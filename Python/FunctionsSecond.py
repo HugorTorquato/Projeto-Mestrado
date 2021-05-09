@@ -57,7 +57,7 @@ def puVmagAngle(Rede):
 
 def originalSteps(Rede):
     Rede.dssLoadShapes.Name = Rede.dssLoadShapes.AllNames[1]
-    print len(Rede.dssLoadShapes.pmult)
+    #print len(Rede.dssLoadShapes.pmult)
     return len(Rede.dssLoadShapes.pmult)
 
 def Colunas_DF_Horas(Rede):

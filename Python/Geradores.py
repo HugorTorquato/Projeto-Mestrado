@@ -3,35 +3,29 @@ from Definitions import *
 import pandas as pd
 import random2
 
-print DF_Geradores.head()
-
 def Adicionar_GDs(Rede):
 
     # Definição dos loadshapes para cada GD
     STEPS = 96
-    Rede.dssText.Command = "New LoadShape._GD_1 npts=" + str(STEPS) + " sinterval=1 " \
-                                      "pmult=(file=C:\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\P_GD_1.txt) " \
-                                      "qmult=(file=C:\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\Q_GD_1.txt)"
-    Rede.dssText.Command = "New LoadShape._GD_2 npts=" + str(STEPS) + " sinterval=1 " \
-                                      "pmult=(file=C:\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\P_GD_2.txt) " \
-                                      "qmult=(file=C:\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\Q_GD_2.txt)"
-    Rede.dssText.Command = "New LoadShape._GD_3 npts=" + str(STEPS) + " sinterval=1 " \
-                                      "pmult=(file=C:\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\P_GD_3.txt) " \
-                                      "qmult=(file=C:\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\Q_GD_3.txt)"
-    Rede.dssText.Command = "New LoadShape._GD_4 npts=" + str(STEPS) + " sinterval=1 " \
-                                      "pmult=(file=C:\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\P_GD_4.txt) " \
-                                      "qmult=(file=C:\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\Q_GD_4.txt)"
-    Rede.dssText.Command = "New LoadShape._GD_5 npts=" + str(STEPS) + " sinterval=1 " \
-                                      "pmult=(file=C:\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\P_GD_5.txt) " \
-                                      "qmult=(file=C:\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\Q_GD_5.txt)"
-    Rede.dssText.Command = "New LoadShape._GD_6 npts=" + str(STEPS) + " sinterval=1 " \
-                                      "pmult=(file=C:\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\P_GD_6.txt) " \
-                                      "qmult=(file=C:\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\Q_GD_6.txt)"
 
-    Create_GD(Rede, 'Hugo', 50, 0, '_GD_1')
-    Create_GD(Rede, 'Hugo2', 50, 0, '_GD_2')
+    # A ideia é carregar os loadshapes e criar os geradores de acordo com a demanda de geradores a serem inseridos.
+    # No momento existem 6 possíveis geradores, limitação pelo número de curvas de cargas adicionadas na pasta
+    # de loadShapes. Para elevar esse número basta adicionar mais curvas
+
+    # A definição do valor de potência é feita pela função HC. A cada tentativa as GDs são redefinidas e o valor de
+    # Pot_GD é atualizado
+
+    for i in range(Num_GDs):
+        Rede.dssText.Command = "New LoadShape._GD_" + str(i + 1) + " npts=" + str(STEPS) + " sinterval=1 " \
+              "pmult=(file=C:\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\P_GD_" + str(i + 1) + ".txt) " \
+              "qmult=(file=C:\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\Q_GD_" + str(i + 1) + ".txt)"
+
+    [Create_GD(Rede, 'Hugo_' + str(i), Pot_GD, 0, '_GD_' + str(i + 1)) for i in range(Num_GDs)]
+
 
 def Create_GD(Rede, Nome, kW, kvar, LoadShape):
+
+    # FEATURES : Adicionar lógica para salvar os dados
 
     # Preparação para armazenamento dos dados
     index = len(DF_Geradores)                                  # Define a linha para aplicar as alterações
@@ -40,7 +34,7 @@ def Create_GD(Rede, Nome, kW, kvar, LoadShape):
 
     # Armazenar e salvar dados
     DF_Geradores.loc[index, 'Nome' ] = Nome
-    DF_Geradores.loc[index, 'Barra'] = random2.choice(DF_Tensao_A.Barras.values)
+    DF_Geradores.loc[index, 'Barra'] = Barras_GDs[index]
     DF_Geradores.loc[index, 'kW'   ] = kW
     DF_Geradores.loc[index, 'kvar' ] = kvar
 
@@ -48,21 +42,14 @@ def Create_GD(Rede, Nome, kW, kvar, LoadShape):
     DF_Geradores.loc[index, 'Fases'] = Fase2String([STRING[i - 1] for i in Rede.dssBus.Nodes])
     DF_Geradores.loc[index, 'LoadShape'] = LoadShape
 
-    print Identify_Phases(DF_Geradores.loc[index, 'Fases'])
     # Criação da GD no Opendss
     Rede.dssText.Command = "new generator.GD_" + str(index + 1) + " phases=" + \
                            str(len(Identify_Phases(DF_Geradores.loc[index, 'Fases']))) +\
-                           " bus1=" +  str(DF_Geradores.loc[index, 'Barra']) + \
+                           " bus1=" + str(DF_Geradores.loc[index, 'Barra']) + \
                            str(Identify_Phases(DF_Geradores.loc[index, 'Fases'])) +\
                            " kv=" + str(Rede.dssBus.kVBase) + " kW=" + str(kW) +\
                            " kVAr=" + str(kvar + 0.001) + " model=1" +\
                            " daily=" + str(LoadShape)
-
-    # Salvar dados
-
-    # como serão as fases dos geradores? Adicionar o neutro ou não?
-
-    # Colocar o loop para fazer o cálculo do HC
 
     print DF_Geradores.head()
 
@@ -72,3 +59,9 @@ def Fase2String(STRING):
     for i in STRING:
         a += str(i)
     return a
+
+def FindBusGD(Num_GDs):
+
+    [Barras_GDs.append(random2.choice(DF_Tensao_A.Barras.values)[0]) for i in range(Num_GDs)]
+    print Barras_GDs
+    # Colocar um debug level aqui

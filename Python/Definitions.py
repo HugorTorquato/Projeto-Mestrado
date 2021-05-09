@@ -9,19 +9,23 @@ DF_Tensao_B = pd.DataFrame()
 DF_Tensao_C = pd.DataFrame()
 
 # GDs
-DF_Geradores = pd.DataFrame({'Nome': [], 'Barra': [], 'kW': [], 'kvar': [], 'Fases': [], 'LoadShape':[]})
-
-
+DF_Geradores = pd.DataFrame({'Nome': [], 'Barra': [], 'kW': [], 'kvar': [], 'Fases': [], 'LoadShape': []})
 
 DF_TESTE = pd.DataFrame({
     "A": [1, 2, 3, 4],
     "B": [4, 3, 2, 1],
     "C": [2, 1, 4, 3]})
 
+# Valores e Arrays auxiliares
+Barras_GDs = []
+Pot_GD     = 0
+
 ##Switches
 
-Salva_Dados = 0
-Criar_GD = 1
+Salva_Dados = 0  # Aciona o script que faz o levantamento dos dados da rede
+Criar_GD = 1     # Aciona a inserção de GDs na rede
+Num_GDs = 2      # Definição do número de GDs que serão adicionadas
+Calc_HC = 1      # Aciona o cálculo do HC
 
 
 class DSS():
@@ -55,4 +59,3 @@ class DSS():
             self.dssActiveClass = self.dssCircuit.ActiveClass
             self.dssPDElements = self.dssCircuit.PDElements
             self.dssTransformers = self.dssCircuit.Transformers
-
