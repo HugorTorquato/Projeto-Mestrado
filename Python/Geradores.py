@@ -36,7 +36,7 @@ def Create_GD(Rede, Nome, kW, kvar, LoadShape):
     # Preparação para armazenamento dos dados
     index = len(DF_Geradores)                                  # Define a linha para aplicar as alterações
     STRING = ['A', 'B', 'C', 'N']                              # Definie a string de fases para o gerador
-    from FunctionsSecond import ativa_barra                    # Importa a função para ativação da barra
+    from FunctionsSecond import ativa_barra, Identify_Phases   # Importa a função para ativação da barra
 
     # Armazenar e salvar dados
     DF_Geradores.loc[index, 'Nome' ] = Nome
@@ -48,10 +48,12 @@ def Create_GD(Rede, Nome, kW, kvar, LoadShape):
     DF_Geradores.loc[index, 'Fases'] = Fase2String([STRING[i - 1] for i in Rede.dssBus.Nodes])
     DF_Geradores.loc[index, 'LoadShape'] = LoadShape
 
-    print Rede.dssBus.kVBase
+    print Identify_Phases(DF_Geradores.loc[index, 'Fases'])
     # Criação da GD no Opendss
-    self.dssText.Command = "new generator.GD_" + str(Numero_de_Geradores(Rede)) + " phases=" + str(len(Phases)) +\
-                           " bus1=" +  str(BUS_GD) + str(Phases_Number) +\
+    Rede.dssText.Command = "new generator.GD_" + str(index + 1) + " phases=" + \
+                           str(len(Identify_Phases(DF_Geradores.loc[index, 'Fases']))) +\
+                           " bus1=" +  str(DF_Geradores.loc[index, 'Barra']) + \
+                           str(Identify_Phases(DF_Geradores.loc[index, 'Fases'])) +\
                            " kv=" + str(Rede.dssBus.kVBase) + " kW=" + str(kW) +\
                            " kVAr=" + str(kvar + 0.001) + " model=1" +\
                            " daily=" + str(LoadShape)
@@ -64,23 +66,9 @@ def Create_GD(Rede, Nome, kW, kvar, LoadShape):
 
     print DF_Geradores.head()
 
-
 def Fase2String(STRING):
 
     a = ''
-
     for i in STRING:
         a += str(i)
-
     return a
-
-def Numero_de_Geradores(Rede):
-
-    Generators_Names = Rede.dssGenerators.AllNames
-
-    if Generators_Names[0] == 'NONE':
-        Num_Gerador = len(Rede.dssGenerators.AllNames)
-    else:
-        Num_Gerador = len(Rede.dssGenerators.AllNames) + 1
-
-    return Num_Gerador

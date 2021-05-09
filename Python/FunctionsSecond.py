@@ -73,3 +73,15 @@ def Salvar_Dados_Tensao():
     DF_Tensao_C.to_excel(Escrever, 'DF_Tensao_C', index=False)
 
     Escrever.save()
+
+def Identify_Phases(Phases):
+
+    Num_Phases = ""
+    for Phase in Phases:
+        if Phase == "A":
+            Num_Phases = Num_Phases + ".1"
+        elif Phase == "B":
+            Num_Phases = Num_Phases + ".2"
+        elif Phase == "C":
+            Num_Phases = Num_Phases + ".3"
+    return Num_Phases

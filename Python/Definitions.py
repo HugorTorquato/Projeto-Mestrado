@@ -20,7 +20,7 @@ DF_TESTE = pd.DataFrame({
 
 ##Switches
 
-Salva_Dados = 1
+Salva_Dados = 0
 Criar_GD = 1
 
 
