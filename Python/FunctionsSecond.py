@@ -85,3 +85,7 @@ def Identify_Phases(Phases):
         elif Phase == "C":
             Num_Phases = Num_Phases + ".3"
     return Num_Phases
+
+def Salvar_e_Limpar_DF(DF_Geradores):
+
+    DF_Geradores.drop([i for i in range(len(DF_Geradores))], inplace=True)

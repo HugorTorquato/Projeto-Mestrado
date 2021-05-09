@@ -18,7 +18,6 @@ DF_TESTE = pd.DataFrame({
 
 # Valores e Arrays auxiliares
 Barras_GDs = []
-Pot_GD     = 0
 
 ##Switches
 

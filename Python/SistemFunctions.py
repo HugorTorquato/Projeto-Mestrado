@@ -11,7 +11,6 @@ def Inicializa(Rede):
 
     # Dataframe de tensão
     DF_Tensao_A.insert(0, 'Barras', Nome_Barras(Rede), allow_duplicates=True)
-    DF_Tensao_A.insert(0, 'Barras', Nome_Barras(Rede), allow_duplicates=True)
     [DF_Tensao_A.insert(i+1, str(i), 'TBD') for i in range(Tamanho_pmult(Rede))]
 
     DF_Tensao_B.insert(0, 'Barras', Nome_Barras(Rede), allow_duplicates=True)
@@ -55,9 +54,8 @@ def Solve_Hora_por_Hora(Rede):
     #       -> Função para salvar os dados em cada iteração ( Salvar_Dados_Tensao )
 
 
-    Compila_DSS(Rede)            # Resetar a rede para definir os geradores novamente
-    if Criar_GD:
-        Adicionar_GDs(Rede)
+
+
 
     Rede.dssSolution.Number = 1
 
@@ -72,7 +70,6 @@ def Solve_Hora_por_Hora(Rede):
 
         Rede.dssSolution.FinishTimeStep()
 
-    print DF_Tensao_A.head()
 
         # Adicionar uma função para salvar o DF e depois zerar ele para a próxima simulação
 
@@ -80,19 +77,28 @@ def Solve_Hora_por_Hora(Rede):
 
 def HC(Rede):
     # Essa função é o pulmão do código, aqui que é feito o cálculo do HC
-    from FunctionsSecond import Colunas_DF_Horas
-    from Definitions import Pot_GD
+    from FunctionsSecond import Colunas_DF_Horas, Salvar_e_Limpar_DF
     coll = Colunas_DF_Horas(Rede)
     Nummero_Simulacoes = 0
+    Pot_GD = 0
 
     print "aqui"
     #while((pd.isna(DF_Tensao_A.set_index('Barras')[coll][(DF_Tensao_A >= 1.05) | (DF_Tensao_A <= 0.92)]).values.all() == True
     #   and pd.isna(DF_Tensao_B.set_index('Barras')[coll][(DF_Tensao_B >= 1.05) | (DF_Tensao_B <= 0.92)]).values.all() == True
     #   and pd.isna(DF_Tensao_C.set_index('Barras')[coll][(DF_Tensao_C >= 1.05) | (DF_Tensao_C <= 0.92)]).values.all() == True)
     #   or Nummero_Simulacoes == 0):
-    while Nummero_Simulacoes == 0:
-        print "aqui2"
-        Solve_Hora_por_Hora(Rede)
+    while Nummero_Simulacoes <= 1:
+
+        # Confere se a definição para adicionar GHD está ativa e se não for a primeira simulação, reseta os devidos
+        # valores para fazer o código funcionar
+        if Criar_GD and Nummero_Simulacoes > 0:
+            Compila_DSS(Rede), Salvar_e_Limpar_DF(DF_Geradores), Adicionar_GDs(Rede, Pot_GD)
+        else:
+            Adicionar_GDs(Rede, Pot_GD)
+
+        Solve_Hora_por_Hora(Rede)        # Chamada da função que levanta o perfil diário
+        print DF_Tensao_A
+
         Nummero_Simulacoes += 1
         Pot_GD += 50
 

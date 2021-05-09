@@ -3,7 +3,7 @@ from Definitions import *
 import pandas as pd
 import random2
 
-def Adicionar_GDs(Rede):
+def Adicionar_GDs(Rede, Pot_GD):
 
     # Definição dos loadshapes para cada GD
     STEPS = 96
@@ -21,7 +21,6 @@ def Adicionar_GDs(Rede):
               "qmult=(file=C:\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\Q_GD_" + str(i + 1) + ".txt)"
 
     [Create_GD(Rede, 'Hugo_' + str(i), Pot_GD, 0, '_GD_' + str(i + 1)) for i in range(Num_GDs)]
-
 
 def Create_GD(Rede, Nome, kW, kvar, LoadShape):
 
@@ -62,6 +61,6 @@ def Fase2String(STRING):
 
 def FindBusGD(Num_GDs):
 
-    [Barras_GDs.append(random2.choice(DF_Tensao_A.Barras.values)[0]) for i in range(Num_GDs)]
-    print Barras_GDs
+    [Barras_GDs.append(random2.choice(DF_Tensao_A.Barras.values)) for i in range(Num_GDs)]
+    #print Barras_GDs
     # Colocar um debug level aqui
