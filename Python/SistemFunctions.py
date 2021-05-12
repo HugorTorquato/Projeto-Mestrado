@@ -53,15 +53,10 @@ def Solve_Hora_por_Hora(Rede):
     # -> Salvar no banco os valores obtidos
     #       -> Função para salvar os dados em cada iteração ( Salvar_Dados_Tensao )
 
-
-
-
-
     Rede.dssSolution.Number = 1
 
     #print 'originalsteps : ' + str(originalSteps)
     from FunctionsSecond import Tensao_Barras, originalSteps
-
 
     for itera in range(0, originalSteps(Rede)):
 
@@ -93,11 +88,13 @@ def HC(Rede):
         # valores para fazer o código funcionar
         if Criar_GD and Nummero_Simulacoes > 0:
             Compila_DSS(Rede), Salvar_e_Limpar_DF(DF_Geradores), Adicionar_GDs(Rede, Pot_GD)
+
+            print DF_Tensao_A.set_index('Barras').max().values, DF_Tensao_A.set_index('Barras').min().values
+            print DF_Tensao_A
         else:
             Adicionar_GDs(Rede, Pot_GD)
 
         Solve_Hora_por_Hora(Rede)        # Chamada da função que levanta o perfil diário
-        print DF_Tensao_A
 
         Nummero_Simulacoes += 1
         Pot_GD += 50

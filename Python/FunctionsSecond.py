@@ -77,14 +77,18 @@ def Salvar_Dados_Tensao():
 def Identify_Phases(Phases):
 
     Num_Phases = ""
+    count = 0
     for Phase in Phases:
         if Phase == "A":
             Num_Phases = Num_Phases + ".1"
+            count += 1
         elif Phase == "B":
             Num_Phases = Num_Phases + ".2"
+            count += 1
         elif Phase == "C":
             Num_Phases = Num_Phases + ".3"
-    return Num_Phases
+            count += 1
+    return Num_Phases, count
 
 def Salvar_e_Limpar_DF(DF_Geradores):
 

@@ -2,6 +2,7 @@
 from Definitions import *
 import pandas as pd
 import random2
+import time
 
 def Adicionar_GDs(Rede, Pot_GD):
 
@@ -43,9 +44,9 @@ def Create_GD(Rede, Nome, kW, kvar, LoadShape):
 
     # Criação da GD no Opendss
     Rede.dssText.Command = "new generator.GD_" + str(index + 1) + " phases=" + \
-                           str(len(Identify_Phases(DF_Geradores.loc[index, 'Fases']))) +\
-                           " bus1=" + str(DF_Geradores.loc[index, 'Barra']) + \
-                           str(Identify_Phases(DF_Geradores.loc[index, 'Fases'])) +\
+                           str(Identify_Phases(DF_Geradores.loc[index, 'Fases'])[1]) +\
+                           " bus1=" + str(DF_Geradores.loc[index, 'Barra'] +
+                                          Identify_Phases(DF_Geradores.loc[index, 'Fases'])[0] ) +\
                            " kv=" + str(Rede.dssBus.kVBase) + " kW=" + str(kW) +\
                            " kVAr=" + str(kvar + 0.001) + " model=1" +\
                            " daily=" + str(LoadShape)
