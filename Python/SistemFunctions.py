@@ -77,27 +77,28 @@ def HC(Rede):
     Nummero_Simulacoes = 0
     Pot_GD = 0
 
-    print "aqui"
-    #while((pd.isna(DF_Tensao_A.set_index('Barras')[coll][(DF_Tensao_A >= 1.05) | (DF_Tensao_A <= 0.92)]).values.all() == True
-    #   and pd.isna(DF_Tensao_B.set_index('Barras')[coll][(DF_Tensao_B >= 1.05) | (DF_Tensao_B <= 0.92)]).values.all() == True
-    #   and pd.isna(DF_Tensao_C.set_index('Barras')[coll][(DF_Tensao_C >= 1.05) | (DF_Tensao_C <= 0.92)]).values.all() == True)
-    #   or Nummero_Simulacoes == 0):
-    while Nummero_Simulacoes <= 1:
+    while (max(DF_Tensao_A.set_index('Barras').max().values) <= 1.05 and
+            min(DF_Tensao_A.set_index('Barras').min().values) >= 0.92) or\
+            Nummero_Simulacoes == 0:
 
         # Confere se a definição para adicionar GHD está ativa e se não for a primeira simulação, reseta os devidos
         # valores para fazer o código funcionar
         if Criar_GD and Nummero_Simulacoes > 0:
             Compila_DSS(Rede), Salvar_e_Limpar_DF(DF_Geradores), Adicionar_GDs(Rede, Pot_GD)
-
-            print DF_Tensao_A.set_index('Barras').max().values, DF_Tensao_A.set_index('Barras').min().values
-            print DF_Tensao_A
         else:
             Adicionar_GDs(Rede, Pot_GD)
 
         Solve_Hora_por_Hora(Rede)        # Chamada da função que levanta o perfil diário
 
         Nummero_Simulacoes += 1
-        Pot_GD += 50
+        Pot_GD += 2
+        print '-----------------------------------------------------'
+        print max(DF_Tensao_A.set_index('Barras').max().values)
+        print min(DF_Tensao_A.set_index('Barras').min().values)
+        print '-----------------------------------------------------'
+
+    print DF_Tensao_A
+    print 'Número de Simulações : ' + str(Nummero_Simulacoes) + ' Pot GDs : ' + str(Pot_GD)
 
     # Feature:
     # -> Colocar o cálculo da pertinência triangular aqui, para acontecer logo depois que tiver a violação
