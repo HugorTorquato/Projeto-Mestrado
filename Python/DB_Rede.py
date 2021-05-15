@@ -3,9 +3,8 @@ import sqlalchemy as sql
 
 def sqlalchemyVersion():
 
-    return
-    #engine = sql.create_engine('mssql+pymssql://sa:sa123@localhost:3306/DB_Rede3')
-    #print engine
+    engine = sql.create_engine('mssql+pymssql://sa:sa123@localhost:3306/DB_Rede3')
+    print(engine)
 
 
 ## Criar engine com o SQL Server -> engine = create_engine('sqlite:///:memory:', echo=True)

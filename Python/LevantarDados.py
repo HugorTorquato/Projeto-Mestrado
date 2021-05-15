@@ -53,12 +53,12 @@ def Dados_Geometria_Linha(Rede):
         Rmatrix.append(Rede.dssLines.Rmatrix)
 
 
-        print Rede.dssLines.Properties
+        print(Rede.dssLines.Properties)
         a = Rede.dssLines.Rmatrix
-        print linha
-        print "hugo"
-        print Rede.dssLines.Name
-        print Rmatrix[-1]
+        print(linha)
+        print("hugo")
+        print(Rede.dssLines.Name)
+        print(Rmatrix[-1])
         pause()
 
     for linha in Nome:
@@ -84,10 +84,10 @@ def Dados_Geometria_Linha(Rede):
         TotalCust.append(Rede.dssLines.TotalCust)
 
         a = Rede.dssLines.Rmatrix
-        print linha
-        print a
-        print Rede.dssLines.Name
-        print Rmatrix[-1]
+        print(linha)
+        print(a)
+        print(Rede.dssLines.Name)
+        print(Rmatrix[-1])
         pause()
 
     Geo_Rede.insert(0, 'Nomes', Nome)
@@ -102,7 +102,7 @@ def Dados_Geometria_Linha(Rede):
     Geo_Rede.insert(17, 'NumCust', NumCust), Geo_Rede.insert(18, 'Phases', Phases)
     Geo_Rede.insert(19, 'Spacing', Spacing), Geo_Rede.insert(20, 'Xmatrix', Xmatrix)
 
-    print Geo_Rede.head()
+    print(Geo_Rede.head())
 
 def Dados_Load(Rede):
 
@@ -152,7 +152,7 @@ def Dados_Load(Rede):
     Load_Rede.insert(12, 'Vminnorm', Vminnorm), Load_Rede.insert(13, 'Vminpu', Vminpu), Load_Rede.insert(14, 'Xneut', Xneut)
     Load_Rede.insert(15, 'Bus', Bus1), Load_Rede.insert(16, 'Phases', Phases)
 
-    print Load_Rede.head()
+    print(Load_Rede.head())
 
 def Dados_LoadShapes(Rede):
 
@@ -186,7 +186,7 @@ def Dados_LoadShapes(Rede):
     LoadShape_Rede.insert(6, 'Sinterval', Sinterval), LoadShape_Rede.insert(7, 'TimeArray', TimeArray)
     LoadShape_Rede.insert(8, 'UseActual', UseActual)
 
-    print LoadShape_Rede.head()
+    print(LoadShape_Rede.head())
 
 def Dados_Transformers(Rede):
 
@@ -240,13 +240,13 @@ def Dados_Transformers(Rede):
     Transformers_Rede.insert(14, 'Xht', Xht), Transformers_Rede.insert(15, 'Xlt', Xlt)
     Transformers_Rede.insert(16, 'Xneut', Xneut)
 
-    print Transformers_Rede.head()
+    print(Transformers_Rede.head())
 
 
 
 def ToExcel():
 
-    Escrever = pd.ExcelWriter("C:\Users\hugo1\Desktop\Projeto_Rede_Fornecida\Python\ToExcel.xlsx")
+    Escrever = pd.ExcelWriter("C:\\Users\hugo1\Desktop\Projeto_Rede_Fornecida\Python\ToExcel.xlsx")
 
     Geo_Rede.to_excel(Escrever, 'Dados Linha', index=False)
     Load_Rede.to_excel(Escrever, 'Dados Cargas', index=False)

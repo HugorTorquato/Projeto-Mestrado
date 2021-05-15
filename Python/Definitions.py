@@ -39,7 +39,7 @@ class DSS():
 
         # Iniciar o Objeto DSS
         if self.dssObj.Start(0) == False:
-            print "Problemas em iniciar o OpenDSS"
+            print("Problemas em iniciar o OpenDSS")
         else:
             # Criar variáveis paras as principais interfaces
             self.dssText = self.dssObj.Text

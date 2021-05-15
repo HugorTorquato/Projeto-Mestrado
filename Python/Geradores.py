@@ -18,8 +18,8 @@ def Adicionar_GDs(Rede, Pot_GD):
 
     for i in range(Num_GDs):
         Rede.dssText.Command = "New LoadShape._GD_" + str(i + 1) + " npts=" + str(STEPS) + " sinterval=1 " \
-              "pmult=(file=C:\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\P_GD_" + str(i + 1) + ".txt) " \
-              "qmult=(file=C:\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\Q_GD_" + str(i + 1) + ".txt)"
+              "pmult=(file=C:\\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\P_GD_" + str(i + 1) + ".txt) " \
+              "qmult=(file=C:\\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\Q_GD_" + str(i + 1) + ".txt)"
 
     [Create_GD(Rede, 'Hugo_' + str(i), Pot_GD, 0, '_GD_' + str(i + 1)) for i in range(Num_GDs)]
 
@@ -51,7 +51,7 @@ def Create_GD(Rede, Nome, kW, kvar, LoadShape):
                            " kVAr=" + str(kvar + 0.001) + " model=1" +\
                            " daily=" + str(LoadShape)
 
-    print DF_Geradores.head()
+    print(DF_Geradores.head())
 
 def Fase2String(STRING):
 
