@@ -2,6 +2,7 @@
 
 import pandas as pd
 import matplotlib.pyplot as plt
+import time
 
 if __name__ == "__main__":
     print u"""Autor: Hugo Torquato \nData: 24/01/2020 \nE-mail: hugortorquato@gmail.com \n"""
@@ -10,6 +11,10 @@ if __name__ == "__main__":
     from SistemFunctions import *
     from LevantarDados import *
     from Geradores import *
+    from DB_Rede import *
+
+    sqlalchemyVersion()
+    time.sleep(1000)
 
     Rede = DSS("C:\Users\hugo1\Desktop\Rede_03\_trafo3\Master.dss")
 
