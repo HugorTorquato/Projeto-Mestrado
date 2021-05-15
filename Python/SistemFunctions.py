@@ -24,7 +24,7 @@ def Inicializa(Rede):
 
 
 def Version(Rede):
-    print Rede.dssObj.Version
+    print(Rede.dssObj.Version)
 
 def Compila_DSS(Rede):
     Rede.dssObj.ClearALL()
@@ -77,9 +77,8 @@ def HC(Rede):
     Nummero_Simulacoes = 0
     Pot_GD = 0
 
-    while (max(DF_Tensao_A.set_index('Barras').max().values) <= 1.05 and
-            min(DF_Tensao_A.set_index('Barras').min().values) >= 0.92) or\
-            Nummero_Simulacoes == 0:
+    while Nummero_Simulacoes == 0 or (float(max(DF_Tensao_A.set_index('Barras').max().values)) <= 1.05 and
+            float(min(DF_Tensao_A.set_index('Barras').min().values)) >= 0.92):
 
         # Confere se a definição para adicionar GHD está ativa e se não for a primeira simulação, reseta os devidos
         # valores para fazer o código funcionar
@@ -92,13 +91,13 @@ def HC(Rede):
 
         Nummero_Simulacoes += 1
         Pot_GD += 2
-        print '-----------------------------------------------------'
-        print max(DF_Tensao_A.set_index('Barras').max().values)
-        print min(DF_Tensao_A.set_index('Barras').min().values)
-        print '-----------------------------------------------------'
+        print('-----------------------------------------------------')
+        print(max(DF_Tensao_A.set_index('Barras').max().values))
+        print(min(DF_Tensao_A.set_index('Barras').min().values))
+        print('-----------------------------------------------------')
 
-    print DF_Tensao_A
-    print 'Número de Simulações : ' + str(Nummero_Simulacoes) + ' Pot GDs : ' + str(Pot_GD)
+    print(DF_Tensao_A)
+    print('Número de Simulações : ' + str(Nummero_Simulacoes) + ' Pot GDs : ' + str(Pot_GD))
 
     # Feature:
     # -> Colocar o cálculo da pertinência triangular aqui, para acontecer logo depois que tiver a violação

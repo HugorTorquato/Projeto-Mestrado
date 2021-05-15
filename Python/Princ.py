@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import time
 
 if __name__ == "__main__":
-    print u"""Autor: Hugo Torquato \nData: 24/01/2020 \nE-mail: hugortorquato@gmail.com \n"""
+    print("""Autor: Hugo Torquato \nData: 24/01/2020 \nE-mail: hugortorquato@gmail.com \n""")
 
     from Definitions import *
     from SistemFunctions import *
@@ -14,9 +14,8 @@ if __name__ == "__main__":
     from DB_Rede import *
 
     sqlalchemyVersion()
-    time.sleep(1000)
 
-    Rede = DSS("C:\Users\hugo1\Desktop\Rede_03\_trafo3\Master.dss")
+    Rede = DSS("C:\\Users\hugo1\Desktop\Rede_03\_trafo3\Master.dss")
 
     Version(Rede), Compila_DSS(Rede), Inicializa(Rede)
 
