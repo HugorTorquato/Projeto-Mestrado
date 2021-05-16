@@ -4,9 +4,20 @@ import pandas as pd
 
 def sqlalchemyVersion():
 
-    engine = sql.create_engine('mssql+pymssql://sa:sa123@localhost:3306/DB_Rede_3', echo=True)
+    #engine = sql.create_engine('mssql+pymssql://sa:sa123@localhost:1433/DB_Rede_3', echo=True)
+    engine = sql.create_engine(
+        'mssql+pyodbc://LAPTOP-5R3FI4O0\SQLEXPRESS/DB_Rede_3?driver=ODBC Driver 17 for SQL Server').connect()
     print(engine)
-    df = pd.read_sql('SELECT TOP (1000) [Nome] ,[idade] FROM [DB_Rede3].[dbo].[Table_1]', engine)
+
+    #DF_TESTE = pd.DataFrame({
+    #    "A": [1, 2, 3, 4],
+    #    "B": [4, 3, 2, 1],
+    #    "C": [2, 1, 4, 3]})
+    #DF_TESTE.to_sql(
+    #    name='TESTE',
+    #    con= engine
+    #)
+    df = pd.read_sql('SELECT * FROM TESTE', engine)
     print(df)
     #Create_Tables(engine)
 
