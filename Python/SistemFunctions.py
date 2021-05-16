@@ -2,6 +2,7 @@
 import numpy as np
 from Definitions import *
 from Geradores import *
+from DB_Rede import *
 
 def Inicializa(Rede):
     # Essa função é responsável por inicializar alguns os dataframes utilizados
@@ -74,30 +75,39 @@ def HC(Rede):
     # Essa função é o pulmão do código, aqui que é feito o cálculo do HC
     from FunctionsSecond import Colunas_DF_Horas, Salvar_e_Limpar_DF
     coll = Colunas_DF_Horas(Rede)
-    Nummero_Simulacoes = 0
-    Pot_GD = 0
 
-    while Nummero_Simulacoes == 0 or (float(max(DF_Tensao_A.set_index('Barras').max().values)) <= 1.05 and
-            float(min(DF_Tensao_A.set_index('Barras').min().values)) >= 0.92):
+    for Simulation in range(1, Num_Simulations + 1):
 
-        # Confere se a definição para adicionar GHD está ativa e se não for a primeira simulação, reseta os devidos
-        # valores para fazer o código funcionar
-        if Criar_GD and Nummero_Simulacoes > 0:
-            Compila_DSS(Rede), Salvar_e_Limpar_DF(DF_Geradores), Adicionar_GDs(Rede, Pot_GD)
-        else:
-            Adicionar_GDs(Rede, Pot_GD)
+        Compila_DSS(Rede), Salvar_e_Limpar_DF(DF_Geradores)  # Resetar os valores dos DF
+        sqlalchemy().execute('INSERT INTO General (Simulation2) VALUES (' + str(Simulation) + ')')
 
-        Solve_Hora_por_Hora(Rede)        # Chamada da função que levanta o perfil diário
+        Nummero_Simulacoes = 0
+        Pot_GD = 10
 
-        Nummero_Simulacoes += 1
-        Pot_GD += 2
-        print('-----------------------------------------------------')
-        print(max(DF_Tensao_A.set_index('Barras').max().values))
-        print(min(DF_Tensao_A.set_index('Barras').min().values))
-        print('-----------------------------------------------------')
+        while Nummero_Simulacoes == 0 or (float(max(DF_Tensao_A.set_index('Barras').max().values)) <= 1.05 and
+                float(min(DF_Tensao_A.set_index('Barras').min().values)) >= 0.92):
 
-    print(DF_Tensao_A)
-    print('Número de Simulações : ' + str(Nummero_Simulacoes) + ' Pot GDs : ' + str(Pot_GD))
+            # Confere se a definição para adicionar GHD está ativa e se não for a primeira simulação, reseta os devidos
+            # valores para fazer o código funcionar
+            if Criar_GD and Nummero_Simulacoes > 0:
+                Compila_DSS(Rede), Salvar_e_Limpar_DF(DF_Geradores), Adicionar_GDs(Rede, Pot_GD, Simulation)
+            else:
+                Adicionar_GDs(Rede, Pot_GD, Simulation)
+
+            Solve_Hora_por_Hora(Rede)        # Chamada da função que levanta o perfil diário
+
+            Nummero_Simulacoes += 1
+            Pot_GD += 2
+            print('-----------------------------------------------------')
+            print(max(DF_Tensao_A.set_index('Barras').max().values))
+            print(min(DF_Tensao_A.set_index('Barras').min().values))
+            print('-----------------------------------------------------')
+
+        print(DF_Tensao_A)
+
+
+        Save_Data()
+        print('Número de Simulações : ' + str(Nummero_Simulacoes) + ' Pot GDs : ' + str(Pot_GD))
 
     # Feature:
     # -> Colocar o cálculo da pertinência triangular aqui, para acontecer logo depois que tiver a violação
