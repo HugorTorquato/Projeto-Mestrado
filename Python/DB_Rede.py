@@ -47,7 +47,9 @@ def Refresh_Or_Create_Tables():
         print('Create')
         General = sql.Table(str(DB), metadata,
                             sql.Column('Simulation', sql.Integer, primary_key=True),
-                            sql.Column('Simulation2', sql.Integer),
+                            sql.Column('Voltage_Max', sql.Float),
+                            sql.Column('Voltage_Min', sql.Float),
+                            sql.Column('GD_Config', sql.String),
                             )
 
     else:
@@ -56,26 +58,11 @@ def Refresh_Or_Create_Tables():
 
     metadata.create_all(engine)
 
-def Refresh_Or_Create_Tables2(engine):
-    metadata = sql.MetaData()
-
-    users = sql.Table('users', metadata,
-                      sql.Column('id', sql.Integer, primary_key=True),
-                      sql.Column('name', sql.String),
-                      sql.Column('fullname', sql.String))
-
-    addresses = sql.Table('addresses', metadata,
-                          sql.Column('id', sql.Integer, primary_key=True),
-                          sql.Column('user_id', None, sql.ForeignKey('users.id')),
-                          sql.Column('email_address', sql.String, nullable=False))
-
-    metadata.create_all(engine)
-
-
 ## Criar chart com a dinamica do banco e as possiveis conexoes que podem ser feitas entra as tabelas
 ## Criar as tabelas
 
 
-def Save_Data():
+def Save_Data(Simulation):
 
+    DF_General.to_sql('General', sqlalchemy(), if_exists='append', index=False)
     DF_Geradores.to_sql('GD', sqlalchemy(), if_exists='append', index=False)

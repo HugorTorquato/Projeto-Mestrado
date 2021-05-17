@@ -10,14 +10,16 @@ DF_Tensao_C = pd.DataFrame()
 
 # GDs
 DF_Geradores = pd.DataFrame({'Simulation': [],
-                             'Name': [],
-                             'Bus': [],
-                             'kW': [],
-                             'kvar': [],
-                             'Phases': '',
-                             'LoadShape': ''})
+                             'Name'      : [],
+                             'Bus'       : [],
+                             'kW'        : [],
+                             'kvar'      : [],
+                             'Phases'    : '',
+                             'LoadShape' : ''})
 
-DF_General = pd.DataFrame({})
+DF_General = pd.DataFrame({'Voltage_Max': [],
+                           'Voltage_Min': [],
+                           'GD_Config'  : ''})
 
 
 DF_TESTE = pd.DataFrame({

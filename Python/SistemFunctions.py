@@ -3,9 +3,10 @@ import numpy as np
 from Definitions import *
 from Geradores import *
 from DB_Rede import *
+from FunctionsSecond import *
 
 def Inicializa(Rede):
-    # Essa função é responsável por inicializar alguns os dataframes utilizados
+    # Essa função é responsável por inicializar alguns os dataframes utilizados ( Acho quenão preciso )
 
     # Features:
     # Daria para colocar uma coluna para diferênciar a simulação diária ( primeira, segunda....)( ID da simulação)
@@ -21,7 +22,7 @@ def Inicializa(Rede):
     [DF_Tensao_C.insert(i+1, str(i), 'TBD') for i in range(Tamanho_pmult(Rede))]
 
     # Defnição das barras em que os geradores vão estar inseridos no sistema
-    FindBusGD(Num_GDs)
+    #FindBusGD(Num_GDs)
 
 
 def Version(Rede):
@@ -73,24 +74,24 @@ def Solve_Hora_por_Hora(Rede):
 
 def HC(Rede):
     # Essa função é o pulmão do código, aqui que é feito o cálculo do HC
-    from FunctionsSecond import Colunas_DF_Horas, Salvar_e_Limpar_DF
+    from FunctionsSecond import Colunas_DF_Horas, Limpar_DF, Max_and_Min_Voltage_DF
     coll = Colunas_DF_Horas(Rede)
 
     for Simulation in range(1, Num_Simulations + 1):
 
-        Compila_DSS(Rede), Salvar_e_Limpar_DF(DF_Geradores)  # Resetar os valores dos DF
-        sqlalchemy().execute('INSERT INTO General (Simulation2) VALUES (' + str(Simulation) + ')')
-
         Nummero_Simulacoes = 0
-        Pot_GD = 10
+        Pot_GD = 1
 
-        while Nummero_Simulacoes == 0 or (float(max(DF_Tensao_A.set_index('Barras').max().values)) <= 1.05 and
-                float(min(DF_Tensao_A.set_index('Barras').min().values)) >= 0.92):
+        Compila_DSS(Rede), Limpar_DF(DF_Geradores)  # Resetar os valores dos DF
+
+        while Nummero_Simulacoes == 0 or \
+                (float(Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[0]) <= 1.05 and
+                float(Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[1]) >= 0.92):
 
             # Confere se a definição para adicionar GHD está ativa e se não for a primeira simulação, reseta os devidos
             # valores para fazer o código funcionar
             if Criar_GD and Nummero_Simulacoes > 0:
-                Compila_DSS(Rede), Salvar_e_Limpar_DF(DF_Geradores), Adicionar_GDs(Rede, Pot_GD, Simulation)
+                Compila_DSS(Rede), Limpar_DF(DF_Geradores), Adicionar_GDs(Rede, Pot_GD, Simulation)
             else:
                 Adicionar_GDs(Rede, Pot_GD, Simulation)
 
@@ -103,11 +104,17 @@ def HC(Rede):
             print(min(DF_Tensao_A.set_index('Barras').min().values))
             print('-----------------------------------------------------')
 
-        print(DF_Tensao_A)
-
-
-        Save_Data()
+        print(DF_Tensao_C)
+        Save_General_Data(Simulation)
+        Save_Data(Simulation)
         print('Número de Simulações : ' + str(Nummero_Simulacoes) + ' Pot GDs : ' + str(Pot_GD))
 
     # Feature:
     # -> Colocar o cálculo da pertinência triangular aqui, para acontecer logo depois que tiver a violação
+
+def Save_General_Data(Simulation):
+
+    Limpar_DF(DF_General)
+    DF_General.loc[Simulation-1, 'Voltage_Max'] = Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[0]
+    DF_General.loc[Simulation-1, 'Voltage_Min'] = Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[1]
+    DF_General.loc[Simulation-1, 'GD_Config'] = str(DF_Geradores.set_index('Name').values)
