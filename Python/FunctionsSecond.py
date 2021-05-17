@@ -90,6 +90,15 @@ def Identify_Phases(Phases):
             count += 1
     return Num_Phases, count
 
-def Salvar_e_Limpar_DF(DF_Geradores):
+def Limpar_DF(DF):
 
-    DF_Geradores.drop([i for i in range(len(DF_Geradores))], inplace=True)
+    DF.drop([i for i in range(len(DF))], inplace=True)
+
+def Max_and_Min_Voltage_DF(A, B, C):
+
+    return max(max(A.set_index('Barras').max().values),
+               max(B.set_index('Barras').max().values),
+               max(C.set_index('Barras').max().values)),\
+           min(min(A.set_index('Barras')[A.set_index('Barras') > .2].min().values),
+               min(B.set_index('Barras')[B.set_index('Barras') > .2].min().values),
+               min(C.set_index('Barras')[C.set_index('Barras') > .1].min().values))

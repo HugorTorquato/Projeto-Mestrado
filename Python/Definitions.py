@@ -9,7 +9,18 @@ DF_Tensao_B = pd.DataFrame()
 DF_Tensao_C = pd.DataFrame()
 
 # GDs
-DF_Geradores = pd.DataFrame({'Nome': [], 'Barra': [], 'kW': [], 'kvar': [], 'Fases': [], 'LoadShape': []})
+DF_Geradores = pd.DataFrame({'Simulation': [],
+                             'Name'      : [],
+                             'Bus'       : [],
+                             'kW'        : [],
+                             'kvar'      : [],
+                             'Phases'    : '',
+                             'LoadShape' : ''})
+
+DF_General = pd.DataFrame({'Voltage_Max': [],
+                           'Voltage_Min': [],
+                           'GD_Config'  : ''})
+
 
 DF_TESTE = pd.DataFrame({
     "A": [1, 2, 3, 4],
@@ -25,6 +36,8 @@ Salva_Dados = 0  # Aciona o script que faz o levantamento dos dados da rede
 Criar_GD = 1     # Aciona a inserção de GDs na rede
 Num_GDs = 2      # Definição do número de GDs que serão adicionadas
 Calc_HC = 1      # Aciona o cálculo do HC
+
+Num_Simulations = 2 # Deifnie o número de simulações que serão realizadas
 
 
 class DSS():
