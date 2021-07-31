@@ -1,0 +1,5 @@
+//Configuração da tensão de base
+
+Set Voltagebases=[115, 4.16, .48]
+calcVoltagebases
+//BusCoords IEEE13Node_BusXY.csv

@@ -21,6 +21,16 @@ DF_General = pd.DataFrame({'Voltage_Max': [],
                            'Voltage_Min': [],
                            'GD_Config'  : ''})
 
+DF_Barras = pd.DataFrame({'Simulation'     : [],
+                          'Name'           : [],
+                          'V_pu_max_a'     : [],
+                          'V_pu_max_b'     : [],
+                          'V_pu_max_c'     : [],
+                          'V_pu_min_a'     : [],
+                          'V_pu_min_b'     : [],
+                          'V_pu_min_c'     : [],
+                          'Deseq'          : []})
+
 
 DF_TESTE = pd.DataFrame({
     "A": [1, 2, 3, 4],
@@ -36,6 +46,9 @@ Salva_Dados = 0  # Aciona o script que faz o levantamento dos dados da rede
 Criar_GD = 1     # Aciona a inserção de GDs na rede
 Num_GDs = 2      # Definição do número de GDs que serão adicionadas
 Calc_HC = 1      # Aciona o cálculo do HC
+All_GDs = 1
+
+Incremento_gd = 300
 
 Num_Simulations = 2 # Deifnie o número de simulações que serão realizadas
 

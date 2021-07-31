@@ -1,16 +1,15 @@
 # coding: utf-8
 from Definitions import *
-from DB_Rede import *
-
 import pandas as pd
 import random2
-import time
 
 def Adicionar_GDs(Rede, Pot_GD, Simulation):
+    from Definitions import DF_Geradores, Num_GDs
 
     # Definição dos loadshapes para cada GD
     STEPS = 96
-    FindBusGD(Num_GDs)
+
+    #FindBusGD(Num_GDs) - Se deixar essa definição aqui ela vai trocar a posição das GDs a cada alteração de Pot
 
     # A ideia é carregar os loadshapes e criar os geradores de acordo com a demanda de geradores a serem inseridos.
     # No momento existem 6 possíveis geradores, limitação pelo número de curvas de cargas adicionadas na pasta
@@ -24,10 +23,12 @@ def Adicionar_GDs(Rede, Pot_GD, Simulation):
               "pmult=(file=C:\\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\P_GD_" + str(i + 1) + ".txt) " \
               "qmult=(file=C:\\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\Q_GD_" + str(i + 1) + ".txt)"
 
-    [Create_GD(Rede, 'Hugo_' + str(i), Pot_GD, 0, '_GD_' + str(i + 1), Simulation) for i in range(Num_GDs)]
+    [Create_GD(Rede, 'GD_' + str(i), Pot_GD, 0, '_GD_' + str(i + 1), Simulation) for i in range(Num_GDs)]
     print(DF_Geradores.head())
 
 def Create_GD(Rede, Nome, kW, kvar, LoadShape, Simulation):
+
+    from Definitions import DF_Geradores
 
     # FEATURES : Adicionar lógica para salvar os dados
 
@@ -64,6 +65,8 @@ def Fase2String(STRING):
     return a
 
 def FindBusGD(Num_GDs):
+
+    from Definitions import DF_Tensao_A
 
     [Barras_GDs.append(random2.choice(DF_Tensao_A.Barras.values)) for i in range(Num_GDs)]
     #print(Barras_GDs)

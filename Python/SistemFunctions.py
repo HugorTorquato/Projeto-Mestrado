@@ -1,11 +1,11 @@
 # coding: utf-8
 import numpy as np
-from Definitions import *
 from Geradores import *
 from DB_Rede import *
-from FunctionsSecond import *
+
 
 def Inicializa(Rede):
+    from Definitions import DF_Tensao_A, DF_Tensao_B, DF_Tensao_C
     # Essa função é responsável por inicializar alguns os dataframes utilizados ( Acho quenão preciso )
 
     # Features:
@@ -13,20 +13,21 @@ def Inicializa(Rede):
 
     # Dataframe de tensão
     DF_Tensao_A.insert(0, 'Barras', Nome_Barras(Rede), allow_duplicates=True)
-    [DF_Tensao_A.insert(i+1, str(i), 'TBD') for i in range(Tamanho_pmult(Rede))]
+    [DF_Tensao_A.insert(i + 1, str(i), 'TBD') for i in range(Tamanho_pmult(Rede))]
 
     DF_Tensao_B.insert(0, 'Barras', Nome_Barras(Rede), allow_duplicates=True)
-    [DF_Tensao_B.insert(i+1, str(i), 'TBD') for i in range(Tamanho_pmult(Rede))]
+    [DF_Tensao_B.insert(i + 1, str(i), 'TBD') for i in range(Tamanho_pmult(Rede))]
 
     DF_Tensao_C.insert(0, 'Barras', Nome_Barras(Rede), allow_duplicates=True)
-    [DF_Tensao_C.insert(i+1, str(i), 'TBD') for i in range(Tamanho_pmult(Rede))]
+    [DF_Tensao_C.insert(i + 1, str(i), 'TBD') for i in range(Tamanho_pmult(Rede))]
 
     # Defnição das barras em que os geradores vão estar inseridos no sistema
-    #FindBusGD(Num_GDs)
+    # FindBusGD(Num_GDs)
 
 
 def Version(Rede):
     print(Rede.dssObj.Version)
+
 
 def Compila_DSS(Rede):
     Rede.dssObj.ClearALL()
@@ -34,19 +35,22 @@ def Compila_DSS(Rede):
 
     Rede.dssSolution.Solve()
 
+
 def Nome_Barras(Rede):
     return Rede.dssCircuit.AllBusNames
-    #Rede.dssText.Command = "Show power kva elements"
-    #Rede.dssText.Command = 'Buscoords BusCoords.csv'
-    #Rede.dssText.Command = 'Set NodeWidth=4'
-    #Rede.dssText.Command = 'plot circuit Power Max=20 dots=y labels=n subs=n C1=$00FF0000'
-    #Rede.dssText.Command = 'Plot type=circuit quantity=1 Max=.001  dots=no  labels=no Object=BusCoords.CSV'
+    # Rede.dssText.Command = "Show power kva elements"
+    # Rede.dssText.Command = 'Buscoords BusCoords.csv'
+    # Rede.dssText.Command = 'Set NodeWidth=4'
+    # Rede.dssText.Command = 'plot circuit Power Max=20 dots=y labels=n subs=n C1=$00FF0000'
+    # Rede.dssText.Command = 'Plot type=circuit quantity=1 Max=.001  dots=no  labels=no Object=BusCoords.CSV'
+
 
 def Tamanho_pmult(Rede):
     Rede.dssLoadShapes.Name = Rede.dssLoadShapes.AllNames[1]
     return len(Rede.dssLoadShapes.pmult)
 
-def Solve_Hora_por_Hora(Rede):
+
+def Solve_Hora_por_Hora(Rede, Simulation):
     # Essa função é o coração do código, aqui que são feitos todos os comandos e designações para os calculos durante
     # a simulação diária
 
@@ -57,36 +61,43 @@ def Solve_Hora_por_Hora(Rede):
 
     Rede.dssSolution.Number = 1
 
-    #print 'originalsteps : ' + str(originalSteps)
+    # print 'originalsteps : ' + str(originalSteps)
     from FunctionsSecond import Tensao_Barras, originalSteps
+    from DB_Rede import Save_Barras_Data
 
     for itera in range(0, originalSteps(Rede)):
-
         Rede.dssSolution.SolveSnap()
         Tensao_Barras(Rede, itera)
 
         Rede.dssSolution.FinishTimeStep()
 
-
         # Adicionar uma função para salvar o DF e depois zerar ele para a próxima simulação
 
-    #print DF_Tensao_A['0'], DF_Tensao_B['0'], DF_Tensao_C['0']
+    # print DF_Tensao_A['0'], DF_Tensao_B['0'], DF_Tensao_C['0']
+
 
 def HC(Rede):
     # Essa função é o pulmão do código, aqui que é feito o cálculo do HC
-    from FunctionsSecond import Colunas_DF_Horas, Limpar_DF, Max_and_Min_Voltage_DF
+    from FunctionsSecond import Colunas_DF_Horas, Limpar_DF, Check
+    from Definitions import Num_GDs, DF_Geradores, DF_Barras, DF_General
+    from DB_Rede import Save_General_Data, Save_Data
+
     coll = Colunas_DF_Horas(Rede)
 
     for Simulation in range(1, Num_Simulations + 1):
+        print(Num_GDs)
 
         Nummero_Simulacoes = 0
-        Pot_GD = 1
+        Pot_GD = 0
 
-        Compila_DSS(Rede), Limpar_DF(DF_Geradores)  # Resetar os valores dos DF
+        Compila_DSS(Rede), Limpar_DF(DF_Geradores), Limpar_DF(DF_Barras), Limpar_DF(DF_General)
 
-        while Nummero_Simulacoes == 0 or \
-                (float(Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[0]) <= 1.05 and
-                float(Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[1]) >= 0.92):
+        # Define em quais barras as GDs vão ser inseridas para obtenção do HC nessa simulação
+        FindBusGD(Num_GDs)
+
+        while Nummero_Simulacoes == 0 or Check == True:
+            # desq
+            # corrente
 
             # Confere se a definição para adicionar GHD está ativa e se não for a primeira simulação, reseta os devidos
             # valores para fazer o código funcionar
@@ -95,26 +106,19 @@ def HC(Rede):
             else:
                 Adicionar_GDs(Rede, Pot_GD, Simulation)
 
-            Solve_Hora_por_Hora(Rede)        # Chamada da função que levanta o perfil diário
+            Solve_Hora_por_Hora(Rede, Simulation)  # Chamada da função que levanta o perfil diário
 
             Nummero_Simulacoes += 1
-            Pot_GD += 2
-            print('-----------------------------------------------------')
-            print(max(DF_Tensao_A.set_index('Barras').max().values))
-            print(min(DF_Tensao_A.set_index('Barras').min().values))
-            print('-----------------------------------------------------')
+            Pot_GD += Incremento_gd
+            # print('-----------------------------------------------------')
+            # print(max(DF_Tensao_A.set_index('Barras').max().values))
+            # print(min(DF_Tensao_A.set_index('Barras').min().values))
+            # print('-----------------------------------------------------')
 
-        print(DF_Tensao_C)
+        Save_Barras_Data(Rede, Simulation)
         Save_General_Data(Simulation)
         Save_Data(Simulation)
-        print('Número de Simulações : ' + str(Nummero_Simulacoes) + ' Pot GDs : ' + str(Pot_GD))
+        print('Número da Simulação : ' + str(Simulation) + ' Pot GDs : ' + str(Pot_GD - Incremento_gd))
 
     # Feature:
     # -> Colocar o cálculo da pertinência triangular aqui, para acontecer logo depois que tiver a violação
-
-def Save_General_Data(Simulation):
-
-    Limpar_DF(DF_General)
-    DF_General.loc[Simulation-1, 'Voltage_Max'] = Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[0]
-    DF_General.loc[Simulation-1, 'Voltage_Min'] = Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[1]
-    DF_General.loc[Simulation-1, 'GD_Config'] = str(DF_Geradores.set_index('Name').values)

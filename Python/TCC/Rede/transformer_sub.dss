@@ -1,0 +1,7 @@
+//DEFINIÇÃO DO TRANSFORMADOR DA SUBESTAÇÃO
+// Embora esses dados tenham sido fornecidos, eles não parecem ser usados nos resultados do caso de teste
+// O caso de teste publicado começa em 1,0 por unidade no Barramento 650. Para que isso aconteça, vamos alterar a impedância! no transformador para algo minúsculo, dividindo por 1000 usando a matemática RPN em linha do DSS
+
+New Transformer.Sub Phases=3 Windings=2   XHL=(8 1000 /)
+~ wdg=1 bus=SourceBus   conn=delta  kv=115  kva=5000   %r=(.5 1000 /) 
+~ wdg=2 bus=650             conn=wye    kv=4.16  kva=5000   %r=(.5 1000 /)  
