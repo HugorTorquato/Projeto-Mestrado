@@ -2,11 +2,17 @@
 import win32com.client
 import pandas as pd
 from Princ import *
+import numpy as np
 
-# Nível de tensão
+# Nível de Tensão
 DF_Tensao_A = pd.DataFrame()
 DF_Tensao_B = pd.DataFrame()
 DF_Tensao_C = pd.DataFrame()
+
+# Deseq Tensão
+DF_Desq_IEC  = pd.DataFrame()
+DF_Desq_IEEE = pd.DataFrame()
+DF_Desq_NEMA = pd.DataFrame()
 
 # GDs
 DF_Geradores = pd.DataFrame({'Simulation': [],
@@ -29,7 +35,9 @@ DF_Barras = pd.DataFrame({'Simulation'     : [],
                           'V_pu_min_a'     : [],
                           'V_pu_min_b'     : [],
                           'V_pu_min_c'     : [],
-                          'Deseq'          : []})
+                          'Deseq_IEC'      : [],
+                          'Deseq_IEEE'     : [],
+                          'Deseq_NEMA'     : []})
 
 
 DF_TESTE = pd.DataFrame({
@@ -48,10 +56,14 @@ Num_GDs = 2      # Definição do número de GDs que serão adicionadas
 Calc_HC = 1      # Aciona o cálculo do HC
 All_GDs = 1
 
-Incremento_gd = 300
+Incremento_gd = 10
 
 Num_Simulations = 2 # Deifnie o número de simulações que serão realizadas
 
+#Constants
+sqrt3 = np.sqrt(3)
+alfa = complex(-0.5, 0.866025403784)
+inv_alfa = complex(-0.5, -0.866025403784)
 
 class DSS():
 

@@ -21,6 +21,16 @@ def Inicializa(Rede):
     DF_Tensao_C.insert(0, 'Barras', Nome_Barras(Rede), allow_duplicates=True)
     [DF_Tensao_C.insert(i + 1, str(i), 'TBD') for i in range(Tamanho_pmult(Rede))]
 
+    # Dataframe de desq de tensão
+    DF_Desq_IEC.insert(0, 'Barras', Nome_Barras(Rede), allow_duplicates=True)
+    [DF_Desq_IEC.insert(i + 1, str(i), 'TBD') for i in range(Tamanho_pmult(Rede))]
+
+    DF_Desq_IEEE.insert(0, 'Barras', Nome_Barras(Rede), allow_duplicates=True)
+    [DF_Desq_IEEE.insert(i + 1, str(i), 'TBD') for i in range(Tamanho_pmult(Rede))]
+
+    DF_Desq_NEMA.insert(0, 'Barras', Nome_Barras(Rede), allow_duplicates=True)
+    [DF_Desq_NEMA.insert(i + 1, str(i), 'TBD') for i in range(Tamanho_pmult(Rede))]
+
     # Defnição das barras em que os geradores vão estar inseridos no sistema
     # FindBusGD(Num_GDs)
 
