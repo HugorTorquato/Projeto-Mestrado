@@ -1,14 +1,23 @@
 # coding: utf-8
 from Definitions import *
 import pandas as pd
+import cmath
 
 
 def Tensao_Barras(Rede, itera):
     puVmag_Buses = []
     angle_Buses = []
     Bus_Names = DF_Tensao_A.Barras.values
+
     count = 0
 
+    tensao1 = 0
+    tensao2 = 0
+    tensao3 = 0
+    angle1 = 0
+    angle2 = 0
+    angle3 = 0
+    vmedio = 0
 
     for Barra in Bus_Names:
         # Feature:
@@ -24,33 +33,130 @@ def Tensao_Barras(Rede, itera):
             DF_Tensao_A.loc[DF_Tensao_A.index == count, str(itera)] = VmagAngle[0]  # puVmag.append(VmagAngle[0])
             DF_Tensao_B.loc[DF_Tensao_B.index == count, str(itera)] = VmagAngle[2]  # puVmag.append(VmagAngle[0])
             DF_Tensao_C.loc[DF_Tensao_C.index == count, str(itera)] = VmagAngle[4]  # puVmag.append(VmagAngle[0])
+            tensao1 = VmagAngle[0] * sqrt3
+            tensao2 = VmagAngle[2] * sqrt3
+            tensao3 = VmagAngle[4] * sqrt3
+            Vmedio = (tensao1 + tensao2 + tensao3) / 3
         elif len(VmagAngle) == 4:
             DF_Tensao_A.loc[DF_Tensao_A.index == count, str(itera)] = VmagAngle[0]  # puVmag.append(VmagAngle[0])
             DF_Tensao_B.loc[DF_Tensao_B.index == count, str(itera)] = VmagAngle[2]  # puVmag.append(VmagAngle[0])
             DF_Tensao_C.loc[DF_Tensao_C.index == count, str(itera)] = 0  # puVmag.append(0)
+            tensao1 = VmagAngle[0] * sqrt3
+            tensao2 = VmagAngle[2] * sqrt3
+            tensao3 = 0
+            vmedio = (tensao1 + tensao2)/2
         elif len(VmagAngle) == 2:
             DF_Tensao_A.loc[DF_Tensao_A.index == count, str(itera)] = VmagAngle[0]  # puVmag.append(VmagAngle[0])
             DF_Tensao_B.loc[DF_Tensao_B.index == count, str(itera)] = 0  # puVmag.append(0)
             DF_Tensao_C.loc[DF_Tensao_C.index == count, str(itera)] = 0  # puVmag.append(0)
+            tensao1 = VmagAngle[0] * sqrt3
+            tensao2 = 0
+            tensao3 = 0
+            Vmedio = tensao1
 
         if len(VmagAngle) == 6:
             angle.append(VmagAngle[1])
             angle.append(VmagAngle[3])
             angle.append(VmagAngle[5])
+            angle1 = VmagAngle[1] + int(30)
+            angle2 = VmagAngle[3] + int(30)
+            angle3 = VmagAngle[5] + int(30)
         elif len(VmagAngle) == 4:
             angle.append(VmagAngle[1])
             angle.append(VmagAngle[3])
             angle.append(0)
+            angle1 = VmagAngle[1] + int(30)
+            angle2 = VmagAngle[3] + int(30)
+            angle3 = 0
         elif len(VmagAngle) == 2:
             angle.append(VmagAngle[1])
             angle.append(0)
             angle.append(0)
+            angle1 = VmagAngle[1] + int(30)
+            angle2 = 0
+            angle3 = 0
+
+        max_IEEE, min_IEEE = Max_Min(tensao1/sqrt3, tensao2/sqrt3, tensao3/sqrt3)
+        max_NEMA, min_NEMA = Max_Min(tensao1, tensao2, tensao3)
+
+        # Se precisar usar as demais normas masta descomentar o código
+        DF_Desq_IEC.loc[DF_Tensao_A.index == count, str(itera)] = \
+            IEC(tensao1/sqrt3, tensao2/sqrt3, tensao3/sqrt3, angle1, angle2, angle3)
+        DF_Desq_IEEE.loc[DF_Tensao_A.index == count, str(itera)] = \
+            IEEE(tensao1, tensao2, tensao3, max_IEEE, min_IEEE)
+        DF_Desq_NEMA.loc[DF_Tensao_A.index == count, str(itera)] =\
+            NEMA(vmedio, max_NEMA)
 
         count += 1
         # puVmag_Buses.append(puVmag)
         angle_Buses.append(angle)
     # print(DF_Tensao_A.head())
 
+def Max_Min(Tensao1, Tensao2, Tensao3):
+
+    Vet_Max_Min = [Tensao1, Tensao2, Tensao3]
+
+    if Tensao1 != 0 and Tensao2 != 0 and Tensao3 != 0:
+        max_Tensao = max(Vet_Max_Min)
+        min_Tensao = min(Vet_Max_Min)
+        return max_Tensao, min_Tensao
+
+    elif Tensao1 == 0 and Tensao2 != 0 and Tensao3 != 0:
+
+        max_Tensao = max(Vet_Max_Min)
+        if Tensao2 > Tensao3:
+            min_Tensao = Tensao3
+            return max_Tensao, min_Tensao
+        else:
+            min_Tensao = Tensao3
+            return max_Tensao, min_Tensao
+
+    elif Tensao1 != 0 and Tensao2 == 0 and Tensao3 != 0:
+
+        max_Tensao = max(Vet_Max_Min)
+        if Tensao1 > Tensao3:
+            min_Tensao = Tensao3
+            return max_Tensao, min_Tensao
+        else:
+            min_Tensao = Tensao1
+            return max_Tensao, min_Tensao
+
+    elif Tensao1 != 0 and Tensao2 != 0 and Tensao3 == 0:
+
+        max_Tensao = max(Vet_Max_Min)
+        if Tensao1 > Tensao2:
+            min_Tensao = Tensao2
+            return max_Tensao, min_Tensao
+        else:
+            min_Tensao = Tensao1
+            return max_Tensao, min_Tensao
+
+    else:
+        max_Tensao = max(Vet_Max_Min)
+        min_Tensao = max_Tensao
+        return max_Tensao, min_Tensao
+
+def IEC(Tensao1, Tensao2, Tensao3, Angle1, Angle2, Angle3):   # Limite de 2%
+
+    if Tensao1 != 0 and Tensao2 != 0 and Tensao3 != 0:
+        Positiva = 0.333333 * ((cmath.rect(Tensao1, np.deg2rad(Angle1))) +
+                               (alfa * cmath.rect(Tensao2, np.deg2rad(Angle2))) +
+                               (inv_alfa * cmath.rect(Tensao3, np.deg2rad(Angle3))))
+        Negativa = 0.333333 * ((cmath.rect(Tensao1, np.deg2rad(Angle1))) +
+                               (inv_alfa * cmath.rect(Tensao2, np.deg2rad(Angle2))) +
+                               (alfa * cmath.rect(Tensao3, np.deg2rad(Angle3))))
+        return (abs(Negativa)/abs(Positiva))*100
+    else:
+        return 0
+
+def IEEE(Tensao1, Tensao2, Tensao3, max, min):
+
+    # Utiliza tensões de fase
+    return (3*100*(max - min))/(Tensao1 + Tensao2 + Tensao3)
+
+def NEMA(Vmedio, Vmax):
+
+    return ((Vmax - Vmedio)/Vmedio)*100 if Vmedio != 0 else 0
 
 def ativa_barra(Rede, nome_barra):
     Rede.dssCircuit.SetActiveBus(nome_barra)

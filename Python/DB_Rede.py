@@ -32,7 +32,9 @@ def Refresh_Or_Create_Tables():
                            sql.Column('V_pu_min_a', sql.Float),
                            sql.Column('V_pu_min_b', sql.Float),
                            sql.Column('V_pu_min_c', sql.Float),
-                           sql.Column('Deseq', sql.Float)
+                           sql.Column('Deseq_IEC',  sql.Float),
+                           sql.Column('Deseq_IEEE', sql.Float),
+                           sql.Column('Deseq_NEMA', sql.Float)
                            )
     else:
         engine.execute('DBCC CHECKIDENT(\'' + DB + '\', RESEED, 0)') # Redefine a PK para começar do zero novamente
@@ -101,7 +103,7 @@ def Save_General_Data(Simulation):
 
 def Save_Barras_Data(Rede, Simulation):
 
-    from Definitions import DF_Tensao_A, DF_Tensao_B, DF_Tensao_C, DF_Barras
+    from Definitions import DF_Tensao_A, DF_Tensao_B, DF_Tensao_C, DF_Barras, DF_Desq_IEC, DF_Desq_IEEE, DF_Desq_NEMA
     from FunctionsSecond import originalSteps
 
     index = len(DF_Barras.index)
@@ -115,7 +117,9 @@ def Save_Barras_Data(Rede, Simulation):
         DF_Barras.loc[index, 'V_pu_min_a'] = min(DF_Tensao_A.set_index('Barras').loc[[str(Barra)]].min())
         DF_Barras.loc[index, 'V_pu_min_b'] = min(DF_Tensao_B.set_index('Barras').loc[[str(Barra)]].min())
         DF_Barras.loc[index, 'V_pu_min_c'] = min(DF_Tensao_C.set_index('Barras').loc[[str(Barra)]].min())
-        DF_Barras.loc[index, 'Deseq'] = 0
+        DF_Barras.loc[index, 'Deseq_IEC' ] = max(DF_Desq_IEC.set_index('Barras').loc[[str(Barra)]].min())
+        DF_Barras.loc[index, 'Deseq_IEEE'] = max(DF_Desq_IEEE.set_index('Barras').loc[[str(Barra)]].min())
+        DF_Barras.loc[index, 'Deseq_NEMA'] = max(DF_Desq_NEMA.set_index('Barras').loc[[str(Barra)]].min())
 
         index += 1
 
