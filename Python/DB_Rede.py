@@ -15,6 +15,10 @@ def Refresh_Or_Create_Tables():
     metadata = sql.MetaData()
     engine = sqlalchemy()
 
+    # To do:
+    #   1- Colocar tabela com todos os valores de tensão ()
+    #       1.1- Sem a GD x Com GD
+
     # Definição da tabela Barras
     DB = 'Barras'
     if len(pd.read_sql(

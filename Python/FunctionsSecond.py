@@ -3,6 +3,51 @@ from Definitions import *
 import pandas as pd
 import cmath
 
+def Sensor(Rede):
+
+    a = Rede.dssSensor.AllNames
+    Elementos = Rede.dssLines.AllNames + Rede.dssTransformers.AllNames
+    Barras_Elementos = []
+
+    for linha in Rede.dssLines.AllNames:
+        Barras_Elementos.append(linha[0:3])
+    # WDG Currents
+
+
+
+    for elemento in Elementos:
+
+        
+
+        #ativa_barra(Rede, nome_barra)
+
+        Rede.dssText.Command = "New Sesor." + elemento + " Element=" + elemento + " kvbase=2.4"
+
+def Correntes_elementos(Rede):
+
+    Elementos = Rede.dssLines.AllNames + Rede.dssTransformers.AllNames
+
+
+    nome = []
+    corrente = []
+
+    for elemento in Elementos:
+
+        Rede.dssCircuit.SetActiveElement(elemento)
+
+        nome.append(nome)
+        corrente.append(Rede.dssTransformers.WdgCurrents)
+
+    #Sensor(Rede)
+
+    return
+
+def get_resultados_potencia(self):
+
+    #self.dssText.Command = "Show power kva elements"
+    #self.dssText.Command = "Show Voltages LN Nodes"
+    #self.dssText.Command = "Show Taps"
+    self.dssText.Command = "Show Currents"
 
 def Tensao_Barras(Rede, itera):
     puVmag_Buses = []
@@ -161,28 +206,24 @@ def NEMA(Vmedio, Vmax):
 def ativa_barra(Rede, nome_barra):
     Rede.dssCircuit.SetActiveBus(nome_barra)
 
-
 def puVmagAngle(Rede):
     return Rede.dssBus.puVmagAngle
-
 
 def originalSteps(Rede):
     Rede.dssLoadShapes.Name = Rede.dssLoadShapes.AllNames[1]
     # print len(Rede.dssLoadShapes.pmult)
     return len(Rede.dssLoadShapes.pmult)
 
-
 def Colunas_DF_Horas(Rede):
     coll = []
     [coll.append(str(i)) for i in range(originalSteps(Rede))]
-
 
 def Check():
 
     # Adicionar condições de vioçação aqui:
 
-    if (float(Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[0]) <= 1.05 and
-            float(Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[1]) >= 0.92):
+    if (float(Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[0]) <= limite_superior and
+            float(Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[1]) >= limite_inferior):
         return True
     else:
         return False

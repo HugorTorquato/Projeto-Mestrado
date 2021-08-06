@@ -161,9 +161,14 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Python/SistemFunctions.py</url>
-          <line>128</line>
-          <option name="timeStamp" value="15" />
+          <url>file://$PROJECT_DIR$/Python/FunctionsSecond.py</url>
+          <line>41</line>
+          <option name="timeStamp" value="19" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Python/FunctionsSecond.py</url>
+          <line>17</line>
+          <option name="timeStamp" value="20" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

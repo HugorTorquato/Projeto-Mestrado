@@ -72,12 +72,13 @@ def Solve_Hora_por_Hora(Rede, Simulation):
     Rede.dssSolution.Number = 1
 
     # print 'originalsteps : ' + str(originalSteps)
-    from FunctionsSecond import Tensao_Barras, originalSteps
+    from FunctionsSecond import Tensao_Barras, originalSteps, Correntes_elementos
     from DB_Rede import Save_Barras_Data
 
     for itera in range(0, originalSteps(Rede)):
         Rede.dssSolution.SolveSnap()
         Tensao_Barras(Rede, itera)
+        Correntes_elementos(Rede)
 
         Rede.dssSolution.FinishTimeStep()
 
@@ -105,7 +106,7 @@ def HC(Rede):
         # Define em quais barras as GDs vão ser inseridas para obtenção do HC nessa simulação
         FindBusGD(Num_GDs)
 
-        while Nummero_Simulacoes == 0 or Check == True:
+        while Nummero_Simulacoes == 0 or Check() == True:
             # desq
             # corrente
 
