@@ -3,42 +3,40 @@ from Definitions import *
 import pandas as pd
 import cmath
 
-def Sensor(Rede):
+def Adiciona_Sensor(Rede):
 
     a = Rede.dssSensor.AllNames
     Elementos = Rede.dssLines.AllNames + Rede.dssTransformers.AllNames
     Barras_Elementos = []
 
-    for linha in Rede.dssLines.AllNames:
-        Barras_Elementos.append(linha[0:3])
-    # WDG Currents
+    #for linha in Rede.dssLines.AllNames:
+    #    Barras_Elementos.append(linha[0:3])
+    ## WDG Currents
 
+    # Precisa do kvbase? o opendss já deve pegar
+    for elemento in Rede.dssLines.AllNames:
+        Rede.dssText.Command = "New Sensor." + elemento + " Element=" + elemento + " enabled=yes" + \
+                               " kvbase=2.4 clear=yes"
 
-
-    for elemento in Elementos:
-
-        
-
-        #ativa_barra(Rede, nome_barra)
-
-        Rede.dssText.Command = "New Sesor." + elemento + " Element=" + elemento + " kvbase=2.4"
+    for elemento in Rede.dssTransformers.AllNames:
+        Rede.dssText.Command = "New Sensor." + elemento + " Element=" + elemento + " enabled=yes"
 
 def Correntes_elementos(Rede):
 
-    Elementos = Rede.dssLines.AllNames + Rede.dssTransformers.AllNames
-
-
     nome = []
     corrente = []
+    teste = []
 
-    for elemento in Elementos:
+    for elemento in Rede.dssSensor.AllNames:
 
         Rede.dssCircuit.SetActiveElement(elemento)
+        teste.append(Rede.dssCktElement.Powers)
+        Rede.dssSensor.Name = elemento
 
-        nome.append(nome)
-        corrente.append(Rede.dssTransformers.WdgCurrents)
+        nome.append(Rede.dssSensor.Name)
+        corrente.append(Rede.dssSensor.kWS)
+        #corrente.append(Rede.dssTransformers.WdgCurrents)
 
-    #Sensor(Rede)
 
     return
 
@@ -153,7 +151,7 @@ def Max_Min(Tensao1, Tensao2, Tensao3):
             min_Tensao = Tensao3
             return max_Tensao, min_Tensao
         else:
-            min_Tensao = Tensao3
+            min_Tensao = Tensao2
             return max_Tensao, min_Tensao
 
     elif Tensao1 != 0 and Tensao2 == 0 and Tensao3 != 0:
@@ -194,7 +192,7 @@ def IEC(Tensao1, Tensao2, Tensao3, Angle1, Angle2, Angle3):   # Limite de 2%
     else:
         return 0
 
-def IEEE(Tensao1, Tensao2, Tensao3, max, min):
+def IEEE(Tensao1, Tensao2, Tensao3, max, min): # limite de 2.5%
 
     # Utiliza tensões de fase
     return (3*100*(max - min))/(Tensao1 + Tensao2 + Tensao3)
@@ -221,12 +219,22 @@ def Colunas_DF_Horas(Rede):
 def Check():
 
     # Adicionar condições de vioçação aqui:
-
-    if (float(Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[0]) <= limite_superior and
-            float(Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[1]) >= limite_inferior):
+    #print(DF_Desq_IEC)
+    #print(Check_Desq(DF_Desq_IEC, DF_Desq_IEEE, DF_Desq_NEMA))
+    if float(Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[0]) <= limite_superior and \
+       float(Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[1]) >= limite_inferior:# and \
+       #float(Check_Desq(DF_Desq_IEC, DF_Desq_IEEE, DF_Desq_NEMA)) <= limite_Deseq:
+        #print(Check_Desq(DF_Desq_IEC, DF_Desq_IEEE, DF_Desq_NEMA))
         return True
     else:
         return False
+
+def Check_Desq(IEC, IEEE, NEMA):
+
+    DF = IEC if Norma == 0 else IEEE if Norma == 1 else NEMA
+
+    return max(DF.set_index('Barras').max().values)
+
 
 
 def Salvar_Dados_Tensao():

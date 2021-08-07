@@ -50,11 +50,11 @@ def Create_GD(Rede, Nome, kW, kvar, LoadShape, Simulation):
 
     # Criação da GD no Opendss
     Rede.dssText.Command = "new generator.GD_" + str(index + 1) + " phases=" + \
-                           str(Identify_Phases(DF_Geradores.loc[index, 'Phases'])[1]) +\
+                           str(Identify_Phases(DF_Geradores.loc[index, 'Phases'])[1]) + \
                            " bus1=" + str(DF_Geradores.loc[index, 'Bus'] +
-                                          Identify_Phases(DF_Geradores.loc[index, 'Phases'])[0] ) +\
-                           " kv=" + str(Rede.dssBus.kVBase) + " kW=" + str(kW) +\
-                           " kVAr=" + str(kvar + 0.001) + " model=1" +\
+                                    Identify_Phases(DF_Geradores.loc[index, 'Phases'])[0]) + \
+                           " kv=" + str(Rede.dssBus.kVBase) + " kW=" + str(kW) + \
+                           " kVAr=" + str(kvar + 0.001) + " model=1" + \
                            " daily=" + str(LoadShape)
 
 def Fase2String(STRING):

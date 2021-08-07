@@ -61,14 +61,14 @@ Barras_GDs = []
 
 Salva_Dados = 0  # Aciona o script que faz o levantamento dos dados da rede
 Criar_GD = 1     # Aciona a inserção de GDs na rede
-Num_GDs = 2      # Definição do número de GDs que serão adicionadas
+Num_GDs = 4      # Definição do número de GDs que serão adicionadas
 Calc_HC = 1      # Aciona o cálculo do HC
 All_GDs = 1
 Norma = 1   #  # 0 - PRODIST # 1 - IEEE
 
-Incremento_gd = 10
+Incremento_gd = 100
 
-Num_Simulations = 2 # Deifnie o número de simulações que serão realizadas
+Num_Simulations = 35 # Deifnie o número de simulações que serão realizadas
 
 #Constants
 sqrt3 = np.sqrt(3)
@@ -78,10 +78,12 @@ inv_alfa = complex(-0.5, -0.866025403784)
 if Norma == 1:
     limite_superior = 1.1
     limite_inferior = 0.9
+    limite_Deseq = 2.5
 
 if Norma == 0:
     limite_superior = 1.05
     limite_inferior = 0.92
+    limite_Deseq = 2
 
 
 class DSS():

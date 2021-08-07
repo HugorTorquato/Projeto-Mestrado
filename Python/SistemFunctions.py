@@ -77,8 +77,9 @@ def Solve_Hora_por_Hora(Rede, Simulation):
 
     for itera in range(0, originalSteps(Rede)):
         Rede.dssSolution.SolveSnap()
+
         Tensao_Barras(Rede, itera)
-        Correntes_elementos(Rede)
+        #Correntes_elementos(Rede)
 
         Rede.dssSolution.FinishTimeStep()
 
@@ -89,7 +90,7 @@ def Solve_Hora_por_Hora(Rede, Simulation):
 
 def HC(Rede):
     # Essa função é o pulmão do código, aqui que é feito o cálculo do HC
-    from FunctionsSecond import Colunas_DF_Horas, Limpar_DF, Check
+    from FunctionsSecond import Colunas_DF_Horas, Limpar_DF, Check, Adiciona_Sensor
     from Definitions import Num_GDs, DF_Geradores, DF_Barras, DF_General
     from DB_Rede import Save_General_Data, Save_Data
 
@@ -101,7 +102,9 @@ def HC(Rede):
         Nummero_Simulacoes = 0
         Pot_GD = 0
 
-        Compila_DSS(Rede), Limpar_DF(DF_Geradores), Limpar_DF(DF_Barras), Limpar_DF(DF_General)
+        Compila_DSS(Rede)
+
+        [Limpar_DF(DF) for DF in [DF_Geradores, DF_Barras, DF_General]]
 
         # Define em quais barras as GDs vão ser inseridas para obtenção do HC nessa simulação
         FindBusGD(Num_GDs)
@@ -114,17 +117,18 @@ def HC(Rede):
             # valores para fazer o código funcionar
             if Criar_GD and Nummero_Simulacoes > 0:
                 Compila_DSS(Rede), Limpar_DF(DF_Geradores), Adicionar_GDs(Rede, Pot_GD, Simulation)
+                #Adiciona_Sensor(Rede)
             else:
-                Adicionar_GDs(Rede, Pot_GD, Simulation)
+                Adicionar_GDs(Rede, Pot_GD, Simulation), Adiciona_Sensor(Rede)
 
             Solve_Hora_por_Hora(Rede, Simulation)  # Chamada da função que levanta o perfil diário
 
             Nummero_Simulacoes += 1
             Pot_GD += Incremento_gd
-            # print('-----------------------------------------------------')
-            # print(max(DF_Tensao_A.set_index('Barras').max().values))
-            # print(min(DF_Tensao_A.set_index('Barras').min().values))
-            # print('-----------------------------------------------------')
+            print('-----------------------------------------------------')
+            print(max(DF_Tensao_A.set_index('Barras').max().values))
+            print(min(DF_Tensao_A.set_index('Barras').min().values))
+            print('-----------------------------------------------------')
 
         Save_Barras_Data(Rede, Simulation)
         Save_General_Data(Simulation)
