@@ -3,6 +3,44 @@ from Definitions import *
 import pandas as pd
 import cmath
 
+def Correntes_elementos(Rede, itera):
+
+    # A função poderia ser melhor em termos de performance. No momento ela está salvando um arquivo .csv
+    # com as correntes de todos os elementos, lendo esses valores para um DF temp e deste DF tempo os valores
+    # são salvos em outros 3 DF ( um para cada fase no formato para fazer as análises de maneira semelhante aos
+    # valores obtidos na tensão ).
+
+    from Definitions import DF_Corrente_itera, DF_Corrente_A, DF_Corrente_B, DF_Corrente_C
+
+    Rede.dssText.Command = "Export Currents"
+
+    Limpar_DF(DF_Corrente_itera)
+    DF_Corrente_itera = pd.read_csv(
+        "C:\\Users\hugo1\Desktop\Projeto_Rede_Fornecida\Python\TCC\Rede\IEEE13barras_EXP_CURRENTS.CSV")
+
+    count = 0
+    A = DF_Corrente_itera.columns[1]
+    B = DF_Corrente_itera.columns[3]
+    C = DF_Corrente_itera.columns[5]
+
+    if not 'Elementos' in DF_Corrente_A:
+        DF_Corrente_A.insert(0, 'Elementos', DF_Corrente_itera['Element'].values, allow_duplicates=True)
+        DF_Corrente_B.insert(0, 'Elementos', DF_Corrente_itera['Element'].values, allow_duplicates=True)
+        DF_Corrente_C.insert(0, 'Elementos', DF_Corrente_itera['Element'].values, allow_duplicates=True)
+
+    for element in DF_Corrente_itera['Element'].values:
+        DF_Corrente_A.loc[DF_Corrente_A.index == count, str(itera)] = DF_Corrente_itera[A].values[count]
+        DF_Corrente_B.loc[DF_Corrente_B.index == count, str(itera)] = DF_Corrente_itera[B].values[count]
+        DF_Corrente_C.loc[DF_Corrente_C.index == count, str(itera)] = DF_Corrente_itera[C].values[count]
+
+        count += 1
+
+def get_resultados_potencia(self):
+
+    #self.dssText.Command = "Show power kva elements"
+    #self.dssText.Command = "Show Voltages LN Nodes"
+    #self.dssText.Command = "Show Taps"
+    self.dssText.Command = "Show Currents"
 
 def Tensao_Barras(Rede, itera):
     puVmag_Buses = []
@@ -108,7 +146,7 @@ def Max_Min(Tensao1, Tensao2, Tensao3):
             min_Tensao = Tensao3
             return max_Tensao, min_Tensao
         else:
-            min_Tensao = Tensao3
+            min_Tensao = Tensao2
             return max_Tensao, min_Tensao
 
     elif Tensao1 != 0 and Tensao2 == 0 and Tensao3 != 0:
@@ -149,7 +187,7 @@ def IEC(Tensao1, Tensao2, Tensao3, Angle1, Angle2, Angle3):   # Limite de 2%
     else:
         return 0
 
-def IEEE(Tensao1, Tensao2, Tensao3, max, min):
+def IEEE(Tensao1, Tensao2, Tensao3, max, min): # limite de 2.5%
 
     # Utiliza tensões de fase
     return (3*100*(max - min))/(Tensao1 + Tensao2 + Tensao3)
@@ -161,31 +199,37 @@ def NEMA(Vmedio, Vmax):
 def ativa_barra(Rede, nome_barra):
     Rede.dssCircuit.SetActiveBus(nome_barra)
 
-
 def puVmagAngle(Rede):
     return Rede.dssBus.puVmagAngle
-
 
 def originalSteps(Rede):
     Rede.dssLoadShapes.Name = Rede.dssLoadShapes.AllNames[1]
     # print len(Rede.dssLoadShapes.pmult)
     return len(Rede.dssLoadShapes.pmult)
 
-
 def Colunas_DF_Horas(Rede):
     coll = []
     [coll.append(str(i)) for i in range(originalSteps(Rede))]
 
-
 def Check():
 
     # Adicionar condições de vioçação aqui:
-
-    if (float(Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[0]) <= 1.05 and
-            float(Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[1]) >= 0.92):
+    #print(DF_Desq_IEC)
+    #print(Check_Desq(DF_Desq_IEC, DF_Desq_IEEE, DF_Desq_NEMA))
+    if float(Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[0]) <= limite_superior and \
+       float(Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[1]) >= limite_inferior:# and \
+       #float(Check_Desq(DF_Desq_IEC, DF_Desq_IEEE, DF_Desq_NEMA)) <= limite_Deseq:
+        #print(Check_Desq(DF_Desq_IEC, DF_Desq_IEEE, DF_Desq_NEMA))
         return True
     else:
         return False
+
+def Check_Desq(IEC, IEEE, NEMA):
+
+    DF = IEC if Norma == 0 else IEEE if Norma == 1 else NEMA
+
+    return max(DF.set_index('Barras').max().values)
+
 
 
 def Salvar_Dados_Tensao():

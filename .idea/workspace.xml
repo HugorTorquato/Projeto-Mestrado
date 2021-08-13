@@ -7,6 +7,7 @@
       <change beforePath="$PROJECT_DIR$/Python/Definitions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/Definitions.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Python/FunctionsSecond.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/FunctionsSecond.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Python/SistemFunctions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/SistemFunctions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python/TCC/Rede/IEEE13barras_EXP_CURRENTS.CSV" beforeDir="false" afterPath="$PROJECT_DIR$/Python/TCC/Rede/IEEE13barras_EXP_CURRENTS.CSV" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -161,9 +162,9 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Python/SistemFunctions.py</url>
-          <line>128</line>
-          <option name="timeStamp" value="15" />
+          <url>file://$PROJECT_DIR$/Python/FunctionsSecond.py</url>
+          <line>216</line>
+          <option name="timeStamp" value="26" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

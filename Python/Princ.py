@@ -20,8 +20,8 @@ if __name__ == "__main__":
     if Calc_HC:
         HC(Rede)  # Chamada da função
 
-    else:
-        Solve_Hora_por_Hora(Rede)
+    #else:
+        #Solve_Hora_por_Hora(Rede)
 
     # print DF_Tensao_A.head()
     # from FunctionsSecond import Colunas_DF_Horas

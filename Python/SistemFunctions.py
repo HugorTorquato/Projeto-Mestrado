@@ -72,12 +72,13 @@ def Solve_Hora_por_Hora(Rede, Simulation):
     Rede.dssSolution.Number = 1
 
     # print 'originalsteps : ' + str(originalSteps)
-    from FunctionsSecond import Tensao_Barras, originalSteps
-    from DB_Rede import Save_Barras_Data
+    from FunctionsSecond import Tensao_Barras, originalSteps, Correntes_elementos
 
     for itera in range(0, originalSteps(Rede)):
         Rede.dssSolution.SolveSnap()
+
         Tensao_Barras(Rede, itera)
+        Correntes_elementos(Rede, itera)
 
         Rede.dssSolution.FinishTimeStep()
 
@@ -89,8 +90,8 @@ def Solve_Hora_por_Hora(Rede, Simulation):
 def HC(Rede):
     # Essa função é o pulmão do código, aqui que é feito o cálculo do HC
     from FunctionsSecond import Colunas_DF_Horas, Limpar_DF, Check
-    from Definitions import Num_GDs, DF_Geradores, DF_Barras, DF_General
-    from DB_Rede import Save_General_Data, Save_Data
+    from Definitions import Num_GDs, DF_Geradores, DF_Barras, DF_General, DF_Elements
+    from DB_Rede import Save_General_Data, Save_Data, Process_Data
 
     coll = Colunas_DF_Horas(Rede)
 
@@ -100,32 +101,34 @@ def HC(Rede):
         Nummero_Simulacoes = 0
         Pot_GD = 0
 
-        Compila_DSS(Rede), Limpar_DF(DF_Geradores), Limpar_DF(DF_Barras), Limpar_DF(DF_General)
+        Compila_DSS(Rede)
+
+        [Limpar_DF(DF) for DF in [DF_Geradores, DF_Barras, DF_General, DF_Elements]]
 
         # Define em quais barras as GDs vão ser inseridas para obtenção do HC nessa simulação
         FindBusGD(Num_GDs)
 
-        while Nummero_Simulacoes == 0 or Check == True:
+        while Nummero_Simulacoes == 0 or Check() == True:
             # desq
             # corrente
 
             # Confere se a definição para adicionar GHD está ativa e se não for a primeira simulação, reseta os devidos
             # valores para fazer o código funcionar
             if Criar_GD and Nummero_Simulacoes > 0:
-                Compila_DSS(Rede), Limpar_DF(DF_Geradores), Adicionar_GDs(Rede, Pot_GD, Simulation)
-            else:
-                Adicionar_GDs(Rede, Pot_GD, Simulation)
+                Compila_DSS(Rede), [Limpar_DF(DF) for DF in [DF_Geradores, DF_Elements]]
+
+            Adicionar_GDs(Rede, Pot_GD, Simulation)
 
             Solve_Hora_por_Hora(Rede, Simulation)  # Chamada da função que levanta o perfil diário
 
             Nummero_Simulacoes += 1
             Pot_GD += Incremento_gd
-            # print('-----------------------------------------------------')
-            # print(max(DF_Tensao_A.set_index('Barras').max().values))
-            # print(min(DF_Tensao_A.set_index('Barras').min().values))
-            # print('-----------------------------------------------------')
+            print('-----------------------------------------------------')
+            print(max(DF_Tensao_A.set_index('Barras').max().values))
+            print(min(DF_Tensao_A.set_index('Barras').min().values))
+            print('-----------------------------------------------------')
 
-        Save_Barras_Data(Rede, Simulation)
+        Process_Data(Rede, Simulation)
         Save_General_Data(Simulation)
         Save_Data(Simulation)
         print('Número da Simulação : ' + str(Simulation) + ' Pot GDs : ' + str(Pot_GD - Incremento_gd))
