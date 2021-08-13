@@ -3,42 +3,37 @@ from Definitions import *
 import pandas as pd
 import cmath
 
-def Adiciona_Sensor(Rede):
+def Correntes_elementos(Rede, itera):
 
-    a = Rede.dssSensor.AllNames
-    Elementos = Rede.dssLines.AllNames + Rede.dssTransformers.AllNames
-    Barras_Elementos = []
+    # A função poderia ser melhor em termos de performance. No momento ela está salvando um arquivo .csv
+    # com as correntes de todos os elementos, lendo esses valores para um DF temp e deste DF tempo os valores
+    # são salvos em outros 3 DF ( um para cada fase no formato para fazer as análises de maneira semelhante aos
+    # valores obtidos na tensão ).
 
-    #for linha in Rede.dssLines.AllNames:
-    #    Barras_Elementos.append(linha[0:3])
-    ## WDG Currents
+    from Definitions import DF_Corrente_itera, DF_Corrente_A, DF_Corrente_B, DF_Corrente_C
 
-    # Precisa do kvbase? o opendss já deve pegar
-    for elemento in Rede.dssLines.AllNames:
-        Rede.dssText.Command = "New Sensor." + elemento + " Element=" + elemento + " enabled=yes" + \
-                               " kvbase=2.4 clear=yes"
+    Rede.dssText.Command = "Export Currents"
 
-    for elemento in Rede.dssTransformers.AllNames:
-        Rede.dssText.Command = "New Sensor." + elemento + " Element=" + elemento + " enabled=yes"
+    Limpar_DF(DF_Corrente_itera)
+    DF_Corrente_itera = pd.read_csv(
+        "C:\\Users\hugo1\Desktop\Projeto_Rede_Fornecida\Python\TCC\Rede\IEEE13barras_EXP_CURRENTS.CSV")
 
-def Correntes_elementos(Rede):
+    count = 0
+    A = DF_Corrente_itera.columns[1]
+    B = DF_Corrente_itera.columns[3]
+    C = DF_Corrente_itera.columns[5]
 
-    nome = []
-    corrente = []
-    teste = []
+    if not 'Elementos' in DF_Corrente_A:
+        DF_Corrente_A.insert(0, 'Elementos', DF_Corrente_itera['Element'].values, allow_duplicates=True)
+        DF_Corrente_B.insert(0, 'Elementos', DF_Corrente_itera['Element'].values, allow_duplicates=True)
+        DF_Corrente_C.insert(0, 'Elementos', DF_Corrente_itera['Element'].values, allow_duplicates=True)
 
-    for elemento in Rede.dssSensor.AllNames:
+    for element in DF_Corrente_itera['Element'].values:
+        DF_Corrente_A.loc[DF_Corrente_A.index == count, str(itera)] = DF_Corrente_itera[A].values[count]
+        DF_Corrente_B.loc[DF_Corrente_B.index == count, str(itera)] = DF_Corrente_itera[B].values[count]
+        DF_Corrente_C.loc[DF_Corrente_C.index == count, str(itera)] = DF_Corrente_itera[C].values[count]
 
-        Rede.dssCircuit.SetActiveElement(elemento)
-        teste.append(Rede.dssCktElement.Powers)
-        Rede.dssSensor.Name = elemento
-
-        nome.append(Rede.dssSensor.Name)
-        corrente.append(Rede.dssSensor.kWS)
-        #corrente.append(Rede.dssTransformers.WdgCurrents)
-
-
-    return
+        count += 1
 
 def get_resultados_potencia(self):
 

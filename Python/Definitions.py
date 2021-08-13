@@ -14,6 +14,12 @@ DF_Desq_IEC  = pd.DataFrame()
 DF_Desq_IEEE = pd.DataFrame()
 DF_Desq_NEMA = pd.DataFrame()
 
+# Corrente Elementos
+DF_Corrente_itera = pd.DataFrame()
+DF_Corrente_A = pd.DataFrame()
+DF_Corrente_B = pd.DataFrame()
+DF_Corrente_C = pd.DataFrame()
+
 # GDs
 DF_Geradores = pd.DataFrame({'Simulation': [],
                              'Name'      : [],
@@ -39,14 +45,14 @@ DF_Barras = pd.DataFrame({'Simulation'     : [],
                           'Deseq_IEEE'     : [],
                           'Deseq_NEMA'     : []})
 
-DF_Correntes = pd.DataFrame({ 'Simulation'     : [],
-                              'Elemento'       : [],
-                              'I_pu_max_a'     : [],
-                              'I_pu_max_b'     : [],
-                              'I_pu_max_c'     : [],
-                              'I_pu_min_a'     : [],
-                              'I_pu_min_b'     : [],
-                              'I_pu_min_c'     : []})
+DF_Elements = pd.DataFrame({'Simulation'     : [],
+                             'Elemento'       : [],
+                             'I_pu_max_a'     : [],
+                             'I_pu_max_b'     : [],
+                             'I_pu_max_c'     : [],
+                             'I_pu_min_a'     : [],
+                             'I_pu_min_b'     : [],
+                             'I_pu_min_c'     : []})
 
 
 DF_TESTE = pd.DataFrame({
@@ -66,9 +72,9 @@ Calc_HC = 1      # Aciona o cálculo do HC
 All_GDs = 1
 Norma = 1   #  # 0 - PRODIST # 1 - IEEE
 
-Incremento_gd = 100
+Incremento_gd = 500
 
-Num_Simulations = 35 # Deifnie o número de simulações que serão realizadas
+Num_Simulations = 2 # Deifnie o número de simulações que serão realizadas
 
 #Constants
 sqrt3 = np.sqrt(3)
