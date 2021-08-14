@@ -90,10 +90,15 @@ def Solve_Hora_por_Hora(Rede, Simulation):
 def HC(Rede):
     # Essa função é o pulmão do código, aqui que é feito o cálculo do HC
     from FunctionsSecond import Colunas_DF_Horas, Limpar_DF, Check
-    from Definitions import Num_GDs, DF_Geradores, DF_Barras, DF_General, DF_Elements
+    from Definitions import Num_GDs, DF_Geradores, DF_Barras, DF_General, DF_Elements, DF_Tensao_A
     from DB_Rede import Save_General_Data, Save_Data, Process_Data
 
     coll = Colunas_DF_Horas(Rede)
+
+    # [1,2,3,4,5] [[b1,b2,b3], [b1,b2,b3], [b1,b2,b3]]
+
+    # Fazer a combinação e avaliar por zona
+    #Barras_GDs = list(combinations(DF_Tensao_A.Barras.values, 3))
 
     for Simulation in range(1, Num_Simulations + 1):
         print(Num_GDs)
