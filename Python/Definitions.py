@@ -29,6 +29,14 @@ DF_Geradores = pd.DataFrame({'Simulation': [],
                              'Phases'    : '',
                              'LoadShape' : ''})
 
+DF_PV = pd.DataFrame({'Simulation': [],
+                      'Name'      : [],
+                      'Bus'       : [],
+                      'Pmp'       : [],
+                      'FP'        : [],
+                      'Irrad'     : '',
+                      'Temp'      : ''})
+
 DF_General = pd.DataFrame({'Voltage_Max': [],
                            'Voltage_Min': [],
                            'GD_Config'  : ''})
@@ -62,17 +70,27 @@ DF_TESTE = pd.DataFrame({
 
 # Valores e Arrays auxiliares
 Barras_GDs = []
+Pot_PV = []
+Pot_PV1 = []
+Pot_PV2 = []
+Pot_PV3 = []
+Pot_PV4 = []
+irrad = []
 
 ##Switches
 
 Salva_Dados = 0  # Aciona o script que faz o levantamento dos dados da rede
 Criar_GD = 1     # Aciona a inserção de GDs na rede
-Num_GDs = 2      # Definição do número de GDs que serão adicionadas
+Num_GDs = 4      # Definição do número de GDs que serão adicionadas
 Calc_HC = 1      # Aciona o cálculo do HC
 All_GDs = 1
 Norma = 1   #  # 0 - PRODIST # 1 - IEEE
 
-Incremento_gd = 500
+# PVSystem
+FP_1 = 1
+Const_Irrad = 0.705
+
+Incremento_gd = 10000
 
 Num_Simulations = 2 # Deifnie o número de simulações que serão realizadas
 
@@ -124,3 +142,4 @@ class DSS():
             self.dssPDElements = self.dssCircuit.PDElements
             self.dssTransformers = self.dssCircuit.Transformers
             self.dssSensor = self.dssCircuit.Sensors
+            self.dssPVSystems = self.dssCircuit.PVSystems

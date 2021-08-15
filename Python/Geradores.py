@@ -5,7 +5,7 @@ import random2
 from itertools import *
 
 def Adicionar_GDs(Rede, Pot_GD, Simulation):
-    from Definitions import DF_Geradores, Num_GDs
+    from Definitions import DF_Geradores, DF_PV, Num_GDs
 
     # Definição dos loadshapes para cada GD
     STEPS = 96
@@ -30,39 +30,78 @@ def Adicionar_GDs(Rede, Pot_GD, Simulation):
     Rede.dssText.Command = "New TShape.Temp npts=96 interval= 1 " \
                            "temp=(File=C:\\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\Temp.txt)"
     Rede.dssText.Command = "New LoadShape.Irrad npts=96 interval=1 " \
-                           "mult=(file=C:\\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\Temp.txt"
-
-
-    #if Geradores:
-    #[Create_GD(Rede, 'GD_' + str(i), Pot_GD, 0, '_GD_' + str(i + 1), Simulation) for i in range(Num_GDs)]
-
-    [Create_PV(Rede, 'PV_' + str(i), Pot_GD, 0, Simulation) for i in range(1)]
-    print(DF_Geradores.head())
-
-def Create_PV(Rede, Nome, kW, kvar, Simulation):
-
-    Rede.dssText.Command = "New PVSystem.PV phases=3 bus1=650 Pmpp=100 kv=13.8 kVA=1200 con=wye " \
-                           "%Cutin=10 %cutout=10 EffCurve=Eff P-TCurve=FactorPVsT " \
-                           "pf=0.9 kvarMax=1200 VarFollowInverter=false " \
-                           "irradiance=0.98 daily=Irrad Tdaily=Temp"
-
+                           "mult=(file=C:\\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\Irrad.txt"
     Rede.dssText.Command = "New XYCurve.vv_curve npts=4 Yarray=(1.0,1.0,-1.0,-1.0) " \
                            "XArray = (0.5,0.95,1.05,1.5)"
 
-    Rede.dssText.Command = "New InvControl.InvPVCtrl mode=VOLTVAR voltage_curvex_ref=rated " \
-                           "vvc_curve1=vv_curve EventLog=yes"
+
+    #Rede.dssText.Command = "New InvControl.InvPVCtrl mode=VOLTVAR voltage_curvex_ref=rated vvc_curve1=vv_curve EventLog=yes"
 
 
 
+#   if Geradores:
+    #[Create_GD(Rede, 'GD_' + str(i), Pot_GD, 0, '_GD_' + str(i + 1), Simulation) for i in range(Num_GDs)]
 
-    return
+    FP = 1
+
+    [Create_PV(Rede, 'PV_' + str(i), Pot_GD, FP, 'Irrad', 'Temp', Simulation) for i in range(Num_GDs)]
+    print(DF_PV.head())
+
+def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
+
+
+    from Definitions import DF_PV, Barras_GDs
+    from FunctionsSecond import ativa_barra, Identify_Phases
+
+    index = len(DF_PV)
+    STRING = ['A', 'B', 'C', 'N']
+
+    DF_PV.loc[index, 'Simulation'] = Simulation
+    DF_PV.loc[index, 'Name' ] = Nome
+    DF_PV.loc[index, 'Bus'] = Barras_GDs[(len(Barras_GDs)-1) - index]
+    DF_PV.loc[index, 'Pmp'   ] = Pmp
+    DF_PV.loc[index, 'FP'   ] = FP
+    DF_PV.loc[index, 'Phases'] = Fase2String([STRING[i - 1] for i in Rede.dssBus.Nodes])
+    DF_PV.loc[index, 'Irrad'] = Irrad
+    DF_PV.loc[index, 'Temp'] = Temp
+
+
+
+    # Pmpp - Ponto de máx pot
+    # kva - pot nom inversor - Pot gerada n pode ser maior
+    # pot dc = ppmppx x irrad x (1-irrad_tempo) x temp_por_pot
+    # pot ac = pot dc x eff
+
+
+    if FP_1:
+        Rede.dssText.Command = "New PVSystem." + Nome + " phases=" + \
+                               str(Identify_Phases(DF_PV.loc[index, 'Phases'])[1]) + " bus1=" + \
+                               str(DF_PV.loc[index, 'Bus'] + Identify_Phases(DF_PV.loc[index, 'Phases'])[0]) + \
+                               " Pmpp=" + str(Pmp) + \
+                               " kv=" + str(Rede.dssBus.kVBase) + \
+                               " kVA=" + str(Pmp * 1.15) + \
+                               " kvarMax=" + str(Pmp * 1.2) + \
+                               " con=wye " \
+                               "%Cutin=0 %cutout=0 EffCurve=Eff P-TCurve=FactorPVsT " \
+                               "pf=1 VarFollowInverter=false " \
+                               "irradiance=" + str(Const_Irrad) + " daily=Irrad Tdaily=Temp debugtrace=yes"
+    else:
+        Rede.dssText.Command = "New PVSystem." + Nome + " phases=" + \
+                               str(Identify_Phases(DF_PV.loc[index, 'Phases'])[1]) + "bus1=" + \
+                               str(DF_PV.loc[index, 'Bus'] + Identify_Phases(DF_PV.loc[index, 'Phases'])[0]) + \
+                               " Pmpp=" + str(Pmp) + \
+                               " kv=" + str(Rede.dssBus.kVBase) + \
+                               " kVA=" + str(Pmp * 1.15) + \
+                               " kvarMax=" + str(Pmp * 1.2) + \
+                               " con=wye " \
+                               "%Cutin=20 %cutout=20 EffCurve=Eff P-TCurve=FactorPVsT " \
+                               "VarFollowInverter=false " \
+                               "irradiance=" + str(Const_Irrad) + " daily=Irrad Tdaily=Temp debugtrace=yes"
 
 
 def Create_GD(Rede, Nome, kW, kvar, LoadShape, Simulation):
 
-    from Definitions import DF_Geradores
-
-    # FEATURES : Adicionar lógica para salvar os dados
+    from Definitions import DF_Geradores, Barras_GDs
 
     # Preparação para armazenamento dos dados
     index = len(DF_Geradores)                                  # Define a linha para aplicar as alterações

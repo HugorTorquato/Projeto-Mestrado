@@ -80,17 +80,33 @@ def Solve_Hora_por_Hora(Rede, Simulation):
         Tensao_Barras(Rede, itera)
         Correntes_elementos(Rede, itera)
 
+        teste(Rede)
+
         Rede.dssSolution.FinishTimeStep()
 
         # Adicionar uma função para salvar o DF e depois zerar ele para a próxima simulação
 
     # print DF_Tensao_A['0'], DF_Tensao_B['0'], DF_Tensao_C['0']
 
+def teste(Rede):
+
+    a = Rede.dssPVSystems.AllNames
+    b = Rede.dssLoadShapes.AllNames
+    from FunctionsSecond import ativa_barra
+    Rede.dssPVSystems.Name = str(a[1])
+    Rede.dssLoadShapes.Name = str(b[7])
+    irrad.append(Rede.dssLoadShapes.pmult)
+    Pot_PV.append(Rede.dssPVSystems.RegisterValues)
+    Pot_PV1.append(Rede.dssPVSystems.kW)
+    Pot_PV2.append(Rede.dssPVSystems.kVArated)
+    Pot_PV3.append(Rede.dssPVSystems.IrradianceNow)
+    Pot_PV4.append(Rede.dssPVSystems.kvar)
+
 
 def HC(Rede):
     # Essa função é o pulmão do código, aqui que é feito o cálculo do HC
     from FunctionsSecond import Colunas_DF_Horas, Limpar_DF, Check
-    from Definitions import Num_GDs, DF_Geradores, DF_Barras, DF_General, DF_Elements, DF_Tensao_A
+    from Definitions import Num_GDs, DF_Geradores, DF_Barras, DF_General, DF_Elements, DF_Tensao_A, DF_PV
     from DB_Rede import Save_General_Data, Save_Data, Process_Data
 
     coll = Colunas_DF_Horas(Rede)
@@ -108,7 +124,7 @@ def HC(Rede):
 
         Compila_DSS(Rede)
 
-        [Limpar_DF(DF) for DF in [DF_Geradores, DF_Barras, DF_General, DF_Elements]]
+        [Limpar_DF(DF) for DF in [DF_Geradores, DF_Barras, DF_General, DF_Elements, DF_PV]]
 
         # Define em quais barras as GDs vão ser inseridas para obtenção do HC nessa simulação
         FindBusGD(Num_GDs)
@@ -120,7 +136,7 @@ def HC(Rede):
             # Confere se a definição para adicionar GHD está ativa e se não for a primeira simulação, reseta os devidos
             # valores para fazer o código funcionar
             if Criar_GD and Nummero_Simulacoes > 0:
-                Compila_DSS(Rede), [Limpar_DF(DF) for DF in [DF_Geradores, DF_Elements]]
+                Compila_DSS(Rede), [Limpar_DF(DF) for DF in [DF_Geradores, DF_Elements, DF_PV]]
 
             Adicionar_GDs(Rede, Pot_GD, Simulation)
 
