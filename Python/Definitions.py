@@ -76,21 +76,23 @@ Pot_PV2 = []
 Pot_PV3 = []
 Pot_PV4 = []
 irrad = []
+irrad2 = []
 
 ##Switches
 
 Salva_Dados = 0  # Aciona o script que faz o levantamento dos dados da rede
 Criar_GD = 1     # Aciona a inserção de GDs na rede
-Num_GDs = 4      # Definição do número de GDs que serão adicionadas
+Num_GDs = 1      # Definição do número de GDs que serão adicionadas
 Calc_HC = 1      # Aciona o cálculo do HC
 All_GDs = 1
 Norma = 1   #  # 0 - PRODIST # 1 - IEEE
 
 # PVSystem
 FP_1 = 1
-Const_Irrad = 0.705
+Const_Irrad = .705
+Const_Temp = 25
 
-Incremento_gd = 10000
+Incremento_gd = 1000
 
 Num_Simulations = 2 # Deifnie o número de simulações que serão realizadas
 

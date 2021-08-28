@@ -93,8 +93,8 @@ def teste(Rede):
     a = Rede.dssPVSystems.AllNames
     b = Rede.dssLoadShapes.AllNames
     from FunctionsSecond import ativa_barra
-    Rede.dssPVSystems.Name = str(a[1])
-    Rede.dssLoadShapes.Name = str(b[7])
+    Rede.dssPVSystems.Name = str(a[0])
+    Rede.dssLoadShapes.Name = str(b[4])
     irrad.append(Rede.dssLoadShapes.pmult)
     Pot_PV.append(Rede.dssPVSystems.RegisterValues)
     Pot_PV1.append(Rede.dssPVSystems.kW)

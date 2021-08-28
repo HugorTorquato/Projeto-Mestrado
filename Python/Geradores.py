@@ -20,19 +20,19 @@ def Adicionar_GDs(Rede, Pot_GD, Simulation):
     # Pot_GD é atualizado
 
     for i in range(Num_GDs):
-        Rede.dssText.Command = "New LoadShape._GD_" + str(i + 1) + " npts=" + str(STEPS) + " sinterval=1 " \
+        Rede.dssText.Command = "New LoadShape._GD_" + str(i + 1) + " npts=" + str(STEPS) + " minterval=15 " \
               "pmult=(file=C:\\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\P_GD_" + str(i + 1) + ".txt) " \
               "qmult=(file=C:\\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\Q_GD_" + str(i + 1) + ".txt)"
 
     # Criação das curvas do pv
     Rede.dssText.Command = "New XYCurve.FatorPvsT npts=4 xarray=[0 25 75 100] yarray=[1.2 1.0 .8 .6]"
     Rede.dssText.Command = "New XYCurve.Eff npts=4 xarray=[.1 .2 .4 1.0] yarray=[.86 .9 .93 .97]"
-    Rede.dssText.Command = "New TShape.Temp npts=96 interval= 1 " \
+    Rede.dssText.Command = "New TShape.Temp npts=96 minterval=15 " \
                            "temp=(File=C:\\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\Temp.txt)"
-    Rede.dssText.Command = "New LoadShape.Irrad npts=96 interval=1 " \
-                           "mult=(file=C:\\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\Irrad.txt"
-    Rede.dssText.Command = "New XYCurve.vv_curve npts=4 Yarray=(1.0,1.0,-1.0,-1.0) " \
-                           "XArray = (0.5,0.95,1.05,1.5)"
+    Rede.dssText.Command = "New LoadShape.irrad npts=96 minterval=15 " \
+                           "mult=(file=C:\\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\Irrad.txt)"
+    #Rede.dssText.Command = "New XYCurve.vv_curve npts=4 Yarray=(1.0,1.0,-1.0,-1.0) " \
+    #                       "XArray = (0.5,0.95,1.05,1.5)"
 
 
     #Rede.dssText.Command = "New InvControl.InvPVCtrl mode=VOLTVAR voltage_curvex_ref=rated vvc_curve1=vv_curve EventLog=yes"
@@ -65,38 +65,24 @@ def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
     DF_PV.loc[index, 'Irrad'] = Irrad
     DF_PV.loc[index, 'Temp'] = Temp
 
-
-
     # Pmpp - Ponto de máx pot
     # kva - pot nom inversor - Pot gerada n pode ser maior
     # pot dc = ppmppx x irrad x (1-irrad_tempo) x temp_por_pot
     # pot ac = pot dc x eff
+    ativa_barra(Rede, str(DF_PV.loc[index, 'Bus']))
 
-
-    if FP_1:
-        Rede.dssText.Command = "New PVSystem." + Nome + " phases=" + \
-                               str(Identify_Phases(DF_PV.loc[index, 'Phases'])[1]) + " bus1=" + \
-                               str(DF_PV.loc[index, 'Bus'] + Identify_Phases(DF_PV.loc[index, 'Phases'])[0]) + \
-                               " Pmpp=" + str(Pmp) + \
-                               " kv=" + str(Rede.dssBus.kVBase) + \
-                               " kVA=" + str(Pmp * 1.15) + \
-                               " kvarMax=" + str(Pmp * 1.2) + \
-                               " con=wye " \
-                               "%Cutin=0 %cutout=0 EffCurve=Eff P-TCurve=FactorPVsT " \
-                               "pf=1 VarFollowInverter=false " \
-                               "irradiance=" + str(Const_Irrad) + " daily=Irrad Tdaily=Temp debugtrace=yes"
-    else:
-        Rede.dssText.Command = "New PVSystem." + Nome + " phases=" + \
-                               str(Identify_Phases(DF_PV.loc[index, 'Phases'])[1]) + "bus1=" + \
-                               str(DF_PV.loc[index, 'Bus'] + Identify_Phases(DF_PV.loc[index, 'Phases'])[0]) + \
-                               " Pmpp=" + str(Pmp) + \
-                               " kv=" + str(Rede.dssBus.kVBase) + \
-                               " kVA=" + str(Pmp * 1.15) + \
-                               " kvarMax=" + str(Pmp * 1.2) + \
-                               " con=wye " \
-                               "%Cutin=20 %cutout=20 EffCurve=Eff P-TCurve=FactorPVsT " \
-                               "VarFollowInverter=false " \
-                               "irradiance=" + str(Const_Irrad) + " daily=Irrad Tdaily=Temp debugtrace=yes"
+    Rede.dssText.Command = "New PVSystem." + Nome + " phases=" + \
+                           str(Identify_Phases(DF_PV.loc[index, 'Phases'])[1]) + " bus1=" + \
+                           str(DF_PV.loc[index, 'Bus'] + Identify_Phases(DF_PV.loc[index, 'Phases'])[0]) + \
+                           " Pmpp=" + str(Pmp) + \
+                           " kv=" + str(Rede.dssBus.kVBase) + \
+                           " kVA=" + str(Pmp * 1.15) + \
+                           " kvarMax=" + str(Pmp * 1.2) + \
+                           " con=wye" \
+                           " %Cutin=0 %cutout=0 EffCurve=Eff P-TCurve=FactorPVsT" \
+                           " pf=1 VarFollowInverter=false" \
+                           " irradiance=" + str(Const_Irrad) + " temperature=" + str(Const_Temp) +\
+                           " daily=irrad Tdaily=Temp"# debugtrace=yes"
 
 
 def Create_GD(Rede, Nome, kW, kvar, LoadShape, Simulation):
@@ -137,7 +123,7 @@ def Fase2String(STRING):
 
 def FindBusGD(Num_GDs):
 
-    from Definitions import DF_Tensao_A
+    from Definitions import DF_Tensao_A, Barras_GDs
 
     [Barras_GDs.append(random2.choice(DF_Tensao_A.Barras.values)) for i in range(Num_GDs)]
     #[Barras_GDs.append(list(combinations(DF_Tensao_A.Barras.values, 2))) for i in range(Num_GDs)]
