@@ -14,6 +14,8 @@ Redirect switches.dss
 Redirect tensao_base.dss
 
 set mode=daily //padrão, mas pode ser daily por ex
+set stepsize = 15m
+set number = 96
 solve
 
 !Transformer.Reg1.Taps=[1.0 1.0625]
