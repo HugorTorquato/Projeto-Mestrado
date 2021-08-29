@@ -1,15 +1,9 @@
 # coding: utf-8
-import numpy as np
 from Geradores import *
-from DB_Rede import *
-
 
 def Inicializa(Rede):
     from Definitions import DF_Tensao_A, DF_Tensao_B, DF_Tensao_C
     # Essa função é responsável por inicializar alguns os dataframes utilizados ( Acho quenão preciso )
-
-    # Features:
-    # Daria para colocar uma coluna para diferênciar a simulação diária ( primeira, segunda....)( ID da simulação)
 
     # Dataframe de tensão
     DF_Tensao_A.insert(0, 'Barras', Nome_Barras(Rede), allow_duplicates=True)
@@ -34,17 +28,14 @@ def Inicializa(Rede):
     # Defnição das barras em que os geradores vão estar inseridos no sistema
     # FindBusGD(Num_GDs)
 
-
 def Version(Rede):
     print(Rede.dssObj.Version)
-
 
 def Compila_DSS(Rede):
     Rede.dssObj.ClearALL()
     Rede.dssText.Command = "compile " + Rede.Modelo_Barras
 
     Rede.dssSolution.Solve()
-
 
 def Nome_Barras(Rede):
     return Rede.dssCircuit.AllBusNames
@@ -54,11 +45,9 @@ def Nome_Barras(Rede):
     # Rede.dssText.Command = 'plot circuit Power Max=20 dots=y labels=n subs=n C1=$00FF0000'
     # Rede.dssText.Command = 'Plot type=circuit quantity=1 Max=.001  dots=no  labels=no Object=BusCoords.CSV'
 
-
 def Tamanho_pmult(Rede):
     Rede.dssLoadShapes.Name = Rede.dssLoadShapes.AllNames[1]
     return len(Rede.dssLoadShapes.pmult)
-
 
 def Solve_Hora_por_Hora(Rede, Simulation):
     # Essa função é o coração do código, aqui que são feitos todos os comandos e designações para os calculos durante
@@ -71,7 +60,6 @@ def Solve_Hora_por_Hora(Rede, Simulation):
 
     Rede.dssSolution.Number = 1
 
-    # print 'originalsteps : ' + str(originalSteps)
     from FunctionsSecond import Tensao_Barras, originalSteps, Correntes_elementos
 
     for itera in range(0, originalSteps(Rede)):

@@ -1,7 +1,5 @@
 import sqlalchemy as sql
-import pandas as pd
 from Definitions import *
-
 
 def sqlalchemy():
 
@@ -17,7 +15,6 @@ def Refresh_Or_Create_Tables():
 
     # To do:
     #   1- Colocar tabela com todos os valores de tensão ()
-    #       1.1- Sem a GD x Com GD
 
     # Definição da tabela Elements
     DB = 'Grid_Elements'
@@ -113,6 +110,8 @@ def Refresh_Or_Create_Tables():
 
 def Save_Data(Simulation):
 
+    from Definitions import DF_Geradores, DF_General, DF_Barras, DF_Elements
+
     DF_General.to_sql('General', sqlalchemy(), if_exists='append', index=False)
     DF_Geradores.to_sql('GD', sqlalchemy(), if_exists='append', index=False)
     DF_Barras.to_sql('Barras', sqlalchemy(), if_exists='append', index=False)
@@ -123,7 +122,6 @@ def Save_General_Data(Simulation):
     from FunctionsSecond import Limpar_DF, Max_and_Min_Voltage_DF
     from Definitions import DF_Tensao_A, DF_Tensao_B, DF_Tensao_C, DF_Geradores, DF_General
 
-
     DF_General.loc[0, 'Voltage_Max'] = Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[0]
     DF_General.loc[0, 'Voltage_Min'] = Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[1]
     DF_General.loc[0, 'GD_Config'] = str(DF_Geradores.set_index('Name').values)
@@ -132,7 +130,6 @@ def Process_Data(Rede, Simulation):
 
     from Definitions import DF_Tensao_A, DF_Tensao_B, DF_Tensao_C, DF_Barras, DF_Desq_IEC, DF_Desq_IEEE,\
         DF_Desq_NEMA, DF_Corrente_A, DF_Corrente_B, DF_Corrente_C, DF_Elements
-    from FunctionsSecond import originalSteps
 
     # Process Bus
     index = len(DF_Barras.index)

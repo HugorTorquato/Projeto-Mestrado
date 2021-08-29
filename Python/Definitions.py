@@ -20,7 +20,6 @@ DF_Corrente_A = pd.DataFrame()
 DF_Corrente_B = pd.DataFrame()
 DF_Corrente_C = pd.DataFrame()
 
-# GDs
 DF_Geradores = pd.DataFrame({'Simulation': [],
                              'Name'      : [],
                              'Bus'       : [],
@@ -80,21 +79,21 @@ irrad2 = []
 
 ##Switches
 
-Salva_Dados = 0  # Aciona o script que faz o levantamento dos dados da rede
-Criar_GD = 1     # Aciona a inserção de GDs na rede
-Num_GDs = 1      # Definição do número de GDs que serão adicionadas
-Calc_HC = 1      # Aciona o cálculo do HC
+Salva_Dados = 0     # Aciona o script que faz o levantamento dos dados da rede
+Criar_GD = 1        # Aciona a inserção de GDs na rede
+Num_GDs = 2         # Definição do número de GDs que serão adicionadas
+Calc_HC = 1         # Aciona o cálculo do HC
 All_GDs = 1
-Norma = 1   #  # 0 - PRODIST # 1 - IEEE
+Use_PV = 1          # 1- Usa o PVSystem  0 - Usa geradore
+Norma = 1           #  # 0 - PRODIST # 1 - IEEE
+Num_Simulations = 2 # Deifnie o número de simulações que serão realizadas
 
 # PVSystem
 FP_1 = 1
 Const_Irrad = .705
 Const_Temp = 25
-
+FP = 1
 Incremento_gd = 1000
-
-Num_Simulations = 2 # Deifnie o número de simulações que serão realizadas
 
 #Constants
 sqrt3 = np.sqrt(3)
@@ -110,7 +109,6 @@ if Norma == 0:
     limite_superior = 1.05
     limite_inferior = 0.92
     limite_Deseq = 2
-
 
 class DSS():
 

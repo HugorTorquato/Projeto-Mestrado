@@ -230,8 +230,6 @@ def Check_Desq(IEC, IEEE, NEMA):
 
     return max(DF.set_index('Barras').max().values)
 
-
-
 def Salvar_Dados_Tensao():
     Escrever = pd.ExcelWriter("C:\\Users\hugo1\Desktop\Projeto_Rede_Fornecida\Python\Debug\Debug.xlsx")
 
@@ -240,7 +238,6 @@ def Salvar_Dados_Tensao():
     DF_Tensao_C.to_excel(Escrever, 'DF_Tensao_C', index=False)
 
     Escrever.save()
-
 
 def Identify_Phases(Phases):
     Num_Phases = ""
@@ -257,10 +254,8 @@ def Identify_Phases(Phases):
             count += 1
     return Num_Phases, count
 
-
 def Limpar_DF(DF):
     DF.drop([i for i in range(len(DF))], inplace=True)
-
 
 def Max_and_Min_Voltage_DF(A, B, C):
     return max(max(A.set_index('Barras').max().values),
