@@ -92,8 +92,9 @@ def teste(Rede):
 
 
 def HC(Rede):
+
     # Essa função é o pulmão do código, aqui que é feito o cálculo do HC
-    from FunctionsSecond import Colunas_DF_Horas, Limpar_DF, Check
+    from FunctionsSecond import Colunas_DF_Horas, Limpar_DF, Check, Adicionar_EnergyMeter
     from Definitions import Num_GDs, DF_Geradores, DF_Barras, DF_General, DF_Elements, DF_Tensao_A, DF_PV
     from DB_Rede import Save_General_Data, Save_Data, Process_Data
 
@@ -105,7 +106,6 @@ def HC(Rede):
     #Barras_GDs = list(combinations(DF_Tensao_A.Barras.values, 3))
 
     for Simulation in range(1, Num_Simulations + 1):
-        print(Num_GDs)
 
         Nummero_Simulacoes = 0
         Pot_GD = 0
@@ -118,15 +118,24 @@ def HC(Rede):
         FindBusGD(Num_GDs)
 
         while Nummero_Simulacoes == 0 or Check() == True:
-            # desq
-            # corrente
 
             # Confere se a definição para adicionar GHD está ativa e se não for a primeira simulação, reseta os devidos
             # valores para fazer o código funcionar
             if Criar_GD and Nummero_Simulacoes > 0:
                 Compila_DSS(Rede), [Limpar_DF(DF) for DF in [DF_Geradores, DF_Elements, DF_PV]]
 
+
+            # ----------------------------------------------------------------------------------------------------------
+            # A função Compila DSS lê os arquivos .dss e deixa o circuito da forma que que está lá.
+            # Para adicionar novos elementos ( Geradores, PVSystem, Medidores... ) tem de ser feito aqui,
+            # Essa definição vai ser incluida na definição dos arquivos .dss e computada durante o solve
+            # que tem dentro da função "Solve_Hora_por_Hora".
+            # OBS: Se definir um DF, lembrar de limpar o mesmo na seção anterior
+
             Adicionar_GDs(Rede, Pot_GD, Simulation)
+            Adicionar_EnergyMeter(Rede)
+
+            # ----------------------------------------------------------------------------------------------------------
 
             Solve_Hora_por_Hora(Rede, Simulation)  # Chamada da função que levanta o perfil diário
 

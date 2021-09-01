@@ -53,6 +53,9 @@ def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
     DF_PV.loc[index, 'Simulation'] = Simulation
     DF_PV.loc[index, 'Name'] = Nome
     DF_PV.loc[index, 'Bus'] = Barras_GDs[(len(Barras_GDs) - 1) - index]
+
+    ativa_barra(Rede, str(DF_PV.loc[index, 'Bus']))
+
     DF_PV.loc[index, 'Pmp'] = Pmp
     DF_PV.loc[index, 'FP'] = FP
     DF_PV.loc[index, 'Phases'] = Fase2String([STRING[i - 1] for i in Rede.dssBus.Nodes])
@@ -63,11 +66,15 @@ def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
     # kva - pot nom inversor - Pot gerada n pode ser maior
     # pot dc = ppmppx x irrad x (1-irrad_tempo) x temp_por_pot
     # pot ac = pot dc x eff
-    ativa_barra(Rede, str(DF_PV.loc[index, 'Bus']))
+
+    A = Identify_Phases(DF_PV.loc[index, 'Phases'])[1]
+    B = DF_PV.loc[index, 'Bus']
 
     Rede.dssText.Command = "New PVSystem." + Nome + " phases=" + \
-                           str(Identify_Phases(DF_PV.loc[index, 'Phases'])[1]) + " bus1=" + \
-                           str(DF_PV.loc[index, 'Bus'] + Identify_Phases(DF_PV.loc[index, 'Phases'])[0]) + \
+                           str(Identify_Phases(DF_PV.loc[index, 'Phases'])[1]) + \
+                           " bus1=" + \
+                           str(DF_PV.loc[index, 'Bus']) + \
+                           str(Identify_Phases(DF_PV.loc[index, 'Phases'])[0]) + \
                            " Pmpp=" + str(Pmp) + \
                            " kv=" + str(Rede.dssBus.kVBase) + \
                            " kVA=" + str(Pmp * 1.15) + \

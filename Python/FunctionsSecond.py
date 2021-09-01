@@ -242,6 +242,7 @@ def Salvar_Dados_Tensao():
 def Identify_Phases(Phases):
     Num_Phases = ""
     count = 0
+    Aa = Phases
     for Phase in Phases:
         if Phase == "A":
             Num_Phases = Num_Phases + ".1"
@@ -264,3 +265,14 @@ def Max_and_Min_Voltage_DF(A, B, C):
            min(min(A.set_index('Barras')[A.set_index('Barras') > .2].min().values),
                min(B.set_index('Barras')[B.set_index('Barras') > .2].min().values),
                min(C.set_index('Barras')[C.set_index('Barras') > .1].min().values))
+
+def Adicionar_EnergyMeter(Rede):
+
+    # Definir o elemento correto ( barra sourcebus ou a primeira linha? fazer de forma iterativa )
+    TE = Rede.dssCircuit.Name
+
+    #Rede.dssText.Command = "New energymeter.EM element=circuit." + str(Rede.dssCircuit.Name) + " terminal=1"
+
+    # Como coletar os resultados?
+
+    return

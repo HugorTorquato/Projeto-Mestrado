@@ -81,7 +81,7 @@ irrad2 = []
 
 Salva_Dados = 0     # Aciona o script que faz o levantamento dos dados da rede
 Criar_GD = 1        # Aciona a inserção de GDs na rede
-Num_GDs = 2         # Definição do número de GDs que serão adicionadas
+Num_GDs = 4         # Definição do número de GDs que serão adicionadas
 Calc_HC = 1         # Aciona o cálculo do HC
 All_GDs = 1
 Use_PV = 1          # 1- Usa o PVSystem  0 - Usa geradore
@@ -143,3 +143,4 @@ class DSS():
             self.dssTransformers = self.dssCircuit.Transformers
             self.dssSensor = self.dssCircuit.Sensors
             self.dssPVSystems = self.dssCircuit.PVSystems
+            #self.dssEnergymeter = self.Energymeter
