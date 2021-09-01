@@ -20,6 +20,13 @@ DF_Corrente_A = pd.DataFrame()
 DF_Corrente_B = pd.DataFrame()
 DF_Corrente_C = pd.DataFrame()
 
+# Valores e Arrays auxiliares
+Barras_GDs = []
+
+DF_kW_PV = pd.DataFrame()
+DF_kvar_PV = pd.DataFrame()
+DF_irradNow_PV = pd.DataFrame()
+
 DF_Geradores = pd.DataFrame({'Simulation': [],
                              'Name'      : [],
                              'Bus'       : [],
@@ -28,6 +35,11 @@ DF_Geradores = pd.DataFrame({'Simulation': [],
                              'Phases'    : '',
                              'LoadShape' : ''})
 
+DF_PVPowerData = pd.DataFrame({'Simulation' : [],
+                               'Name'       : [],
+                               'Bus'        : [],
+                               'Measurement': ''})
+
 DF_PV = pd.DataFrame({'Simulation': [],
                       'Name'      : [],
                       'Bus'       : [],
@@ -35,7 +47,7 @@ DF_PV = pd.DataFrame({'Simulation': [],
                       'kW'        : [],
                       'kvar'      : [],
                       'FP'        : [],
-                      'Phases'     : '',
+                      'Phases'    : '',
                       'Irrad'     : '',
                       'Temp'      : ''})
 
@@ -55,7 +67,7 @@ DF_Barras = pd.DataFrame({'Simulation'     : [],
                           'Deseq_IEEE'     : [],
                           'Deseq_NEMA'     : []})
 
-DF_Elements = pd.DataFrame({'Simulation'     : [],
+DF_Elements = pd.DataFrame({ 'Simulation'     : [],
                              'Elemento'       : [],
                              'I_pu_max_a'     : [],
                              'I_pu_max_b'     : [],
@@ -64,21 +76,10 @@ DF_Elements = pd.DataFrame({'Simulation'     : [],
                              'I_pu_min_b'     : [],
                              'I_pu_min_c'     : []})
 
-
 DF_TESTE = pd.DataFrame({
     "A": [1, 2, 3, 4],
     "B": [4, 3, 2, 1],
     "C": [2, 1, 4, 3]})
-
-# Valores e Arrays auxiliares
-Barras_GDs = []
-Pot_PV = []
-Pot_PV1 = []
-Pot_PV2 = []
-Pot_PV3 = []
-Pot_PV4 = []
-irrad = []
-irrad2 = []
 
 ##Switches
 
@@ -112,6 +113,8 @@ if Norma == 0:
     limite_superior = 1.05
     limite_inferior = 0.92
     limite_Deseq = 2
+
+
 
 class DSS():
 

@@ -1,3 +1,4 @@
+import pandas as pd
 import sqlalchemy as sql
 from Definitions import *
 
@@ -8,13 +9,32 @@ def sqlalchemy():
 
     return engine
 
-def Refresh_Or_Create_Tables():
+def Refresh_Or_Create_Tables(Rede):
 
     metadata = sql.MetaData()
     engine = sqlalchemy()
 
     # To do:
     #   1- Colocar tabela com todos os valores de tensão ()
+
+    # Definição da tabela PVSystems
+    DB = 'PVPowerData'
+    if len(pd.read_sql(
+            'SELECT TABLE_NAME '
+            'FROM INFORMATION_SCHEMA.TABLES '
+            'WHERE TABLE_NAME = \'' + DB + '\'', engine)) == 0:
+        print('Create :' + str(DB) + " table")
+        Barras = sql.Table(str(DB), metadata,
+                           sql.Column('Nome_ID', sql.Integer, primary_key=True),
+                           sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
+                           sql.Column('Name', sql.String),
+                           sql.Column('Bus', sql.String),
+                           sql.Column('Measurement', sql.String)
+                           )
+
+    else:
+        engine.execute('DBCC CHECKIDENT(\'' + DB + '\', RESEED, 0)') # Redefine a PK para começar do zero novamente
+        engine.execute('DELETE FROM ' + str(DB))
 
     # Definição da tabela PVSystems
     DB = 'PVSystems'
@@ -127,18 +147,33 @@ def Refresh_Or_Create_Tables():
         engine.execute('DELETE FROM ' + str(DB))
 
     metadata.create_all(engine)
+    Adjust_tables_to_timestemp(engine, Rede)
 
-## Criar chart com a dinamica do banco e as possiveis conexoes que podem ser feitas entra as tabelas
-## Criar as tabelas
+def Adjust_tables_to_timestemp(engine, Rede):
 
+    from FunctionsSecond import originalSteps
+
+    # Case queira salvar dados em todos os intervalos de simulação, tem de adicionar o nome da tabela destino
+    # o seguinte vetor. A ideia dessa função consiste em adicionar N colunas com que irá possíbilitar salvar
+    # todos os valores presentes em um dia
+
+    DB = ['PVPowerData']
+
+    for table in DB:
+        if pd.read_sql('SELECT COUNT(COLUMN_NAME) AS resultado FROM INFORMATION_SCHEMA.COLUMNS '
+                       'WHERE TABLE_NAME = \'' + str(table) + '\' AND  COLUMN_NAME = \'Time_1\'', engine).values == 0:
+
+            for i in range(originalSteps(Rede)):
+                engine.execute("ALTER TABLE " + table + " ADD Time_" + str(i) + " float(53)")
 
 def Save_Data(Simulation):
 
-    from Definitions import DF_Geradores, DF_General, DF_Barras, DF_Elements
+    from Definitions import DF_Geradores, DF_General, DF_Barras, DF_Elements, DF_PV, DF_PVPowerData
 
     DF_General.to_sql('General', sqlalchemy(), if_exists='append', index=False)
     DF_Geradores.to_sql('GD', sqlalchemy(), if_exists='append', index=False)
     DF_PV.to_sql('PVSystems', sqlalchemy(), if_exists='append', index=False)
+    DF_PVPowerData.to_sql('PVPowerData', sqlalchemy(), if_exists='append', index=False)
     DF_Barras.to_sql('Barras', sqlalchemy(), if_exists='append', index=False)
     DF_Elements.to_sql('Grid_Elements', sqlalchemy(), if_exists='append', index=False)
 

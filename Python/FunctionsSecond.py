@@ -256,15 +256,57 @@ def Identify_Phases(Phases):
     return Num_Phases, count
 
 def Limpar_DF(DF):
+
     DF.drop([i for i in range(len(DF))], inplace=True)
 
 def Max_and_Min_Voltage_DF(A, B, C):
+
     return max(max(A.set_index('Barras').max().values),
                max(B.set_index('Barras').max().values),
                max(C.set_index('Barras').max().values)), \
            min(min(A.set_index('Barras')[A.set_index('Barras') > .2].min().values),
                min(B.set_index('Barras')[B.set_index('Barras') > .2].min().values),
                min(C.set_index('Barras')[C.set_index('Barras') > .1].min().values))
+
+def Data_PV(Rede, itera):
+
+    PVs = Rede.dssPVSystems.AllNames
+
+    for PV in range(len(Rede.dssPVSystems.AllNames)):
+        #DF_Tensao_A.loc[DF_Tensao_A.index == count, str(itera)]
+
+        Rede.dssPVSystems.Name = str(PVs[PV])
+
+        DF_kW_PV.loc[DF_kW_PV.index == PV, str(itera)] = Rede.dssPVSystems.kW
+        DF_kvar_PV.loc[DF_kvar_PV.index == PV, str(itera)] = Rede.dssPVSystems.kvar
+        DF_irradNow_PV.loc[DF_irradNow_PV.index == PV, str(itera)] = Rede.dssPVSystems.IrradianceNow
+
+
+def Power_measurement_PV(Rede, Simulation):
+
+    from Definitions import DF_PVPowerData, DF_PV
+
+    Measur = ['kW', 'kvar', 'irradNow']
+    PVs = Rede.dssPVSystems.AllNames
+
+    for PV in range(len(Rede.dssPVSystems.AllNames)):
+        for Meas in range(len(Measur)):
+            index = len(DF_PVPowerData)
+            DF_PVPowerData.loc[index, 'Simulation'] = Simulation
+            DF_PVPowerData.loc[index, 'Name'] = PVs[PV]
+            DF_PVPowerData.loc[index, 'Bus'] = \
+                DF_PV.query('Name == "' + str(PVs[PV]).upper() + '"')['Bus'].values
+            DF_PVPowerData.loc[index, 'Measurement'] = Measur[Meas]
+
+            if Meas == 0:
+                for i in range(originalSteps(Rede)):
+                    DF_PVPowerData.loc[index, 'Time_' + str(i)] = DF_kW_PV.loc[PV, str(i)]
+            elif Meas == 1:
+                for i in range(originalSteps(Rede)):
+                    DF_PVPowerData.loc[index, 'Time_' + str(i)] = DF_kvar_PV.loc[PV, str(i)]
+            elif Meas == 2:
+                for i in range(originalSteps(Rede)):
+                    DF_PVPowerData.loc[index, 'Time_' + str(i)] = DF_irradNow_PV.loc[PV, str(i)]
 
 def Adicionar_EnergyMeter(Rede):
 
