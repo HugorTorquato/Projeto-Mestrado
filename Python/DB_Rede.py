@@ -16,13 +16,37 @@ def Refresh_Or_Create_Tables():
     # To do:
     #   1- Colocar tabela com todos os valores de tensão ()
 
+    # Definição da tabela PVSystems
+    DB = 'PVSystems'
+    if len(pd.read_sql(
+            'SELECT TABLE_NAME '
+            'FROM INFORMATION_SCHEMA.TABLES '
+            'WHERE TABLE_NAME = \'' + DB + '\'', engine)) == 0:
+        print('Create :' + str(DB) + " table")
+        Barras = sql.Table(str(DB), metadata,
+                           sql.Column('Nome_ID', sql.Integer, primary_key=True),
+                           sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
+                           sql.Column('Name', sql.String),
+                           sql.Column('Bus', sql.String),
+                           sql.Column('Pmp', sql.Float),
+                           sql.Column('kW', sql.Float),
+                           sql.Column('kvar', sql.Float),
+                           sql.Column('FP', sql.Float),
+                           sql.Column('Phases', sql.String),
+                           sql.Column('Irrad', sql.String),
+                           sql.Column('Temp', sql.String)
+                           )
+    else:
+        engine.execute('DBCC CHECKIDENT(\'' + DB + '\', RESEED, 0)') # Redefine a PK para começar do zero novamente
+        engine.execute('DELETE FROM ' + str(DB))
+
     # Definição da tabela Elements
     DB = 'Grid_Elements'
     if len(pd.read_sql(
             'SELECT TABLE_NAME '
             'FROM INFORMATION_SCHEMA.TABLES '
             'WHERE TABLE_NAME = \'' + DB + '\'', engine)) == 0:
-        print('Create')
+        print('Create :' + str(DB) + " table")
         Barras = sql.Table(str(DB), metadata,
                            sql.Column('Nome_ID', sql.Integer, primary_key=True),
                            sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
@@ -44,7 +68,7 @@ def Refresh_Or_Create_Tables():
             'SELECT TABLE_NAME '
             'FROM INFORMATION_SCHEMA.TABLES '
             'WHERE TABLE_NAME = \'' + DB + '\'', engine)) == 0:
-        print('Create')
+        print('Create :' + str(DB) + " table")
         Barras = sql.Table(str(DB), metadata,
                            sql.Column('Nome_ID', sql.Integer, primary_key=True),
                            sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
@@ -69,7 +93,7 @@ def Refresh_Or_Create_Tables():
             'SELECT TABLE_NAME '
             'FROM INFORMATION_SCHEMA.TABLES '
             'WHERE TABLE_NAME = \'' + DB + '\'', engine)) == 0:
-        print('Create')
+        print('Create :' + str(DB) + " table")
         GD = sql.Table(str(DB), metadata,
                        sql.Column('Nome_ID', sql.Integer, primary_key=True),
                        sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
@@ -90,7 +114,7 @@ def Refresh_Or_Create_Tables():
             'SELECT TABLE_NAME '
             'FROM INFORMATION_SCHEMA.TABLES '
             'WHERE TABLE_NAME = \'' + DB + '\'', engine)) == 0:
-        print('Create')
+        print('Create :' + str(DB) + " table")
         General = sql.Table(str(DB), metadata,
                             sql.Column('Simulation', sql.Integer, primary_key=True),
                             sql.Column('Voltage_Max', sql.Float),
@@ -114,6 +138,7 @@ def Save_Data(Simulation):
 
     DF_General.to_sql('General', sqlalchemy(), if_exists='append', index=False)
     DF_Geradores.to_sql('GD', sqlalchemy(), if_exists='append', index=False)
+    DF_PV.to_sql('PVSystems', sqlalchemy(), if_exists='append', index=False)
     DF_Barras.to_sql('Barras', sqlalchemy(), if_exists='append', index=False)
     DF_Elements.to_sql('Grid_Elements', sqlalchemy(), if_exists='append', index=False)
 

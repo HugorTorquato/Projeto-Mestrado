@@ -57,6 +57,8 @@ def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
     ativa_barra(Rede, str(DF_PV.loc[index, 'Bus']))
 
     DF_PV.loc[index, 'Pmp'] = Pmp
+    DF_PV.loc[index, 'kW'] = 0   #Definir função para coletar pot gerada
+    DF_PV.loc[index, 'kvar'] = 0
     DF_PV.loc[index, 'FP'] = FP
     DF_PV.loc[index, 'Phases'] = Fase2String([STRING[i - 1] for i in Rede.dssBus.Nodes])
     DF_PV.loc[index, 'Irrad'] = Irrad

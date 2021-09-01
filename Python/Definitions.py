@@ -32,7 +32,10 @@ DF_PV = pd.DataFrame({'Simulation': [],
                       'Name'      : [],
                       'Bus'       : [],
                       'Pmp'       : [],
+                      'kW'        : [],
+                      'kvar'      : [],
                       'FP'        : [],
+                      'Phases'     : '',
                       'Irrad'     : '',
                       'Temp'      : ''})
 
