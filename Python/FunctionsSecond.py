@@ -1,4 +1,6 @@
 # coding: utf-8
+import numpy as np
+
 from Definitions import *
 import pandas as pd
 import cmath
@@ -17,6 +19,8 @@ def Correntes_elementos(Rede, itera):
     Limpar_DF(DF_Corrente_itera)
     DF_Corrente_itera = pd.read_csv(
         "C:\\Users\hugo1\Desktop\Projeto_Rede_Fornecida\Python\TCC\Rede\IEEE13barras_EXP_CURRENTS.CSV")
+
+    # Melhorar isso para identificar o caminho correto, se pa criar um header fixo na definição da rede
 
     count = 0
     A = DF_Corrente_itera.columns[1]
@@ -273,7 +277,6 @@ def Data_PV(Rede, itera):
     PVs = Rede.dssPVSystems.AllNames
 
     for PV in range(len(Rede.dssPVSystems.AllNames)):
-        #DF_Tensao_A.loc[DF_Tensao_A.index == count, str(itera)]
 
         Rede.dssPVSystems.Name = str(PVs[PV])
 

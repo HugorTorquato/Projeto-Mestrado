@@ -95,11 +95,14 @@ def Solve_Hora_por_Hora(Rede, Simulation):
 
 def HC(Rede):
 
+    # Adicionar uma simulação padrão apra salvar os valores sem interferência das GDs
+
     # Essa função é o pulmão do código, aqui que é feito o cálculo do HC
     from FunctionsSecond import Colunas_DF_Horas, Limpar_DF, Check, Power_measurement_PV, \
         Adicionar_EnergyMeter
+    from Monitores import Adicionar_Monitores, Export_And_Read_Monitors_Data
     from Definitions import Num_GDs, DF_Geradores, DF_Barras, DF_General, DF_Elements, DF_Tensao_A, DF_PV,\
-        DF_PVPowerData
+        DF_PVPowerData, DF_Lista_Monitors
     from DB_Rede import Save_General_Data, Save_Data, Process_Data
 
     coll = Colunas_DF_Horas(Rede)
@@ -109,6 +112,8 @@ def HC(Rede):
     # Fazer a combinação e avaliar por zona
     #Barras_GDs = list(combinations(DF_Tensao_A.Barras.values, 3))
 
+    Sem_GD = 0
+
     for Simulation in range(1, Num_Simulations + 1):
 
         Nummero_Simulacoes = 0
@@ -116,10 +121,13 @@ def HC(Rede):
 
         Compila_DSS(Rede)
 
-        [Limpar_DF(DF) for DF in [DF_Geradores, DF_Barras, DF_General, DF_Elements, DF_PV, DF_PVPowerData]]
+        [Limpar_DF(DF) for DF in [DF_Geradores, DF_Barras, DF_General, DF_Elements, DF_PV, DF_PVPowerData,
+                                  DF_Lista_Monitors, DF_PVPowerData]]
 
         # Define em quais barras as GDs vão ser inseridas para obtenção do HC nessa simulação
         FindBusGD(Num_GDs)
+
+        Sem_GD = 1 if Num_Simulations != 0 else 0
 
         while Nummero_Simulacoes == 0 or Check() == True:
 
@@ -127,7 +135,7 @@ def HC(Rede):
             # valores para fazer o código funcionar
             if Criar_GD and Nummero_Simulacoes > 0:
                 Compila_DSS(Rede)
-                [Limpar_DF(DF) for DF in [DF_Geradores, DF_Elements, DF_PV]]
+                [Limpar_DF(DF) for DF in [DF_Geradores, DF_Elements, DF_PV, DF_Lista_Monitors, DF_PVPowerData]]
 
             # ----------------------------------------------------------------------------------------------------------
             # A função Compila DSS lê os arquivos .dss e deixa o circuito da forma que que está lá.
@@ -138,6 +146,7 @@ def HC(Rede):
 
             Adicionar_GDs(Rede, Pot_GD, Simulation)
             Adicionar_EnergyMeter(Rede)
+            Adicionar_Monitores(Rede)
 
             # ----------------------------------------------------------------------------------------------------------
 
@@ -145,11 +154,16 @@ def HC(Rede):
 
             Nummero_Simulacoes += 1
             Pot_GD += Incremento_gd
+
             print('-----------------------------------------------------')
             print(max(DF_Tensao_A.set_index('Barras').max().values))
             print(min(DF_Tensao_A.set_index('Barras').min().values))
             print('-----------------------------------------------------')
 
+            if Sem_GD == 0:
+                break
+
+        Export_And_Read_Monitors_Data(Rede, DF_Lista_Monitors, Simulation)
         Power_measurement_PV(Rede, Simulation)
         Process_Data(Rede, Simulation)
         Save_General_Data(Simulation)

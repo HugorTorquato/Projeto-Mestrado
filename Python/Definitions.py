@@ -27,6 +27,11 @@ DF_kW_PV = pd.DataFrame()
 DF_kvar_PV = pd.DataFrame()
 DF_irradNow_PV = pd.DataFrame()
 
+# Salva dados locais relacionados aos monitores
+DF_Lista_Monitors = pd.DataFrame()
+DF_Monitors_Power_Values = pd.DataFrame()
+DF_Monitors_Voltage_Values = pd.DataFrame()
+
 DF_Geradores = pd.DataFrame({'Simulation': [],
                              'Name'      : [],
                              'Bus'       : [],
@@ -67,14 +72,20 @@ DF_Barras = pd.DataFrame({'Simulation'     : [],
                           'Deseq_IEEE'     : [],
                           'Deseq_NEMA'     : []})
 
-DF_Elements = pd.DataFrame({ 'Simulation'     : [],
-                             'Elemento'       : [],
-                             'I_pu_max_a'     : [],
-                             'I_pu_max_b'     : [],
-                             'I_pu_max_c'     : [],
-                             'I_pu_min_a'     : [],
-                             'I_pu_min_b'     : [],
-                             'I_pu_min_c'     : []})
+DF_Elements = pd.DataFrame({'Simulation'     : [],
+                            'Elemento'       : [],
+                            'I_pu_max_a'     : [],
+                            'I_pu_max_b'     : [],
+                            'I_pu_max_c'     : [],
+                            'I_pu_min_a'     : [],
+                            'I_pu_min_b'     : [],
+                            'I_pu_min_c'     : []})
+
+# Lembrar de alterar essa tabela sempre que tiver alteração no número de monitores
+# Adicionar os novos campos
+DF_Monitors_Data = pd.DataFrame({'Simulation'     : [],
+                                 'Elemento'       : [],
+                                 'Measurement'    : []})
 
 DF_TESTE = pd.DataFrame({
     "A": [1, 2, 3, 4],
@@ -90,14 +101,14 @@ Calc_HC = 1         # Aciona o cálculo do HC
 All_GDs = 1
 Use_PV = 1          # 1- Usa o PVSystem  0 - Usa geradore
 Norma = 1           #  # 0 - PRODIST # 1 - IEEE
-Num_Simulations = 2 # Deifnie o número de simulações que serão realizadas
+Num_Simulations = 3 # Deifnie o número de simulações que serão realizadas
 
 # PVSystem
 FP_1 = 1
 Const_Irrad = .705
 Const_Temp = 25
 FP = 1
-Incremento_gd = 1000
+Incremento_gd = 5000
 
 #Constants
 sqrt3 = np.sqrt(3)

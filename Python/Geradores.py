@@ -5,7 +5,7 @@ import random2
 
 def Adicionar_GDs(Rede, Pot_GD, Simulation):
 
-    from Definitions import DF_Geradores, DF_PV, Num_GDs
+    from Definitions import DF_PV, Num_GDs
     from FunctionsSecond import originalSteps
 
     STEPS = originalSteps(Rede)
@@ -69,9 +69,6 @@ def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
     # pot dc = ppmppx x irrad x (1-irrad_tempo) x temp_por_pot
     # pot ac = pot dc x eff
 
-    A = Identify_Phases(DF_PV.loc[index, 'Phases'])[1]
-    B = DF_PV.loc[index, 'Bus']
-
     Rede.dssText.Command = "New PVSystem." + Nome + " phases=" + \
                            str(Identify_Phases(DF_PV.loc[index, 'Phases'])[1]) + \
                            " bus1=" + \
@@ -86,7 +83,6 @@ def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
                            " pf=1 VarFollowInverter=false" \
                            " irradiance=" + str(Const_Irrad) + " temperature=" + str(Const_Temp) + \
                            " daily=irrad Tdaily=Temp"  # debugtrace=yes"
-
 
 def Create_GD(Rede, Nome, kW, kvar, LoadShape, Simulation):
     from Definitions import DF_Geradores, Barras_GDs
@@ -115,7 +111,6 @@ def Create_GD(Rede, Nome, kW, kvar, LoadShape, Simulation):
                            " kv=" + str(Rede.dssBus.kVBase) + " kW=" + str(kW) + \
                            " kVAr=" + str(kvar + 0.001) + " model=1" + \
                            " daily=" + str(LoadShape)
-
 
 def Fase2String(STRING):
     a = ''

@@ -18,12 +18,30 @@ def Refresh_Or_Create_Tables(Rede):
     #   1- Colocar tabela com todos os valores de tensão ()
 
     # Definição da tabela PVSystems
+    DB = 'MonitoresData'
+    if len(pd.read_sql(
+            'SELECT TABLE_NAME '
+            'FROM INFORMATION_SCHEMA.TABLES '
+            'WHERE TABLE_NAME = \'' + DB + '\'', engine)) == 0:
+        print('Create Table :' + str(DB))
+        Barras = sql.Table(str(DB), metadata,
+                           sql.Column('Nome_ID', sql.Integer, primary_key=True),
+                           sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
+                           sql.Column('Elemento', sql.String),
+                           sql.Column('Measurement', sql.String)
+                           )
+
+    else:
+        engine.execute('DBCC CHECKIDENT(\'' + DB + '\', RESEED, 0)') # Redefine a PK para começar do zero novamente
+        engine.execute('DELETE FROM ' + str(DB))
+
+    # Definição da tabela PVSystems
     DB = 'PVPowerData'
     if len(pd.read_sql(
             'SELECT TABLE_NAME '
             'FROM INFORMATION_SCHEMA.TABLES '
             'WHERE TABLE_NAME = \'' + DB + '\'', engine)) == 0:
-        print('Create :' + str(DB) + " table")
+        print('Create Table :' + str(DB))
         Barras = sql.Table(str(DB), metadata,
                            sql.Column('Nome_ID', sql.Integer, primary_key=True),
                            sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
@@ -42,7 +60,7 @@ def Refresh_Or_Create_Tables(Rede):
             'SELECT TABLE_NAME '
             'FROM INFORMATION_SCHEMA.TABLES '
             'WHERE TABLE_NAME = \'' + DB + '\'', engine)) == 0:
-        print('Create :' + str(DB) + " table")
+        print('Create Table :' + str(DB))
         Barras = sql.Table(str(DB), metadata,
                            sql.Column('Nome_ID', sql.Integer, primary_key=True),
                            sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
@@ -66,7 +84,7 @@ def Refresh_Or_Create_Tables(Rede):
             'SELECT TABLE_NAME '
             'FROM INFORMATION_SCHEMA.TABLES '
             'WHERE TABLE_NAME = \'' + DB + '\'', engine)) == 0:
-        print('Create :' + str(DB) + " table")
+        print('Create Table :' + str(DB))
         Barras = sql.Table(str(DB), metadata,
                            sql.Column('Nome_ID', sql.Integer, primary_key=True),
                            sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
@@ -88,7 +106,7 @@ def Refresh_Or_Create_Tables(Rede):
             'SELECT TABLE_NAME '
             'FROM INFORMATION_SCHEMA.TABLES '
             'WHERE TABLE_NAME = \'' + DB + '\'', engine)) == 0:
-        print('Create :' + str(DB) + " table")
+        print('Create Table :' + str(DB))
         Barras = sql.Table(str(DB), metadata,
                            sql.Column('Nome_ID', sql.Integer, primary_key=True),
                            sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
@@ -113,7 +131,7 @@ def Refresh_Or_Create_Tables(Rede):
             'SELECT TABLE_NAME '
             'FROM INFORMATION_SCHEMA.TABLES '
             'WHERE TABLE_NAME = \'' + DB + '\'', engine)) == 0:
-        print('Create :' + str(DB) + " table")
+        print('Create Table :' + str(DB))
         GD = sql.Table(str(DB), metadata,
                        sql.Column('Nome_ID', sql.Integer, primary_key=True),
                        sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
@@ -134,7 +152,7 @@ def Refresh_Or_Create_Tables(Rede):
             'SELECT TABLE_NAME '
             'FROM INFORMATION_SCHEMA.TABLES '
             'WHERE TABLE_NAME = \'' + DB + '\'', engine)) == 0:
-        print('Create :' + str(DB) + " table")
+        print('Create Table :' + str(DB))
         General = sql.Table(str(DB), metadata,
                             sql.Column('Simulation', sql.Integer, primary_key=True),
                             sql.Column('Voltage_Max', sql.Float),
@@ -157,7 +175,7 @@ def Adjust_tables_to_timestemp(engine, Rede):
     # o seguinte vetor. A ideia dessa função consiste em adicionar N colunas com que irá possíbilitar salvar
     # todos os valores presentes em um dia
 
-    DB = ['PVPowerData']
+    DB = ['PVPowerData', 'MonitoresData']
 
     for table in DB:
         if pd.read_sql('SELECT COUNT(COLUMN_NAME) AS resultado FROM INFORMATION_SCHEMA.COLUMNS '
@@ -168,12 +186,13 @@ def Adjust_tables_to_timestemp(engine, Rede):
 
 def Save_Data(Simulation):
 
-    from Definitions import DF_Geradores, DF_General, DF_Barras, DF_Elements, DF_PV, DF_PVPowerData
+    from Definitions import DF_Geradores, DF_General, DF_Barras, DF_Elements, DF_PV, DF_PVPowerData, DF_Monitors_Data
 
     DF_General.to_sql('General', sqlalchemy(), if_exists='append', index=False)
     DF_Geradores.to_sql('GD', sqlalchemy(), if_exists='append', index=False)
     DF_PV.to_sql('PVSystems', sqlalchemy(), if_exists='append', index=False)
     DF_PVPowerData.to_sql('PVPowerData', sqlalchemy(), if_exists='append', index=False)
+    DF_Monitors_Data.to_sql('MonitoresData', sqlalchemy(), if_exists='append', index=False)
     DF_Barras.to_sql('Barras', sqlalchemy(), if_exists='append', index=False)
     DF_Elements.to_sql('Grid_Elements', sqlalchemy(), if_exists='append', index=False)
 
