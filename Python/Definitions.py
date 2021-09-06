@@ -20,7 +20,18 @@ DF_Corrente_A = pd.DataFrame()
 DF_Corrente_B = pd.DataFrame()
 DF_Corrente_C = pd.DataFrame()
 
-# GDs
+# Valores e Arrays auxiliares
+Barras_GDs = []
+
+DF_kW_PV = pd.DataFrame()
+DF_kvar_PV = pd.DataFrame()
+DF_irradNow_PV = pd.DataFrame()
+
+# Salva dados locais relacionados aos monitores
+DF_Lista_Monitors = pd.DataFrame()
+DF_Monitors_Power_Values = pd.DataFrame()
+DF_Monitors_Voltage_Values = pd.DataFrame()
+
 DF_Geradores = pd.DataFrame({'Simulation': [],
                              'Name'      : [],
                              'Bus'       : [],
@@ -29,11 +40,19 @@ DF_Geradores = pd.DataFrame({'Simulation': [],
                              'Phases'    : '',
                              'LoadShape' : ''})
 
+DF_PVPowerData = pd.DataFrame({'Simulation' : [],
+                               'Name'       : [],
+                               'Bus'        : [],
+                               'Measurement': ''})
+
 DF_PV = pd.DataFrame({'Simulation': [],
                       'Name'      : [],
                       'Bus'       : [],
                       'Pmp'       : [],
+                      'kW'        : [],
+                      'kvar'      : [],
                       'FP'        : [],
+                      'Phases'    : '',
                       'Irrad'     : '',
                       'Temp'      : ''})
 
@@ -54,47 +73,42 @@ DF_Barras = pd.DataFrame({'Simulation'     : [],
                           'Deseq_NEMA'     : []})
 
 DF_Elements = pd.DataFrame({'Simulation'     : [],
-                             'Elemento'       : [],
-                             'I_pu_max_a'     : [],
-                             'I_pu_max_b'     : [],
-                             'I_pu_max_c'     : [],
-                             'I_pu_min_a'     : [],
-                             'I_pu_min_b'     : [],
-                             'I_pu_min_c'     : []})
+                            'Elemento'       : [],
+                            'I_pu_max_a'     : [],
+                            'I_pu_max_b'     : [],
+                            'I_pu_max_c'     : [],
+                            'I_pu_min_a'     : [],
+                            'I_pu_min_b'     : [],
+                            'I_pu_min_c'     : []})
 
+# Lembrar de alterar essa tabela sempre que tiver alteração no número de monitores
+# Adicionar os novos campos
+DF_Monitors_Data = pd.DataFrame({'Simulation'     : [],
+                                 'Elemento'       : [],
+                                 'Measurement'    : []})
 
 DF_TESTE = pd.DataFrame({
     "A": [1, 2, 3, 4],
     "B": [4, 3, 2, 1],
     "C": [2, 1, 4, 3]})
 
-# Valores e Arrays auxiliares
-Barras_GDs = []
-Pot_PV = []
-Pot_PV1 = []
-Pot_PV2 = []
-Pot_PV3 = []
-Pot_PV4 = []
-irrad = []
-irrad2 = []
-
 ##Switches
 
-Salva_Dados = 0  # Aciona o script que faz o levantamento dos dados da rede
-Criar_GD = 1     # Aciona a inserção de GDs na rede
-Num_GDs = 1      # Definição do número de GDs que serão adicionadas
-Calc_HC = 1      # Aciona o cálculo do HC
+Salva_Dados = 0     # Aciona o script que faz o levantamento dos dados da rede
+Criar_GD = 1        # Aciona a inserção de GDs na rede
+Num_GDs = 4         # Definição do número de GDs que serão adicionadas
+Calc_HC = 1         # Aciona o cálculo do HC
 All_GDs = 1
-Norma = 1   #  # 0 - PRODIST # 1 - IEEE
+Use_PV = 1          # 1- Usa o PVSystem  0 - Usa geradore
+Norma = 1           #  # 0 - PRODIST # 1 - IEEE
+Num_Simulations = 3 # Deifnie o número de simulações que serão realizadas
 
 # PVSystem
 FP_1 = 1
 Const_Irrad = .705
 Const_Temp = 25
-
-Incremento_gd = 1000
-
-Num_Simulations = 2 # Deifnie o número de simulações que serão realizadas
+FP = 1
+Incremento_gd = 5000
 
 #Constants
 sqrt3 = np.sqrt(3)
@@ -110,6 +124,7 @@ if Norma == 0:
     limite_superior = 1.05
     limite_inferior = 0.92
     limite_Deseq = 2
+
 
 
 class DSS():
@@ -145,3 +160,4 @@ class DSS():
             self.dssTransformers = self.dssCircuit.Transformers
             self.dssSensor = self.dssCircuit.Sensors
             self.dssPVSystems = self.dssCircuit.PVSystems
+            #self.dssEnergymeter = self.Energymeter

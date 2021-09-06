@@ -1,15 +1,13 @@
 # coding: utf-8
-import numpy as np
 from Geradores import *
-from DB_Rede import *
-
 
 def Inicializa(Rede):
-    from Definitions import DF_Tensao_A, DF_Tensao_B, DF_Tensao_C
-    # Essa função é responsável por inicializar alguns os dataframes utilizados ( Acho quenão preciso )
 
-    # Features:
-    # Daria para colocar uma coluna para diferênciar a simulação diária ( primeira, segunda....)( ID da simulação)
+    from Definitions import DF_Tensao_A, DF_Tensao_B, DF_Tensao_C, DF_Desq_IEC, DF_Desq_IEEE, DF_Desq_NEMA,\
+        DF_PVPowerData, DF_kW_PV, DF_kvar_PV, DF_irradNow_PV, Num_GDs
+    from FunctionsSecond import originalSteps
+
+    # Essa função é responsável por inicializar alguns os dataframes utilizados ( Acho quenão preciso )
 
     # Dataframe de tensão
     DF_Tensao_A.insert(0, 'Barras', Nome_Barras(Rede), allow_duplicates=True)
@@ -31,20 +29,31 @@ def Inicializa(Rede):
     DF_Desq_NEMA.insert(0, 'Barras', Nome_Barras(Rede), allow_duplicates=True)
     [DF_Desq_NEMA.insert(i + 1, str(i), 'TBD') for i in range(Tamanho_pmult(Rede))]
 
+    [DF_PVPowerData.insert(i + 4, "Time_" + str(i), 0) for i in range(originalSteps(Rede))]
+
+    PVs = ["PV_" + str(i) for i in range(Num_GDs)]
+
+    DF_kW_PV.insert(0, 'PVs', PVs, allow_duplicates=True)
+    [DF_kW_PV.insert(i + 1, str(i), 'TBD') for i in range(originalSteps(Rede))]
+
+    DF_kvar_PV.insert(0, 'PVs', PVs, allow_duplicates=True)
+    [DF_kvar_PV.insert(i + 1, str(i), 'TBD') for i in range(originalSteps(Rede))]
+
+    DF_irradNow_PV.insert(0, 'PVs', PVs, allow_duplicates=True)
+    [DF_irradNow_PV.insert(i + 1, str(i), 'TBD') for i in range(originalSteps(Rede))]
+
+
     # Defnição das barras em que os geradores vão estar inseridos no sistema
     # FindBusGD(Num_GDs)
 
-
 def Version(Rede):
     print(Rede.dssObj.Version)
-
 
 def Compila_DSS(Rede):
     Rede.dssObj.ClearALL()
     Rede.dssText.Command = "compile " + Rede.Modelo_Barras
 
     Rede.dssSolution.Solve()
-
 
 def Nome_Barras(Rede):
     return Rede.dssCircuit.AllBusNames
@@ -54,11 +63,9 @@ def Nome_Barras(Rede):
     # Rede.dssText.Command = 'plot circuit Power Max=20 dots=y labels=n subs=n C1=$00FF0000'
     # Rede.dssText.Command = 'Plot type=circuit quantity=1 Max=.001  dots=no  labels=no Object=BusCoords.CSV'
 
-
 def Tamanho_pmult(Rede):
     Rede.dssLoadShapes.Name = Rede.dssLoadShapes.AllNames[1]
     return len(Rede.dssLoadShapes.pmult)
-
 
 def Solve_Hora_por_Hora(Rede, Simulation):
     # Essa função é o coração do código, aqui que são feitos todos os comandos e designações para os calculos durante
@@ -71,16 +78,14 @@ def Solve_Hora_por_Hora(Rede, Simulation):
 
     Rede.dssSolution.Number = 1
 
-    # print 'originalsteps : ' + str(originalSteps)
-    from FunctionsSecond import Tensao_Barras, originalSteps, Correntes_elementos
+    from FunctionsSecond import Tensao_Barras, originalSteps, Correntes_elementos, Data_PV
 
     for itera in range(0, originalSteps(Rede)):
         Rede.dssSolution.SolveSnap()
 
         Tensao_Barras(Rede, itera)
         Correntes_elementos(Rede, itera)
-
-        teste(Rede)
+        Data_PV(Rede, itera)
 
         Rede.dssSolution.FinishTimeStep()
 
@@ -88,25 +93,16 @@ def Solve_Hora_por_Hora(Rede, Simulation):
 
     # print DF_Tensao_A['0'], DF_Tensao_B['0'], DF_Tensao_C['0']
 
-def teste(Rede):
-
-    a = Rede.dssPVSystems.AllNames
-    b = Rede.dssLoadShapes.AllNames
-    from FunctionsSecond import ativa_barra
-    Rede.dssPVSystems.Name = str(a[0])
-    Rede.dssLoadShapes.Name = str(b[4])
-    irrad.append(Rede.dssLoadShapes.pmult)
-    Pot_PV.append(Rede.dssPVSystems.RegisterValues)
-    Pot_PV1.append(Rede.dssPVSystems.kW)
-    Pot_PV2.append(Rede.dssPVSystems.kVArated)
-    Pot_PV3.append(Rede.dssPVSystems.IrradianceNow)
-    Pot_PV4.append(Rede.dssPVSystems.kvar)
-
-
 def HC(Rede):
+
+    # Adicionar uma simulação padrão apra salvar os valores sem interferência das GDs
+
     # Essa função é o pulmão do código, aqui que é feito o cálculo do HC
-    from FunctionsSecond import Colunas_DF_Horas, Limpar_DF, Check
-    from Definitions import Num_GDs, DF_Geradores, DF_Barras, DF_General, DF_Elements, DF_Tensao_A, DF_PV
+    from FunctionsSecond import Colunas_DF_Horas, Limpar_DF, Check, Power_measurement_PV, \
+        Adicionar_EnergyMeter
+    from Monitores import Adicionar_Monitores, Export_And_Read_Monitors_Data
+    from Definitions import Num_GDs, DF_Geradores, DF_Barras, DF_General, DF_Elements, DF_Tensao_A, DF_PV,\
+        DF_PVPowerData, DF_Lista_Monitors
     from DB_Rede import Save_General_Data, Save_Data, Process_Data
 
     coll = Colunas_DF_Horas(Rede)
@@ -116,39 +112,59 @@ def HC(Rede):
     # Fazer a combinação e avaliar por zona
     #Barras_GDs = list(combinations(DF_Tensao_A.Barras.values, 3))
 
+    Sem_GD = 0
+
     for Simulation in range(1, Num_Simulations + 1):
-        print(Num_GDs)
 
         Nummero_Simulacoes = 0
         Pot_GD = 0
 
         Compila_DSS(Rede)
 
-        [Limpar_DF(DF) for DF in [DF_Geradores, DF_Barras, DF_General, DF_Elements, DF_PV]]
+        [Limpar_DF(DF) for DF in [DF_Geradores, DF_Barras, DF_General, DF_Elements, DF_PV, DF_PVPowerData,
+                                  DF_Lista_Monitors, DF_PVPowerData]]
 
         # Define em quais barras as GDs vão ser inseridas para obtenção do HC nessa simulação
         FindBusGD(Num_GDs)
 
+        Sem_GD = 1 if Num_Simulations != 0 else 0
+
         while Nummero_Simulacoes == 0 or Check() == True:
-            # desq
-            # corrente
 
             # Confere se a definição para adicionar GHD está ativa e se não for a primeira simulação, reseta os devidos
             # valores para fazer o código funcionar
             if Criar_GD and Nummero_Simulacoes > 0:
-                Compila_DSS(Rede), [Limpar_DF(DF) for DF in [DF_Geradores, DF_Elements, DF_PV]]
+                Compila_DSS(Rede)
+                [Limpar_DF(DF) for DF in [DF_Geradores, DF_Elements, DF_PV, DF_Lista_Monitors, DF_PVPowerData]]
+
+            # ----------------------------------------------------------------------------------------------------------
+            # A função Compila DSS lê os arquivos .dss e deixa o circuito da forma que que está lá.
+            # Para adicionar novos elementos ( Geradores, PVSystem, Medidores... ) tem de ser feito aqui,
+            # Essa definição vai ser incluida na definição dos arquivos .dss e computada durante o solve
+            # que tem dentro da função "Solve_Hora_por_Hora".
+            # OBS: Se definir um DF, lembrar de limpar o mesmo na seção anterior
 
             Adicionar_GDs(Rede, Pot_GD, Simulation)
+            Adicionar_EnergyMeter(Rede)
+            Adicionar_Monitores(Rede)
+
+            # ----------------------------------------------------------------------------------------------------------
 
             Solve_Hora_por_Hora(Rede, Simulation)  # Chamada da função que levanta o perfil diário
 
             Nummero_Simulacoes += 1
             Pot_GD += Incremento_gd
+
             print('-----------------------------------------------------')
             print(max(DF_Tensao_A.set_index('Barras').max().values))
             print(min(DF_Tensao_A.set_index('Barras').min().values))
             print('-----------------------------------------------------')
 
+            if Sem_GD == 0:
+                break
+
+        Export_And_Read_Monitors_Data(Rede, DF_Lista_Monitors, Simulation)
+        Power_measurement_PV(Rede, Simulation)
         Process_Data(Rede, Simulation)
         Save_General_Data(Simulation)
         Save_Data(Simulation)

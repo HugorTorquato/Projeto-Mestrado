@@ -12,7 +12,7 @@ if __name__ == "__main__":
     Rede = DSS("C:\\Users\hugo1\Desktop\Projeto_Rede_Fornecida\Python\TCC\Rede\Master.dss")  # 13 barras IEEE
     #Rede = DSS("C:\\Users\hugo1\Desktop\Rede_03\_trafo3\Master.dss")                       # Rede_3
 
-    Version(Rede), Compila_DSS(Rede), Inicializa(Rede), Refresh_Or_Create_Tables()
+    Version(Rede), Compila_DSS(Rede), Inicializa(Rede), Refresh_Or_Create_Tables(Rede)
 
     if Salva_Dados:
         Salvar_Dados_Rede(Rede)

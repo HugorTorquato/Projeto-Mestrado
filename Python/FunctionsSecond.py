@@ -1,4 +1,6 @@
 # coding: utf-8
+import numpy as np
+
 from Definitions import *
 import pandas as pd
 import cmath
@@ -17,6 +19,8 @@ def Correntes_elementos(Rede, itera):
     Limpar_DF(DF_Corrente_itera)
     DF_Corrente_itera = pd.read_csv(
         "C:\\Users\hugo1\Desktop\Projeto_Rede_Fornecida\Python\TCC\Rede\IEEE13barras_EXP_CURRENTS.CSV")
+
+    # Melhorar isso para identificar o caminho correto, se pa criar um header fixo na definição da rede
 
     count = 0
     A = DF_Corrente_itera.columns[1]
@@ -230,8 +234,6 @@ def Check_Desq(IEC, IEEE, NEMA):
 
     return max(DF.set_index('Barras').max().values)
 
-
-
 def Salvar_Dados_Tensao():
     Escrever = pd.ExcelWriter("C:\\Users\hugo1\Desktop\Projeto_Rede_Fornecida\Python\Debug\Debug.xlsx")
 
@@ -241,10 +243,10 @@ def Salvar_Dados_Tensao():
 
     Escrever.save()
 
-
 def Identify_Phases(Phases):
     Num_Phases = ""
     count = 0
+    Aa = Phases
     for Phase in Phases:
         if Phase == "A":
             Num_Phases = Num_Phases + ".1"
@@ -257,15 +259,65 @@ def Identify_Phases(Phases):
             count += 1
     return Num_Phases, count
 
-
 def Limpar_DF(DF):
+
     DF.drop([i for i in range(len(DF))], inplace=True)
 
-
 def Max_and_Min_Voltage_DF(A, B, C):
+
     return max(max(A.set_index('Barras').max().values),
                max(B.set_index('Barras').max().values),
                max(C.set_index('Barras').max().values)), \
            min(min(A.set_index('Barras')[A.set_index('Barras') > .2].min().values),
                min(B.set_index('Barras')[B.set_index('Barras') > .2].min().values),
                min(C.set_index('Barras')[C.set_index('Barras') > .1].min().values))
+
+def Data_PV(Rede, itera):
+
+    PVs = Rede.dssPVSystems.AllNames
+
+    for PV in range(len(Rede.dssPVSystems.AllNames)):
+
+        Rede.dssPVSystems.Name = str(PVs[PV])
+
+        DF_kW_PV.loc[DF_kW_PV.index == PV, str(itera)] = Rede.dssPVSystems.kW
+        DF_kvar_PV.loc[DF_kvar_PV.index == PV, str(itera)] = Rede.dssPVSystems.kvar
+        DF_irradNow_PV.loc[DF_irradNow_PV.index == PV, str(itera)] = Rede.dssPVSystems.IrradianceNow
+
+
+def Power_measurement_PV(Rede, Simulation):
+
+    from Definitions import DF_PVPowerData, DF_PV
+
+    Measur = ['kW', 'kvar', 'irradNow']
+    PVs = Rede.dssPVSystems.AllNames
+
+    for PV in range(len(Rede.dssPVSystems.AllNames)):
+        for Meas in range(len(Measur)):
+            index = len(DF_PVPowerData)
+            DF_PVPowerData.loc[index, 'Simulation'] = Simulation
+            DF_PVPowerData.loc[index, 'Name'] = PVs[PV]
+            DF_PVPowerData.loc[index, 'Bus'] = \
+                DF_PV.query('Name == "' + str(PVs[PV]).upper() + '"')['Bus'].values
+            DF_PVPowerData.loc[index, 'Measurement'] = Measur[Meas]
+
+            if Meas == 0:
+                for i in range(originalSteps(Rede)):
+                    DF_PVPowerData.loc[index, 'Time_' + str(i)] = DF_kW_PV.loc[PV, str(i)]
+            elif Meas == 1:
+                for i in range(originalSteps(Rede)):
+                    DF_PVPowerData.loc[index, 'Time_' + str(i)] = DF_kvar_PV.loc[PV, str(i)]
+            elif Meas == 2:
+                for i in range(originalSteps(Rede)):
+                    DF_PVPowerData.loc[index, 'Time_' + str(i)] = DF_irradNow_PV.loc[PV, str(i)]
+
+def Adicionar_EnergyMeter(Rede):
+
+    # Definir o elemento correto ( barra sourcebus ou a primeira linha? fazer de forma iterativa )
+    TE = Rede.dssCircuit.Name
+
+    #Rede.dssText.Command = "New energymeter.EM element=circuit." + str(Rede.dssCircuit.Name) + " terminal=1"
+
+    # Como coletar os resultados?
+
+    return
