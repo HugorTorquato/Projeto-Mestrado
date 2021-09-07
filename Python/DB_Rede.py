@@ -318,9 +318,9 @@ def Process_Data(Rede, Simulation):
     DF_Corrente_A_Temp.insert(loc=1, column='Fase', value='A') \
         if 'Fase' not in DF_Corrente_A_Temp else 0
     DF_Corrente_B_Temp.insert(loc=1, column='Fase', value='B') \
-        if 'Fase' not in DF_Corrente_A_Temp else 0
+        if 'Fase' not in DF_Corrente_B_Temp else 0
     DF_Corrente_C_Temp.insert(loc=1, column='Fase', value='C') \
-        if 'Fase' not in DF_Corrente_A_Temp else 0
+        if 'Fase' not in DF_Corrente_C_Temp else 0
 
     DF_Corrente_Data = pd.concat([DF_Corrente_A_Temp, DF_Corrente_B_Temp, DF_Corrente_C_Temp])
 

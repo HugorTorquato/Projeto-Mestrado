@@ -114,7 +114,7 @@ def HC(Rede):
     # Adicionar uma simulação padrão apra salvar os valores sem interferência das GDs
 
     # Essa função é o pulmão do código, aqui que é feito o cálculo do HC
-    from FunctionsSecond import Colunas_DF_Horas, Limpar_DF, Check
+    from FunctionsSecond import Colunas_DF_Horas, Limpar_DF, Check, Identify_Overcurrent_Limits
     from Definitions import Num_GDs, DF_Geradores, DF_Barras, DF_General, DF_Elements, DF_PV,\
         DF_PVPowerData, DF_Lista_Monitors, DF_Tensao_A
 
@@ -123,6 +123,8 @@ def HC(Rede):
 
     Rede.dssTransformers.Name = Rede.dssTransformers.AllNames[0]
     Incremento_Pot_gd = float(Incremento_gd)/100 * Rede.dssTransformers.kva
+
+    Identify_Overcurrent_Limits(Rede)
 
     Sem_GD = 0
 

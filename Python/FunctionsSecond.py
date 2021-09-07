@@ -331,3 +331,16 @@ def Adjust_Colum_Name(DF):
         new_Col.append('Time_' + str(column)) if column.isnumeric() is True else new_Col.append(column)
 
     return new_Col
+
+def Identify_Overcurrent_Limits(Rede):
+
+    NormAmps = []
+
+    for Line in Rede.dssLines.AllNames:
+        Rede.dssLines.Name = Line
+        NormAmps.append(Rede.dssLines.NormAmps)
+
+    DF_Corrente_Limite.insert(0, 'Elemento', Rede.dssLines.AllNames, allow_duplicates=True)
+    DF_Corrente_Limite.insert(1, 'Current_Limits', NormAmps, allow_duplicates=True)
+
+    print()

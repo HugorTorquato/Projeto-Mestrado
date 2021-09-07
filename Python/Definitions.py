@@ -24,6 +24,8 @@ DF_Corrente_A = pd.DataFrame()
 DF_Corrente_B = pd.DataFrame()
 DF_Corrente_C = pd.DataFrame()
 
+DF_Corrente_Limite = pd.DataFrame()
+
 # Valores e Arrays auxiliares
 Barras_GDs = []
 
