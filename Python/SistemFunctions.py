@@ -114,11 +114,9 @@ def HC(Rede):
     # Adicionar uma simulação padrão apra salvar os valores sem interferência das GDs
 
     # Essa função é o pulmão do código, aqui que é feito o cálculo do HC
-    from FunctionsSecond import Colunas_DF_Horas, Limpar_DF, Check, \
-        Adicionar_EnergyMeter
-    from Monitores import Adicionar_Monitores
+    from FunctionsSecond import Colunas_DF_Horas, Limpar_DF, Check
     from Definitions import Num_GDs, DF_Geradores, DF_Barras, DF_General, DF_Elements, DF_PV,\
-        DF_PVPowerData, DF_Lista_Monitors
+        DF_PVPowerData, DF_Lista_Monitors, DF_Tensao_A
 
     coll = Colunas_DF_Horas(Rede)
 
@@ -152,24 +150,21 @@ def HC(Rede):
             print(min(DF_Tensao_A.set_index('Barras').min().values))
             print('-----------------------------------------------------')
 
-        Coleta_Resultados(Rede, Simulation, Pot_GD)
 
-def Coleta_Resultados(Rede, Simulation, Pot_GD):
+        from Monitores import Export_And_Read_Monitors_Data
+        from FunctionsSecond import Power_measurement_PV
+        from DB_Rede import Save_General_Data, Save_Data, Process_Data
+        from Definitions import DF_Lista_Monitors
 
-    from Monitores import Export_And_Read_Monitors_Data
-    from FunctionsSecond import Power_measurement_PV
-    from DB_Rede import Save_General_Data, Save_Data, Process_Data
-    from Definitions import DF_Lista_Monitors
+        Export_And_Read_Monitors_Data(Rede, DF_Lista_Monitors, Simulation)
+        Power_measurement_PV(Rede, Simulation)
+        DF_Voltage_Data, DF_Corrente_Data = Process_Data(Rede, Simulation)
+        Save_General_Data(Simulation)
+        Save_Data(Simulation, DF_Voltage_Data, DF_Corrente_Data)
 
-    Export_And_Read_Monitors_Data(Rede, DF_Lista_Monitors, Simulation)
-    Power_measurement_PV(Rede, Simulation)
-    Process_Data(Rede, Simulation)
-    Save_General_Data(Simulation)
-    Save_Data(Simulation)
+        Pot_GD = Incremento_gd if Pot_GD == 0 else Pot_GD
 
-    Pot_GD = Incremento_gd if Pot_GD == 0 else Pot_GD
+        print('Número da Simulação : ' + str(Simulation) + ' Pot GDs : ' + str(Pot_GD - Incremento_gd))
 
-    print('Número da Simulação : ' + str(Simulation) + ' Pot GDs : ' + str(Pot_GD - Incremento_gd))
-
-    # Feature:
-    # -> Colocar o cálculo da pertinência triangular aqui, para acontecer logo depois que tiver a violação
+        # Feature:
+        # -> Colocar o cálculo da pertinência triangular aqui, para acontecer logo depois que tiver a violação

@@ -321,3 +321,14 @@ def Adicionar_EnergyMeter(Rede):
     # Como coletar os resultados?
 
     return
+
+def Adjust_Colum_Name(DF):
+
+    # Faz o ajuste dos nomes das colunas ( 0 -> Time_0 ) caso não esteja de acordo com a formatação da tabela
+
+    new_Col = []
+
+    for column in DF.columns:
+        new_Col.append('Time_' + str(column)) if column.isnumeric() is True else new_Col.append(column)
+
+    return new_Col

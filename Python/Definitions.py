@@ -87,6 +87,14 @@ DF_Monitors_Data = pd.DataFrame({'Simulation'     : [],
                                  'Elemento'       : [],
                                  'Measurement'    : []})
 
+DF_Voltage_Data = pd.DataFrame({'Simulation'     : [],
+                                 'Barras'        : [],
+                                 'Fase'          : []})
+
+DF_Current_Data = pd.DataFrame({'Simulation'     : [],
+                                'Elementos'       : [],
+                                'Fase'           : []})
+
 DF_TESTE = pd.DataFrame({
     "A": [1, 2, 3, 4],
     "B": [4, 3, 2, 1],
