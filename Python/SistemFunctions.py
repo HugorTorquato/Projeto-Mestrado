@@ -124,6 +124,8 @@ def HC(Rede):
     Rede.dssTransformers.Name = Rede.dssTransformers.AllNames[0]
     Incremento_Pot_gd = float(Incremento_gd)/100 * Rede.dssTransformers.kva
 
+    Sem_GD = 0
+
     for Simulation in range(1, Num_Simulations + 1):
 
         Nummero_Simulacoes = 0
@@ -155,6 +157,9 @@ def HC(Rede):
             print(min(DF_Tensao_A.set_index('Barras').min().values))
             print('-----------------------------------------------------')
 
+            if Sem_GD == 0:
+                Sem_GD = 1
+                break
 
         from Monitores import Export_And_Read_Monitors_Data
         from FunctionsSecond import Power_measurement_PV
