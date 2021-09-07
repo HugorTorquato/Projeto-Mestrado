@@ -98,13 +98,19 @@ DF_Voltage_Data = pd.DataFrame({'Simulation'     : [],
                                  'Fase'          : []})
 
 DF_Current_Data = pd.DataFrame({'Simulation'     : [],
-                                'Elementos'       : [],
+                                'Elementos'      : [],
                                 'Fase'           : []})
 
 DF_TESTE = pd.DataFrame({
+    "Name": ['L1', 'L2', 'L3', 'A1'],
     "A": [1, 2, 3, 4],
     "B": [4, 3, 2, 1],
     "C": [2, 1, 4, 3]})
+
+print(DF_TESTE)
+print(DF_TESTE.query('A > B'))
+print(DF_TESTE.query('A > B').values)
+print(len(DF_TESTE.query('A > B')))
 
 ##Switches
 

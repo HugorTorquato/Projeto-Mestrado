@@ -214,18 +214,66 @@ def Colunas_DF_Horas(Rede):
     coll = []
     [coll.append(str(i)) for i in range(originalSteps(Rede))]
 
-def Check():
+def Check(Simulation):
 
     # Adicionar condições de vioçação aqui:
     #print(DF_Desq_IEC)
     #print(Check_Desq(DF_Desq_IEC, DF_Desq_IEEE, DF_Desq_NEMA))
-    if float(Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[0]) <= limite_superior and \
-       float(Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[1]) >= limite_inferior:# and \
-       #float(Check_Desq(DF_Desq_IEC, DF_Desq_IEEE, DF_Desq_NEMA)) <= limite_Deseq:
-        #print(Check_Desq(DF_Desq_IEC, DF_Desq_IEEE, DF_Desq_NEMA))
-        return True
-    else:
-        return False
+
+    # and \
+    #float(Check_Desq(DF_Desq_IEC, DF_Desq_IEEE, DF_Desq_NEMA)) <= limite_Deseq:
+    #print(Check_Desq(DF_Desq_IEC, DF_Desq_IEEE, DF_Desq_NEMA))
+
+    # --------------------------------------------------------------------------------------------------------
+    # Requirements
+
+    # Fazer um check report para identificar quando cada uma das violações acontecerem
+
+    # Mais de uma violação pode acontecer ao mesmo tempo, computar TODAS
+
+    # Tem de entender o que está rolando com o desq de tensão
+
+    # --------------------------------------------------------------------------------------------------------
+
+    Simulation_Data = Simulation - 1 # O check acontece depois que o contador incrementa um na contagem
+
+    overvoltage = 0
+    undervoltage = 0
+    overcurrent = 0
+    unbalance = 0
+
+    overvoltage = 0 if float(Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[0]) <= limite_superior \
+        else 1
+    undervoltage = 0 if float(Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[1]) >= limite_inferior \
+        else 1
+    overcurrent = 0 if Check_overcurrent() == 0 \
+        else 1
+
+    return True if overvoltage == 0 and undervoltage and overcurrent == 0 \
+        else False
+
+    #if float(Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[0]) <= limite_superior and \
+    #   float(Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[1]) >= limite_inferior:
+    #    return True
+    #else:
+    #    return False
+
+def Check_overcurrent():
+
+    Violacao = 0
+    for DF_Cur in [DF_Corrente_A, DF_Corrente_B, DF_Corrente_C]:
+
+        df_temp_curr = DF_Corrente_Limite.copy(deep=True)
+        df_temp_curr.insert(2, 'Max_Curr',
+                            DF_Cur[DF_Cur.Elementos.str.contains("Line", regex=False)].set_index('Elementos')
+                            .max(axis=1).values, allow_duplicates=True)
+
+        if len(df_temp_curr.query('Max_Curr > Current_Limits')) != 0:
+            Violacao = 1
+
+        # Implementar maneira de armazenar os dados de quais linhas tiveram violação
+
+    return Violacao
 
 def Check_Desq(IEC, IEEE, NEMA):
 
@@ -335,12 +383,14 @@ def Adjust_Colum_Name(DF):
 def Identify_Overcurrent_Limits(Rede):
 
     NormAmps = []
+    Line_Names = []
 
     for Line in Rede.dssLines.AllNames:
         Rede.dssLines.Name = Line
+        Line_Names.append("Line." + str(Line).upper())
         NormAmps.append(Rede.dssLines.NormAmps)
 
-    DF_Corrente_Limite.insert(0, 'Elemento', Rede.dssLines.AllNames, allow_duplicates=True)
+    DF_Corrente_Limite.insert(0, 'Elementos', Line_Names, allow_duplicates=True)
     DF_Corrente_Limite.insert(1, 'Current_Limits', NormAmps, allow_duplicates=True)
 
     print()

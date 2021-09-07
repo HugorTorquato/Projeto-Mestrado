@@ -140,7 +140,7 @@ def HC(Rede):
 
         FindBusGD(Num_GDs) # Define em quais barras as GDs vão ser inseridas para obtenção do HC nessa simulação
 
-        while Nummero_Simulacoes == 0 or Check() is True:
+        while Nummero_Simulacoes == 0 or Check(Simulation) is True:
 
             # Confere se a definição para adicionar GHD está ativa e se não for a primeira simulação, reseta os devidos
             # valores para fazer o código funcionar
