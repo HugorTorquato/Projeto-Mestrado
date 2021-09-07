@@ -4,6 +4,10 @@ import pandas as pd
 from Princ import *
 import numpy as np
 
+Rede_Path = "C:\\Users\hugo1\Desktop\Projeto_Rede_Fornecida\Python\TCC\Rede" # IEEE13
+Rede_Path = "C:\\Users\hugo1\Desktop\Rede_03\_trafo3"                       #Rede_03
+Debug_Path = "C:\\Users\hugo1\Desktop\Projeto_Rede_Fornecida\Python\Debug"
+
 # Nível de Tensão
 DF_Tensao_A = pd.DataFrame()
 DF_Tensao_B = pd.DataFrame()
@@ -116,7 +120,7 @@ FP_1 = 1
 Const_Irrad = .705
 Const_Temp = 25
 FP = 1
-Incremento_gd = 5000
+Incremento_gd = 100
 
 #Constants
 sqrt3 = np.sqrt(3)

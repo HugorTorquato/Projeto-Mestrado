@@ -9,8 +9,7 @@ if __name__ == "__main__":
     from Geradores import *
     from DB_Rede import *
 
-    Rede = DSS("C:\\Users\hugo1\Desktop\Projeto_Rede_Fornecida\Python\TCC\Rede\Master.dss")  # 13 barras IEEE
-    #Rede = DSS("C:\\Users\hugo1\Desktop\Rede_03\_trafo3\Master.dss")                       # Rede_3
+    Rede = DSS(Rede_Path + "\Master.dss")
 
     Version(Rede), Compila_DSS(Rede), Inicializa(Rede), Refresh_Or_Create_Tables(Rede)
 

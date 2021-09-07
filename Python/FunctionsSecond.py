@@ -14,11 +14,10 @@ def Correntes_elementos(Rede, itera):
 
     from Definitions import DF_Corrente_itera, DF_Corrente_A, DF_Corrente_B, DF_Corrente_C
 
-    Rede.dssText.Command = "Export Currents"
+    Rede.dssText.Command = "Export Currents file = " + Debug_Path + "\EXP_PVMETERS.CSV"
 
     Limpar_DF(DF_Corrente_itera)
-    DF_Corrente_itera = pd.read_csv(
-        "C:\\Users\hugo1\Desktop\Projeto_Rede_Fornecida\Python\TCC\Rede\IEEE13barras_EXP_CURRENTS.CSV")
+    DF_Corrente_itera = pd.read_csv(Debug_Path + "\EXP_PVMETERS.CSV")
 
     # Melhorar isso para identificar o caminho correto, se pa criar um header fixo na definição da rede
 
@@ -235,7 +234,7 @@ def Check_Desq(IEC, IEEE, NEMA):
     return max(DF.set_index('Barras').max().values)
 
 def Salvar_Dados_Tensao():
-    Escrever = pd.ExcelWriter("C:\\Users\hugo1\Desktop\Projeto_Rede_Fornecida\Python\Debug\Debug.xlsx")
+    Escrever = pd.ExcelWriter(Debug_Path + "\Debug.xlsx")
 
     DF_Tensao_A.to_excel(Escrever, 'DF_Tensao_A', index=False)
     DF_Tensao_B.to_excel(Escrever, 'DF_Tensao_B', index=False)

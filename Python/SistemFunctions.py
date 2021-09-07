@@ -146,6 +146,7 @@ def HC(Rede):
             Pot_GD += Incremento_gd if Criar_GD and Nummero_Simulacoes > 0 else 0
 
             print('-----------------------------------------------------')
+            print(DF_Tensao_A.head())
             print(max(DF_Tensao_A.set_index('Barras').max().values))
             print(min(DF_Tensao_A.set_index('Barras').min().values))
             print('-----------------------------------------------------')
