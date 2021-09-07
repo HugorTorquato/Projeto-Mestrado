@@ -118,7 +118,11 @@ def HC(Rede):
     from Definitions import Num_GDs, DF_Geradores, DF_Barras, DF_General, DF_Elements, DF_PV,\
         DF_PVPowerData, DF_Lista_Monitors, DF_Tensao_A
 
-    coll = Colunas_DF_Horas(Rede)
+    # Define o primeiro transformador como o ponto de PCC e o incremento de pot em cada verificação do HC é
+    # definido em termos de % frente a pot do trafo de entrada
+
+    Rede.dssTransformers.Name = Rede.dssTransformers.AllNames[0]
+    Incremento_Pot_gd = float(Incremento_gd)/100 * Rede.dssTransformers.kva
 
     for Simulation in range(1, Num_Simulations + 1):
 
@@ -143,10 +147,10 @@ def HC(Rede):
             Solve_Hora_por_Hora(Rede, Simulation, Pot_GD)  # Chamada da função que levanta o perfil diário
 
             Nummero_Simulacoes += 1
-            Pot_GD += Incremento_gd if Criar_GD and Nummero_Simulacoes > 0 else 0
+            Pot_GD += Incremento_Pot_gd if Criar_GD and Nummero_Simulacoes > 0 else 0
 
             print('-----------------------------------------------------')
-            print(DF_Tensao_A.head())
+            #print(DF_Tensao_A.head())
             print(max(DF_Tensao_A.set_index('Barras').max().values))
             print(min(DF_Tensao_A.set_index('Barras').min().values))
             print('-----------------------------------------------------')
@@ -163,9 +167,11 @@ def HC(Rede):
         Save_General_Data(Simulation)
         Save_Data(Simulation, DF_Voltage_Data, DF_Corrente_Data)
 
-        Pot_GD = Incremento_gd if Pot_GD == 0 else Pot_GD
+        # Olhar isso aqui direito... parece que n está computando o valor limite certinho
+        # Apresenta o valor de pot já com a violação
+        #Pot_GD = Incremento_Pot_gd if Pot_GD == 0 else Pot_GD
 
-        print('Número da Simulação : ' + str(Simulation) + ' Pot GDs : ' + str(Pot_GD - Incremento_gd))
+        print('Número da Simulação : ' + str(Simulation) + ' Pot GDs : ' + str(Pot_GD - Incremento_Pot_gd))
 
         # Feature:
         # -> Colocar o cálculo da pertinência triangular aqui, para acontecer logo depois que tiver a violação

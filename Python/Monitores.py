@@ -58,9 +58,6 @@ def Export_And_Read_Monitors_Data(Rede, Lista_Monitores, Simulation):
 
         [Limpar_DF(DF) for DF in [DF_Monitors_Power_Values, DF_Monitors_Voltage_Values, DF_Monitors_Data]]
 
-        # Melhorar isso para identificar o caminho correto, se pa criar um header fixo na definição da rede
-        # Conferir se sempre vai aparecer o 1 no final do arquivo
-
         DF_Monitors_Power_Values = pd.read_csv(
             Debug_Path + "\_Mon_" + str(element.split('.')[1]) + "_power_1.csv")
 

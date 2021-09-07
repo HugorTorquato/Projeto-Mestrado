@@ -120,7 +120,7 @@ FP_1 = 1
 Const_Irrad = .705
 Const_Temp = 25
 FP = 1
-Incremento_gd = 100
+Incremento_gd = 10 # Valores em porcentagem (%)
 
 #Constants
 sqrt3 = np.sqrt(3)
