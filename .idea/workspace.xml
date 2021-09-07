@@ -10,6 +10,8 @@
       <change beforePath="$PROJECT_DIR$/Python/SistemFunctions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/SistemFunctions.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Python/TCC/Rede/IEEE13barras_Curr_Seq.Txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Python/TCC/Rede/IEEE13barras_EXP_CURRENTS.CSV" beforeDir="false" afterPath="$PROJECT_DIR$/Python/TCC/Rede/IEEE13barras_EXP_CURRENTS.CSV" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python/TCC/Rede/IEEE13barras_Mon_650632_power_1.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Python/TCC/Rede/IEEE13barras_Mon_650632_power_1.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python/TCC/Rede/IEEE13barras_Mon_650632_voltage_1.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Python/TCC/Rede/IEEE13barras_Mon_650632_voltage_1.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Python/TCC/Rede/IEEE13barras_Power.DSV" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Python/TCC/Rede/IEEE13barras_Power.dbl" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Python/TCC/Rede/IEEE13barras_Power_elem_kVA.txt" beforeDir="false" />
