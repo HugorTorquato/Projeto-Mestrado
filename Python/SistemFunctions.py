@@ -42,7 +42,6 @@ def Inicializa(Rede):
     DF_irradNow_PV.insert(0, 'PVs', PVs, allow_duplicates=True)
     [DF_irradNow_PV.insert(i + 1, str(i), 'TBD') for i in range(originalSteps(Rede))]
 
-
     # Defnição das barras em que os geradores vão estar inseridos no sistema
     # FindBusGD(Num_GDs)
 
@@ -67,9 +66,12 @@ def Tamanho_pmult(Rede):
     Rede.dssLoadShapes.Name = Rede.dssLoadShapes.AllNames[1]
     return len(Rede.dssLoadShapes.pmult)
 
-def Solve_Hora_por_Hora(Rede, Simulation):
+def Solve_Hora_por_Hora(Rede, Simulation, Pot_GD):
     # Essa função é o coração do código, aqui que são feitos todos os comandos e designações para os calculos durante
     # a simulação diária
+
+    from Monitores import Adicionar_Monitores
+    from FunctionsSecond import Adicionar_EnergyMeter
 
     # Feature:
     # -> Limitar a simulação diária somente ao pico de geração fotovoltaica ( algumas horas ) = sim. mais rápida
@@ -78,9 +80,23 @@ def Solve_Hora_por_Hora(Rede, Simulation):
 
     Rede.dssSolution.Number = 1
 
+    # ----------------------------------------------------------------------------------------------------------
+    # A função Compila DSS lê os arquivos .dss e deixa o circuito da forma que que está lá.
+    # Para adicionar novos elementos ( Geradores, PVSystem, Medidores... ) tem de ser feito aqui,
+    # Essa definição vai ser incluida na definição dos arquivos .dss e computada durante o solve
+    # que tem dentro da função "Solve_Hora_por_Hora".
+    # OBS: Se definir um DF, lembrar de limpar o mesmo na seção anterior
+
+    Adicionar_GDs(Rede, Pot_GD, Simulation)
+    Adicionar_EnergyMeter(Rede)
+    Adicionar_Monitores(Rede)
+
+    # ----------------------------------------------------------------------------------------------------------
+
     from FunctionsSecond import Tensao_Barras, originalSteps, Correntes_elementos, Data_PV
 
     for itera in range(0, originalSteps(Rede)):
+
         Rede.dssSolution.SolveSnap()
 
         Tensao_Barras(Rede, itera)
@@ -98,19 +114,17 @@ def HC(Rede):
     # Adicionar uma simulação padrão apra salvar os valores sem interferência das GDs
 
     # Essa função é o pulmão do código, aqui que é feito o cálculo do HC
-    from FunctionsSecond import Colunas_DF_Horas, Limpar_DF, Check, Power_measurement_PV, \
-        Adicionar_EnergyMeter
-    from Monitores import Adicionar_Monitores, Export_And_Read_Monitors_Data
-    from Definitions import Num_GDs, DF_Geradores, DF_Barras, DF_General, DF_Elements, DF_Tensao_A, DF_PV,\
-        DF_PVPowerData, DF_Lista_Monitors
-    from DB_Rede import Save_General_Data, Save_Data, Process_Data
+    from FunctionsSecond import Colunas_DF_Horas, Limpar_DF, Check, Identify_Overcurrent_Limits
+    from Definitions import Num_GDs, DF_Geradores, DF_Barras, DF_General, DF_Elements, DF_PV,\
+        DF_PVPowerData, DF_Lista_Monitors, DF_Tensao_A
 
-    coll = Colunas_DF_Horas(Rede)
+    # Define o primeiro transformador como o ponto de PCC e o incremento de pot em cada verificação do HC é
+    # definido em termos de % frente a pot do trafo de entrada
 
-    # [1,2,3,4,5] [[b1,b2,b3], [b1,b2,b3], [b1,b2,b3]]
+    Rede.dssTransformers.Name = Rede.dssTransformers.AllNames[0]
+    Incremento_Pot_gd = float(Incremento_gd)/100 * Rede.dssTransformers.kva
 
-    # Fazer a combinação e avaliar por zona
-    #Barras_GDs = list(combinations(DF_Tensao_A.Barras.values, 3))
+    Identify_Overcurrent_Limits(Rede)
 
     Sem_GD = 0
 
@@ -124,12 +138,9 @@ def HC(Rede):
         [Limpar_DF(DF) for DF in [DF_Geradores, DF_Barras, DF_General, DF_Elements, DF_PV, DF_PVPowerData,
                                   DF_Lista_Monitors, DF_PVPowerData]]
 
-        # Define em quais barras as GDs vão ser inseridas para obtenção do HC nessa simulação
-        FindBusGD(Num_GDs)
+        FindBusGD(Num_GDs) # Define em quais barras as GDs vão ser inseridas para obtenção do HC nessa simulação
 
-        Sem_GD = 1 if Num_Simulations != 0 else 0
-
-        while Nummero_Simulacoes == 0 or Check() == True:
+        while Nummero_Simulacoes == 0 or Check() is True:
 
             # Confere se a definição para adicionar GHD está ativa e se não for a primeira simulação, reseta os devidos
             # valores para fazer o código funcionar
@@ -137,38 +148,37 @@ def HC(Rede):
                 Compila_DSS(Rede)
                 [Limpar_DF(DF) for DF in [DF_Geradores, DF_Elements, DF_PV, DF_Lista_Monitors, DF_PVPowerData]]
 
-            # ----------------------------------------------------------------------------------------------------------
-            # A função Compila DSS lê os arquivos .dss e deixa o circuito da forma que que está lá.
-            # Para adicionar novos elementos ( Geradores, PVSystem, Medidores... ) tem de ser feito aqui,
-            # Essa definição vai ser incluida na definição dos arquivos .dss e computada durante o solve
-            # que tem dentro da função "Solve_Hora_por_Hora".
-            # OBS: Se definir um DF, lembrar de limpar o mesmo na seção anterior
-
-            Adicionar_GDs(Rede, Pot_GD, Simulation)
-            Adicionar_EnergyMeter(Rede)
-            Adicionar_Monitores(Rede)
-
-            # ----------------------------------------------------------------------------------------------------------
-
-            Solve_Hora_por_Hora(Rede, Simulation)  # Chamada da função que levanta o perfil diário
+            Solve_Hora_por_Hora(Rede, Simulation, Pot_GD)  # Chamada da função que levanta o perfil diário
 
             Nummero_Simulacoes += 1
-            Pot_GD += Incremento_gd
+            Pot_GD += Incremento_Pot_gd if Criar_GD and Nummero_Simulacoes > 0 else 0
 
             print('-----------------------------------------------------')
+            #print(DF_Tensao_A.head())
             print(max(DF_Tensao_A.set_index('Barras').max().values))
             print(min(DF_Tensao_A.set_index('Barras').min().values))
             print('-----------------------------------------------------')
 
             if Sem_GD == 0:
+                Sem_GD = 1
                 break
+
+        from Monitores import Export_And_Read_Monitors_Data
+        from FunctionsSecond import Power_measurement_PV
+        from DB_Rede import Save_General_Data, Save_Data, Process_Data
+        from Definitions import DF_Lista_Monitors
 
         Export_And_Read_Monitors_Data(Rede, DF_Lista_Monitors, Simulation)
         Power_measurement_PV(Rede, Simulation)
-        Process_Data(Rede, Simulation)
+        DF_Voltage_Data, DF_Corrente_Data = Process_Data(Rede, Simulation)
         Save_General_Data(Simulation)
-        Save_Data(Simulation)
-        print('Número da Simulação : ' + str(Simulation) + ' Pot GDs : ' + str(Pot_GD - Incremento_gd))
+        Save_Data(Simulation, DF_Voltage_Data, DF_Corrente_Data)
 
-    # Feature:
-    # -> Colocar o cálculo da pertinência triangular aqui, para acontecer logo depois que tiver a violação
+        # Olhar isso aqui direito... parece que n está computando o valor limite certinho
+        # Apresenta o valor de pot já com a violação
+        #Pot_GD = Incremento_Pot_gd if Pot_GD == 0 else Pot_GD
+
+        print('Número da Simulação : ' + str(Simulation) + ' Pot GDs : ' + str(Pot_GD - Incremento_Pot_gd))
+
+        # Feature:
+        # -> Colocar o cálculo da pertinência triangular aqui, para acontecer logo depois que tiver a violação

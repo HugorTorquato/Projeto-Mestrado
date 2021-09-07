@@ -6,15 +6,7 @@
       <change beforePath="$PROJECT_DIR$/Python/DB_Rede.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/DB_Rede.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Python/Definitions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/Definitions.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Python/FunctionsSecond.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/FunctionsSecond.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python/Geradores.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/Geradores.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Python/SistemFunctions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/SistemFunctions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python/TCC/Rede/IEEE13barras_Curr_Seq.Txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python/TCC/Rede/IEEE13barras_EXP_CURRENTS.CSV" beforeDir="false" afterPath="$PROJECT_DIR$/Python/TCC/Rede/IEEE13barras_EXP_CURRENTS.CSV" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python/TCC/Rede/IEEE13barras_Power.DSV" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python/TCC/Rede/IEEE13barras_Power.dbl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python/TCC/Rede/IEEE13barras_Power_elem_kVA.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python/TCC/Rede/IEEE13barras_RegTaps.Txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python/TCC/Rede/IEEE13barras_VLN_Node.Txt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -169,9 +161,19 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Python/DB_Rede.py</url>
-          <line>194</line>
-          <option name="timeStamp" value="93" />
+          <url>file://$PROJECT_DIR$/Python/FunctionsSecond.py</url>
+          <line>244</line>
+          <option name="timeStamp" value="125" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Python/FunctionsSecond.py</url>
+          <line>242</line>
+          <option name="timeStamp" value="126" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Python/FunctionsSecond.py</url>
+          <line>238</line>
+          <option name="timeStamp" value="127" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

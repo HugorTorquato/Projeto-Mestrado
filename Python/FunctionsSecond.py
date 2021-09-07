@@ -14,11 +14,10 @@ def Correntes_elementos(Rede, itera):
 
     from Definitions import DF_Corrente_itera, DF_Corrente_A, DF_Corrente_B, DF_Corrente_C
 
-    Rede.dssText.Command = "Export Currents"
+    Rede.dssText.Command = "Export Currents file = " + Debug_Path + "\EXP_PVMETERS.CSV"
 
     Limpar_DF(DF_Corrente_itera)
-    DF_Corrente_itera = pd.read_csv(
-        "C:\\Users\hugo1\Desktop\Projeto_Rede_Fornecida\Python\TCC\Rede\IEEE13barras_EXP_CURRENTS.CSV")
+    DF_Corrente_itera = pd.read_csv(Debug_Path + "\EXP_PVMETERS.CSV")
 
     # Melhorar isso para identificar o caminho correto, se pa criar um header fixo na definição da rede
 
@@ -235,7 +234,7 @@ def Check_Desq(IEC, IEEE, NEMA):
     return max(DF.set_index('Barras').max().values)
 
 def Salvar_Dados_Tensao():
-    Escrever = pd.ExcelWriter("C:\\Users\hugo1\Desktop\Projeto_Rede_Fornecida\Python\Debug\Debug.xlsx")
+    Escrever = pd.ExcelWriter(Debug_Path + "\Debug.xlsx")
 
     DF_Tensao_A.to_excel(Escrever, 'DF_Tensao_A', index=False)
     DF_Tensao_B.to_excel(Escrever, 'DF_Tensao_B', index=False)
@@ -321,3 +320,27 @@ def Adicionar_EnergyMeter(Rede):
     # Como coletar os resultados?
 
     return
+
+def Adjust_Colum_Name(DF):
+
+    # Faz o ajuste dos nomes das colunas ( 0 -> Time_0 ) caso não esteja de acordo com a formatação da tabela
+
+    new_Col = []
+
+    for column in DF.columns:
+        new_Col.append('Time_' + str(column)) if column.isnumeric() is True else new_Col.append(column)
+
+    return new_Col
+
+def Identify_Overcurrent_Limits(Rede):
+
+    NormAmps = []
+
+    for Line in Rede.dssLines.AllNames:
+        Rede.dssLines.Name = Line
+        NormAmps.append(Rede.dssLines.NormAmps)
+
+    DF_Corrente_Limite.insert(0, 'Elemento', Rede.dssLines.AllNames, allow_duplicates=True)
+    DF_Corrente_Limite.insert(1, 'Current_Limits', NormAmps, allow_duplicates=True)
+
+    print()

@@ -4,6 +4,10 @@ import pandas as pd
 from Princ import *
 import numpy as np
 
+Rede_Path = "C:\\Users\hugo1\Desktop\Projeto_Rede_Fornecida\Python\TCC\Rede" # IEEE13
+Rede_Path = "C:\\Users\hugo1\Desktop\Rede_03\_trafo3"                       #Rede_03
+Debug_Path = "C:\\Users\hugo1\Desktop\Projeto_Rede_Fornecida\Python\Debug"
+
 # Nível de Tensão
 DF_Tensao_A = pd.DataFrame()
 DF_Tensao_B = pd.DataFrame()
@@ -19,6 +23,8 @@ DF_Corrente_itera = pd.DataFrame()
 DF_Corrente_A = pd.DataFrame()
 DF_Corrente_B = pd.DataFrame()
 DF_Corrente_C = pd.DataFrame()
+
+DF_Corrente_Limite = pd.DataFrame()
 
 # Valores e Arrays auxiliares
 Barras_GDs = []
@@ -87,6 +93,14 @@ DF_Monitors_Data = pd.DataFrame({'Simulation'     : [],
                                  'Elemento'       : [],
                                  'Measurement'    : []})
 
+DF_Voltage_Data = pd.DataFrame({'Simulation'     : [],
+                                 'Barras'        : [],
+                                 'Fase'          : []})
+
+DF_Current_Data = pd.DataFrame({'Simulation'     : [],
+                                'Elementos'       : [],
+                                'Fase'           : []})
+
 DF_TESTE = pd.DataFrame({
     "A": [1, 2, 3, 4],
     "B": [4, 3, 2, 1],
@@ -101,14 +115,14 @@ Calc_HC = 1         # Aciona o cálculo do HC
 All_GDs = 1
 Use_PV = 1          # 1- Usa o PVSystem  0 - Usa geradore
 Norma = 1           #  # 0 - PRODIST # 1 - IEEE
-Num_Simulations = 3 # Deifnie o número de simulações que serão realizadas
+Num_Simulations = 2 # Deifnie o número de simulações que serão realizadas
 
 # PVSystem
 FP_1 = 1
 Const_Irrad = .705
 Const_Temp = 25
 FP = 1
-Incremento_gd = 5000
+Incremento_gd = 10 # Valores em porcentagem (%)
 
 #Constants
 sqrt3 = np.sqrt(3)
@@ -124,8 +138,6 @@ if Norma == 0:
     limite_superior = 1.05
     limite_inferior = 0.92
     limite_Deseq = 2
-
-
 
 class DSS():
 
@@ -160,4 +172,3 @@ class DSS():
             self.dssTransformers = self.dssCircuit.Transformers
             self.dssSensor = self.dssCircuit.Sensors
             self.dssPVSystems = self.dssCircuit.PVSystems
-            #self.dssEnergymeter = self.Energymeter

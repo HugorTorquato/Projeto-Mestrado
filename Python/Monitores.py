@@ -29,11 +29,24 @@ def Define_Monitor(Rede, Lista_Monitores):
                                " terminal=1 mode=1 ppolar=no"
         Rede.dssText.Command = "New monitor." + str(element.split('.')[1]) + "_voltage element=" + str(element) \
                                + " terminal=1 mode=0"
+def Move_Files():
+
+    import os
+
+    for file in os.listdir(Rede_Path):
+
+        if 'Mon' in file.split("_"):
+
+            os.remove(os.path.join(Debug_Path, file.replace(file.split("_")[0], ""))) \
+                if file.replace(file.split("_")[0], "") in os.listdir(Debug_Path) else 0
+
+            os.rename(file, Debug_Path + file.replace(file.split("_")[0], "\\"))
 
 def Export_And_Read_Monitors_Data(Rede, Lista_Monitores, Simulation):
 
     from Definitions import DF_Monitors_Power_Values, DF_Monitors_Voltage_Values
     from FunctionsSecond import Limpar_DF, originalSteps
+
 
     Lista_Monitores = Lista_Monitores["Elemento_com_monitor"].values
 
@@ -41,18 +54,15 @@ def Export_And_Read_Monitors_Data(Rede, Lista_Monitores, Simulation):
         Rede.dssText.Command = "Export monitors " + str(element.split('.')[1]) + "_power"
         Rede.dssText.Command = "Export monitors " + str(element.split('.')[1]) + "_voltage"
 
+        Move_Files()
+
         [Limpar_DF(DF) for DF in [DF_Monitors_Power_Values, DF_Monitors_Voltage_Values, DF_Monitors_Data]]
 
-        # Melhorar isso para identificar o caminho correto, se pa criar um header fixo na definição da rede
-        # Conferir se sempre vai aparecer o 1 no final do arquivo
-
         DF_Monitors_Power_Values = pd.read_csv(
-            "C:\\Users\hugo1\Desktop\Projeto_Rede_Fornecida\Python\TCC\Rede\IEEE13barras_Mon_" +
-            str(element.split('.')[1]) + "_power_1.csv")
+            Debug_Path + "\_Mon_" + str(element.split('.')[1]) + "_power_1.csv")
 
         DF_Monitors_Voltage_Values = pd.read_csv(
-            "C:\\Users\hugo1\Desktop\Projeto_Rede_Fornecida\Python\TCC\Rede\IEEE13barras_Mon_" +
-            str(element.split('.')[1]) + "_voltage_1.csv")
+            Debug_Path + "\_Mon_" + str(element.split('.')[1]) + "_voltage_1.csv")
 
         Columns_Power_Names = DF_Monitors_Power_Values.columns.values[2:]
         Columns_Voltage_Names = DF_Monitors_Voltage_Values.columns.values[2:]
