@@ -51,6 +51,9 @@ def Version(Rede):
 def Compila_DSS(Rede):
     Rede.dssObj.ClearALL()
     Rede.dssText.Command = "compile " + Rede.Modelo_Barras
+    Rede.dssText.Command = "set mode=daily"
+    Rede.dssText.Command = "set stepsize = 15m"
+    Rede.dssText.Command = "set number = 96"
 
     Rede.dssSolution.Solve()
 
@@ -131,7 +134,7 @@ def HC(Rede):
     for Simulation in range(1, Num_Simulations + 1):
 
         Nummero_Simulacoes = 0
-        Pot_GD = 0
+        Pot_GD = 0 if Sem_GD == 0 else 1
 
         Compila_DSS(Rede)
 
@@ -140,7 +143,7 @@ def HC(Rede):
 
         FindBusGD(Num_GDs) # Define em quais barras as GDs vão ser inseridas para obtenção do HC nessa simulação
 
-        while Nummero_Simulacoes == 0 or Check() is True:
+        while Nummero_Simulacoes == 0 or Check(Rede, Simulation) is True:
 
             # Confere se a definição para adicionar GHD está ativa e se não for a primeira simulação, reseta os devidos
             # valores para fazer o código funcionar
@@ -160,6 +163,8 @@ def HC(Rede):
             print('-----------------------------------------------------')
 
             if Sem_GD == 0:
+                print('--------------------- S/ GD -------------------------')
+                print('-----------------------------------------------------')
                 Sem_GD = 1
                 break
 

@@ -137,6 +137,10 @@ def Max_Min(Tensao1, Tensao2, Tensao3):
 
     Vet_Max_Min = [Tensao1, Tensao2, Tensao3]
 
+    Tensao1 = 0 if Tensao1 < 0.3 else Tensao1
+    Tensao2 = 0 if Tensao2 < 0.3 else Tensao2
+    Tensao3 = 0 if Tensao3 < 0.3 else Tensao3
+
     if Tensao1 != 0 and Tensao2 != 0 and Tensao3 != 0:
         max_Tensao = max(Vet_Max_Min)
         min_Tensao = min(Vet_Max_Min)
@@ -179,6 +183,10 @@ def Max_Min(Tensao1, Tensao2, Tensao3):
 
 def IEC(Tensao1, Tensao2, Tensao3, Angle1, Angle2, Angle3):   # Limite de 2%
 
+    Tensao1 = 0 if Tensao1 < 0.3 else Tensao1
+    Tensao2 = 0 if Tensao2 < 0.3 else Tensao2
+    Tensao3 = 0 if Tensao3 < 0.3 else Tensao3
+
     if Tensao1 != 0 and Tensao2 != 0 and Tensao3 != 0:
         Positiva = 0.333333 * ((cmath.rect(Tensao1, np.deg2rad(Angle1))) +
                                (alfa * cmath.rect(Tensao2, np.deg2rad(Angle2))) +
@@ -193,6 +201,10 @@ def IEC(Tensao1, Tensao2, Tensao3, Angle1, Angle2, Angle3):   # Limite de 2%
 def IEEE(Tensao1, Tensao2, Tensao3, max, min): # limite de 2.5%
 
     # Utiliza tensões de fase
+    Tensao1 = 0 if Tensao1 < 0.3 else Tensao1
+    Tensao2 = 0 if Tensao2 < 0.3 else Tensao2
+    Tensao3 = 0 if Tensao3 < 0.3 else Tensao3
+
     return (3*100*(max - min))/(Tensao1 + Tensao2 + Tensao3)
 
 def NEMA(Vmedio, Vmax):
@@ -214,24 +226,90 @@ def Colunas_DF_Horas(Rede):
     coll = []
     [coll.append(str(i)) for i in range(originalSteps(Rede))]
 
-def Check():
+def Check(Rede, Simulation):
 
     # Adicionar condições de vioçação aqui:
     #print(DF_Desq_IEC)
     #print(Check_Desq(DF_Desq_IEC, DF_Desq_IEEE, DF_Desq_NEMA))
-    if float(Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[0]) <= limite_superior and \
-       float(Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[1]) >= limite_inferior:# and \
-       #float(Check_Desq(DF_Desq_IEC, DF_Desq_IEEE, DF_Desq_NEMA)) <= limite_Deseq:
-        #print(Check_Desq(DF_Desq_IEC, DF_Desq_IEEE, DF_Desq_NEMA))
-        return True
-    else:
-        return False
 
-def Check_Desq(IEC, IEEE, NEMA):
+    # and \
+    #float(Check_Desq(DF_Desq_IEC, DF_Desq_IEEE, DF_Desq_NEMA)) <= limite_Deseq:
+    #print(Check_Desq(DF_Desq_IEC, DF_Desq_IEEE, DF_Desq_NEMA))
+
+    # --------------------------------------------------------------------------------------------------------
+    # Requirements
+
+    # Fazer um check report para identificar quando cada uma das violações acontecerem
+
+    # Mais de uma violação pode acontecer ao mesmo tempo, computar TODAS
+
+    # Tem de entender o que está rolando com o desq de tensão
+
+    # --------------------------------------------------------------------------------------------------------
+
+    overvoltage = 0
+    undervoltage = 0
+    overcurrent = 0
+    unbalance = 0
+
+    overvoltage = 0 if float(Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[0]) <= limite_superior \
+        else 1
+    undervoltage = 0 if float(Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[1]) >= limite_inferior \
+        else 1
+    overcurrent = 0 if Check_overcurrent() == 0 \
+        else 1
+    unbalance = 0 if Check_Desq(Rede, DF_Desq_IEC, DF_Desq_IEEE, DF_Desq_NEMA) is False \
+        else 1
+
+    return True if overvoltage == 0 and undervoltage == 0 and overcurrent == 0 and unbalance == 0 \
+        else Salva_Check_Report(Simulation, overvoltage, undervoltage, overcurrent, unbalance)
+
+def Check_overcurrent():
+
+    Violacao = 0
+    for DF_Cur in [DF_Corrente_A, DF_Corrente_B, DF_Corrente_C]:
+
+        df_temp_curr = DF_Corrente_Limite.copy(deep=True)
+        df_temp_curr.insert(2, 'Max_Curr',
+                            DF_Cur[DF_Cur.Elementos.str.contains("Line", regex=False)].set_index('Elementos')
+                            .max(axis=1).values, allow_duplicates=True)
+
+        if len(df_temp_curr.query('Max_Curr > Current_Limits')) != 0:
+            Violacao = 1
+
+        # Implementar maneira de armazenar os dados de quais linhas tiveram violação
+
+    return Violacao
+
+def Check_Desq(Rede, IEC, IEEE, NEMA):
+
+    # Só o IEEE está funcionando por hora
 
     DF = IEC if Norma == 0 else IEEE if Norma == 1 else NEMA
 
-    return max(DF.set_index('Barras').max().values)
+    # Se alguma barra tiver mais que 5% violações de tensão, acusa o overvoltage
+    count = 0
+    aa = DF.set_index('Barras')
+    aaa = DF.set_index('Barras').where(DF.set_index('Barras') > limite_Deseq).count(axis=1)
+    a = DF.set_index('Barras').where(DF.set_index('Barras') > limite_Deseq).count(axis=1).values
+    for barra in DF.set_index('Barras').where(DF.set_index('Barras') > limite_Deseq).count(axis=1).values:
+        count += 1 if barra >= np.floor(originalSteps(Rede)*float(Steps_wtout_unbalance/100)) else 0
+
+    return False if count == 0 else True
+
+def Salva_Check_Report(Simulation_Data, overvoltage, undervoltage, overcurrent, unbalance):
+
+    Limpar_DF(DF_Check_Report)
+
+    index = len(DF_Check_Report.index)
+
+    DF_Check_Report.loc[index, 'Simulation'] = Simulation_Data
+    DF_Check_Report.loc[index, 'overvoltage'] = overvoltage
+    DF_Check_Report.loc[index, 'undervoltage'] = undervoltage
+    DF_Check_Report.loc[index, 'overcurrent'] = overcurrent
+    DF_Check_Report.loc[index, 'unbalance'] = unbalance
+
+    return False
 
 def Salvar_Dados_Tensao():
     Escrever = pd.ExcelWriter(Debug_Path + "\Debug.xlsx")
@@ -335,12 +413,14 @@ def Adjust_Colum_Name(DF):
 def Identify_Overcurrent_Limits(Rede):
 
     NormAmps = []
+    Line_Names = []
 
     for Line in Rede.dssLines.AllNames:
         Rede.dssLines.Name = Line
+        Line_Names.append("Line." + str(Line).upper())
         NormAmps.append(Rede.dssLines.NormAmps)
 
-    DF_Corrente_Limite.insert(0, 'Elemento', Rede.dssLines.AllNames, allow_duplicates=True)
+    DF_Corrente_Limite.insert(0, 'Elementos', Line_Names, allow_duplicates=True)
     DF_Corrente_Limite.insert(1, 'Current_Limits', NormAmps, allow_duplicates=True)
 
     print()

@@ -121,7 +121,14 @@ def Fase2String(STRING):
 def FindBusGD(Num_GDs):
     from Definitions import DF_Tensao_A, Barras_GDs
 
-    [Barras_GDs.append(random2.choice(DF_Tensao_A.Barras.values)) for i in range(Num_GDs)]
+    #[Barras_GDs.append(random2.choice(DF_Tensao_A.Barras.values)) for i in range(Num_GDs)]
+    vet_choice = list(DF_Tensao_A.Barras.values)
+    for i in range(Num_GDs):
+        choice = random2.choice(vet_choice)
+        vet_choice.remove(choice) if choice in vet_choice else 0
+        Barras_GDs.append(choice)
+
+
     # [Barras_GDs.append(list(combinations(DF_Tensao_A.Barras.values, 2))) for i in range(Num_GDs)]
     # print(Barras_GDs)
     # Colocar um debug level aqui

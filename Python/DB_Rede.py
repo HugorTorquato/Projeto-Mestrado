@@ -17,7 +17,27 @@ def Refresh_Or_Create_Tables(Rede):
     # To do:
     #   1- Colocar tabela com todos os valores de tensão ()
 
-    # Definição da tabela PVSystems
+    # Definição da tabela Check_Report
+    DB = 'Check_Report'
+    if len(pd.read_sql(
+            'SELECT TABLE_NAME '
+            'FROM INFORMATION_SCHEMA.TABLES '
+            'WHERE TABLE_NAME = \'' + DB + '\'', engine)) == 0:
+        print('Create Table :' + str(DB))
+        Barras = sql.Table(str(DB), metadata,
+                           sql.Column('Nome_ID', sql.Integer, primary_key=True),
+                           sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
+                           sql.Column('overvoltage', sql.Integer),
+                           sql.Column('undervoltage', sql.Integer),
+                           sql.Column('overcurrent', sql.Integer),
+                           sql.Column('unbalance', sql.Integer)
+                           )
+
+    else:
+        engine.execute('DBCC CHECKIDENT(\'' + DB + '\', RESEED, 0)') # Redefine a PK para começar do zero novamente
+        engine.execute('DELETE FROM ' + str(DB))
+
+    # Definição da tabela Voltage_Data
     DB = 'Voltage_Data'
     if len(pd.read_sql(
             'SELECT TABLE_NAME '
@@ -35,7 +55,7 @@ def Refresh_Or_Create_Tables(Rede):
         engine.execute('DBCC CHECKIDENT(\'' + DB + '\', RESEED, 0)') # Redefine a PK para começar do zero novamente
         engine.execute('DELETE FROM ' + str(DB))
 
-    # Definição da tabela PVSystems
+    # Definição da tabela Current_Data
     DB = 'Current_Data'
     if len(pd.read_sql(
             'SELECT TABLE_NAME '
@@ -222,7 +242,8 @@ def Adjust_tables_to_timestemp(engine, Rede):
 
 def Save_Data(Simulation, DF_Voltage_Data, DF_Corrente_Data):
 
-    from Definitions import DF_Geradores, DF_General, DF_Barras, DF_Elements, DF_PV, DF_PVPowerData, DF_Monitors_Data
+    from Definitions import DF_Geradores, DF_General, DF_Barras, DF_Elements, DF_PV, DF_PVPowerData,\
+        DF_Monitors_Data, DF_Check_Report
 
     DF_General.to_sql('General', sqlalchemy(), if_exists='append', index=False)
     DF_Geradores.to_sql('GD', sqlalchemy(), if_exists='append', index=False)
@@ -231,6 +252,7 @@ def Save_Data(Simulation, DF_Voltage_Data, DF_Corrente_Data):
     DF_Monitors_Data.to_sql('MonitoresData', sqlalchemy(), if_exists='append', index=False)
     DF_Barras.to_sql('Barras', sqlalchemy(), if_exists='append', index=False)
     DF_Elements.to_sql('Grid_Elements', sqlalchemy(), if_exists='append', index=False)
+    DF_Check_Report.to_sql('Check_Report', sqlalchemy(), if_exists='append', index=False)
 
     # Corrigir essa ref -> Por algum motivo não está sendo armazenada a global
     DF_Voltage_Data.to_sql('Voltage_Data', sqlalchemy(), if_exists='append', index=False)

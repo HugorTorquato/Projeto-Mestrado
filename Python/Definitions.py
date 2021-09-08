@@ -8,6 +8,9 @@ Rede_Path = "C:\\Users\hugo1\Desktop\Projeto_Rede_Fornecida\Python\TCC\Rede" # I
 Rede_Path = "C:\\Users\hugo1\Desktop\Rede_03\_trafo3"                       #Rede_03
 Debug_Path = "C:\\Users\hugo1\Desktop\Projeto_Rede_Fornecida\Python\Debug"
 
+unbalance_chk = []
+
+
 # Nível de Tensão
 DF_Tensao_A = pd.DataFrame()
 DF_Tensao_B = pd.DataFrame()
@@ -98,31 +101,40 @@ DF_Voltage_Data = pd.DataFrame({'Simulation'     : [],
                                  'Fase'          : []})
 
 DF_Current_Data = pd.DataFrame({'Simulation'     : [],
-                                'Elementos'       : [],
+                                'Elementos'      : [],
                                 'Fase'           : []})
 
+DF_Check_Report = pd.DataFrame({'Simulation'     : [],
+                                'overvoltage'    : [],
+                                'undervoltage'   : [],
+                                'overcurrent'    : [],
+                                'unbalance'      : []})
+
 DF_TESTE = pd.DataFrame({
-    "A": [1, 2, 3, 4],
-    "B": [4, 3, 2, 1],
-    "C": [2, 1, 4, 3]})
+    "N": ['N','M','P','Q'],
+    "A": [1, 2, 3.5, 4],
+    "B": [4.5, 3.1, 2, 1],
+    "C": [4.6, 1, 2, 3]})
 
 ##Switches
 
 Salva_Dados = 0     # Aciona o script que faz o levantamento dos dados da rede
 Criar_GD = 1        # Aciona a inserção de GDs na rede
-Num_GDs = 4         # Definição do número de GDs que serão adicionadas
+Num_GDs = 8         # Definição do número de GDs que serão adicionadas
 Calc_HC = 1         # Aciona o cálculo do HC
 All_GDs = 1
 Use_PV = 1          # 1- Usa o PVSystem  0 - Usa geradore
 Norma = 1           #  # 0 - PRODIST # 1 - IEEE
-Num_Simulations = 2 # Deifnie o número de simulações que serão realizadas
+Num_Simulations = 50 # Deifnie o número de simulações que serão realizadas
 
 # PVSystem
 FP_1 = 1
 Const_Irrad = .705
 Const_Temp = 25
 FP = 1
-Incremento_gd = 10 # Valores em porcentagem (%)
+Incremento_gd = 1 # Valores em porcentagem (%)
+
+Steps_wtout_unbalance = 10
 
 #Constants
 sqrt3 = np.sqrt(3)
@@ -130,9 +142,9 @@ alfa = complex(-0.5, 0.866025403784)
 inv_alfa = complex(-0.5, -0.866025403784)
 
 if Norma == 1:
-    limite_superior = 1.1
-    limite_inferior = 0.9
-    limite_Deseq = 2.5
+    limite_superior = 1.05
+    limite_inferior = 0.92
+    limite_Deseq = 3#2.5
 
 if Norma == 0:
     limite_superior = 1.05
