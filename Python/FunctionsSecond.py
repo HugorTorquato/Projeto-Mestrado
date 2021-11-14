@@ -252,6 +252,9 @@ def Check(Rede, Simulation):
     overcurrent = 0
     unbalance = 0
 
+    a = float(Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[0])
+    b = float(Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[1])
+
     overvoltage = 0 if float(Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[0]) <= limite_superior \
         else 1
     undervoltage = 0 if float(Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[1]) >= limite_inferior \
@@ -345,9 +348,9 @@ def Max_and_Min_Voltage_DF(A, B, C):
     return max(max(A.set_index('Barras').max().values),
                max(B.set_index('Barras').max().values),
                max(C.set_index('Barras').max().values)), \
-           min(min(A.set_index('Barras')[A.set_index('Barras') > .2].min().values),
-               min(B.set_index('Barras')[B.set_index('Barras') > .2].min().values),
-               min(C.set_index('Barras')[C.set_index('Barras') > .1].min().values))
+           min(min(Min_2(A.set_index('Barras')[A.set_index('Barras') > .2].min().values)),
+               min(Min_2(B.set_index('Barras')[B.set_index('Barras') > .2].min().values)),
+               min(Min_2(C.set_index('Barras')[C.set_index('Barras') > .1].min().values)))
 
 def Data_PV(Rede, itera):
 
@@ -424,3 +427,19 @@ def Identify_Overcurrent_Limits(Rede):
     DF_Corrente_Limite.insert(1, 'Current_Limits', NormAmps, allow_duplicates=True)
 
     print()
+
+def Converter_Intervalo_de_Simulacao(Rede, Hora):
+    # Converte a hora passada para o respectivo instante em steps da curva de carga
+
+    Pontos_por_Hora = originalSteps(Rede)/24
+
+    H = Hora // 100 % 100
+
+    return H * Pontos_por_Hora
+
+def Min_2(Vet):
+
+    for value in range(len(Vet)):
+        if Vet[value] == 0:
+            Vet[value] = 1
+    return Vet

@@ -1,7 +1,6 @@
 # coding: utf-8
 
 if __name__ == "__main__":
-    print("""Autor: Hugo Torquato \nData: 24/01/2020 \nE-mail: hugortorquato@gmail.com \n""")
 
     from Definitions import *
     from SistemFunctions import *

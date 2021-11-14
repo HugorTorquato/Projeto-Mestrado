@@ -4,7 +4,7 @@ import pandas as pd
 from Princ import *
 import numpy as np
 
-Rede_Path = "C:\\Users\hugo1\Desktop\Projeto_Rede_Fornecida\Python\TCC\Rede" # IEEE13
+#Rede_Path = "C:\\Users\hugo1\Desktop\Projeto_Rede_Fornecida\Python\TCC\Rede" # IEEE13
 Rede_Path = "C:\\Users\hugo1\Desktop\Rede_03\_trafo3"                       #Rede_03
 Debug_Path = "C:\\Users\hugo1\Desktop\Projeto_Rede_Fornecida\Python\Debug"
 
@@ -120,12 +120,12 @@ DF_TESTE = pd.DataFrame({
 
 Salva_Dados = 0     # Aciona o script que faz o levantamento dos dados da rede
 Criar_GD = 1        # Aciona a inserção de GDs na rede
-Num_GDs = 8         # Definição do número de GDs que serão adicionadas
+Num_GDs = 2         # Definição do número de GDs que serão adicionadas
 Calc_HC = 1         # Aciona o cálculo do HC
 All_GDs = 1
 Use_PV = 1          # 1- Usa o PVSystem  0 - Usa geradore
 Norma = 1           #  # 0 - PRODIST # 1 - IEEE
-Num_Simulations = 50 # Deifnie o número de simulações que serão realizadas
+Num_Simulations = 2# Deifnie o número de simulações que serão realizadas
 
 # PVSystem
 FP_1 = 1
@@ -140,6 +140,12 @@ Steps_wtout_unbalance = 10
 sqrt3 = np.sqrt(3)
 alfa = complex(-0.5, 0.866025403784)
 inv_alfa = complex(-0.5, -0.866025403784)
+
+# Intervalo de simulação
+## Entre com a hora sem o ":", por exemplo: 13:00 -> 1300
+
+Inicio_Sim = 1000
+Fim_Sim = 1500
 
 if Norma == 1:
     limite_superior = 1.05
