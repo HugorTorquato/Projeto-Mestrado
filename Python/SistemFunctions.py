@@ -120,10 +120,11 @@ def HC(Rede):
     # Adicionar uma simulação padrão apra salvar os valores sem interferência das GDs
 
     # Essa função é o pulmão do código, aqui que é feito o cálculo do HC
-    from FunctionsSecond import Colunas_DF_Horas, Limpar_DF, Check, Identify_Overcurrent_Limits, \
+    from FunctionsSecond import Limpar_DF, Check, Identify_Overcurrent_Limits, \
         Max_and_Min_Voltage_DF
     from Definitions import Num_GDs, DF_Geradores, DF_Barras, DF_General, DF_Elements, DF_PV,\
-        DF_PVPowerData, DF_Lista_Monitors, DF_Tensao_A
+        DF_PVPowerData, DF_Lista_Monitors, DF_Tensao_A, DF_Tensao_B, DF_Tensao_C
+    from Geradores import FindBusGD
 
     # Define o primeiro transformador como o ponto de PCC e o incremento de pot em cada verificação do HC é
     # definido em termos de % frente a pot do trafo de entrada
