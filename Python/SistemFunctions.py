@@ -96,7 +96,8 @@ def Solve_Hora_por_Hora(Rede, Simulation, Pot_GD):
 
     # ----------------------------------------------------------------------------------------------------------
 
-    from FunctionsSecond import Tensao_Barras, originalSteps, Correntes_elementos, Data_PV
+    from FunctionsSecond import Tensao_Barras, originalSteps, Correntes_elementos, Data_PV, \
+        Dados_Elements
 
     for itera in range(0, originalSteps(Rede)):
 
@@ -109,6 +110,7 @@ def Solve_Hora_por_Hora(Rede, Simulation, Pot_GD):
 
             Tensao_Barras(Rede, itera)
             Correntes_elementos(Rede, itera)
+            Dados_Elements(Rede, itera) if Savar_Dados_Elem == 1 else 0
             Data_PV(Rede, itera)
 
         Rede.dssSolution.FinishTimeStep()
@@ -156,6 +158,7 @@ def HC(Rede):
                 Compila_DSS(Rede)
                 [Limpar_DF(DF) for DF in [DF_Geradores, DF_Elements, DF_PV, DF_Lista_Monitors, DF_PVPowerData]]
 
+            # trocar .insert por .concat ( primeiro tem performance ruim )
             Solve_Hora_por_Hora(Rede, Simulation, Pot_GD)  # Chamada da função que levanta o perfil diário
 
             Nummero_Simulacoes += 1
@@ -175,14 +178,24 @@ def HC(Rede):
 
         from Monitores import Export_And_Read_Monitors_Data
         from FunctionsSecond import Power_measurement_PV
-        from DB_Rede import Save_General_Data, Save_Data, Process_Data
+        from DB_Rede import Save_General_Data, Save_Data, Process_Data, Process_Data_Secondary, Save_Data_Secondary
         from Definitions import DF_Lista_Monitors
 
         Export_And_Read_Monitors_Data(Rede, DF_Lista_Monitors, Simulation)
         Power_measurement_PV(Rede, Simulation)
-        DF_Voltage_Data, DF_Corrente_Data = Process_Data(Rede, Simulation)
+
+        DF_Voltage_Data, DF_Corrente_Data, DF_Current_Elemt_Data_Ang = Process_Data(Rede, Simulation)
         Save_General_Data(Simulation)
-        Save_Data(Simulation, DF_Voltage_Data, DF_Corrente_Data)
+        Save_Data(Simulation, DF_Voltage_Data, DF_Corrente_Data, DF_Current_Elemt_Data_Ang)
+
+        if Savar_Dados_Elem == 1:
+            DF_Voltage_Elemt_Data, DF_Voltage_Elemt_Data_Ang, DF_Power_P_Elemt_Data, DF_Power_Q_Elemt_Data = \
+                Process_Data_Secondary(Rede, Simulation)
+
+            Save_Data_Secondary(DF_Power_P_Elemt_Data, DF_Power_Q_Elemt_Data, DF_Voltage_Elemt_Data,
+                                DF_Voltage_Elemt_Data_Ang)
+
+
 
         # Olhar isso aqui direito... parece que n está computando o valor limite certinho
         # Apresenta o valor de pot já com a violação
