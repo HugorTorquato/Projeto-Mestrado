@@ -120,7 +120,8 @@ def HC(Rede):
     # Adicionar uma simulação padrão apra salvar os valores sem interferência das GDs
 
     # Essa função é o pulmão do código, aqui que é feito o cálculo do HC
-    from FunctionsSecond import Colunas_DF_Horas, Limpar_DF, Check, Identify_Overcurrent_Limits, Min_2
+    from FunctionsSecond import Colunas_DF_Horas, Limpar_DF, Check, Identify_Overcurrent_Limits, \
+        Max_and_Min_Voltage_DF
     from Definitions import Num_GDs, DF_Geradores, DF_Barras, DF_General, DF_Elements, DF_PV,\
         DF_PVPowerData, DF_Lista_Monitors, DF_Tensao_A
 
@@ -161,8 +162,8 @@ def HC(Rede):
 
             print('-----------------------------------------------------')
             #print(DF_Tensao_A.head())
-            print(max(DF_Tensao_A.set_index('Barras').max().values))
-            print(min(Min_2(DF_Tensao_A.set_index('Barras').min().values)))
+            print(float(Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[0]))
+            print(float(Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[1]))
             print('-----------------------------------------------------')
 
             if Sem_GD == 0:
