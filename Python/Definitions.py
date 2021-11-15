@@ -26,6 +26,28 @@ DF_Corrente_itera = pd.DataFrame()
 DF_Corrente_A = pd.DataFrame()
 DF_Corrente_B = pd.DataFrame()
 DF_Corrente_C = pd.DataFrame()
+DF_Corrente_Ang_A = pd.DataFrame()
+DF_Corrente_Ang_B = pd.DataFrame()
+DF_Corrente_Ang_C = pd.DataFrame()
+
+# Pot elementos
+DF_Pot_itera = pd.DataFrame()
+DF_Pot_P_A = pd.DataFrame()
+DF_Pot_P_B = pd.DataFrame()
+DF_Pot_P_C = pd.DataFrame()
+DF_Pot_Q_A = pd.DataFrame()
+DF_Pot_Q_B = pd.DataFrame()
+DF_Pot_Q_C = pd.DataFrame()
+
+# Tensão elementos
+DF_Voltage_itera = pd.DataFrame()
+DF_Voltage_A = pd.DataFrame()
+DF_Voltage_B = pd.DataFrame()
+DF_Voltage_C = pd.DataFrame()
+DF_Voltage_Ang_A = pd.DataFrame()
+DF_Voltage_Ang_B = pd.DataFrame()
+DF_Voltage_Ang_C = pd.DataFrame()
+
 
 DF_Corrente_Limite = pd.DataFrame()
 
@@ -110,22 +132,44 @@ DF_Check_Report = pd.DataFrame({'Simulation'     : [],
                                 'overcurrent'    : [],
                                 'unbalance'      : []})
 
+DF_Current_Elemt_Data_Ang = pd.DataFrame({'Simulation'     : [],
+                                          'Elementos'      : [],
+                                          'Fase'           : []})
+
+DF_Power_P_Elemt_Data = pd.DataFrame({'Simulation'     : [],
+                                      'Elementos'      : [],
+                                      'Fase'           : []})
+
+DF_Power_Q_Elemt_Data = pd.DataFrame({'Simulation'     : [],
+                                      'Elementos'      : [],
+                                      'Fase'           : []})
+
+DF_Voltage_Elemt_Data = pd.DataFrame({'Simulation'     : [],
+                                      'Elementos'      : [],
+                                      'Fase'           : []})
+
+DF_Voltage_Elemt_Data_Ang = pd.DataFrame({'Simulation'     : [],
+                                          'Elementos'      : [],
+                                          'Fase'           : []})
+
+
 DF_TESTE = pd.DataFrame({
-    "N": ['N','M','P','Q'],
+    "N": ['N', 'M', 'P', 'Q'],
     "A": [1, 2, 3.5, 4],
     "B": [4.5, 3.1, 2, 1],
     "C": [4.6, 1, 2, 3]})
 
 ##Switches
 
-Salva_Dados = 0     # Aciona o script que faz o levantamento dos dados da rede
-Criar_GD = 1        # Aciona a inserção de GDs na rede
-Num_GDs = 2         # Definição do número de GDs que serão adicionadas
-Calc_HC = 1         # Aciona o cálculo do HC
+Salva_Dados = 0      # Aciona o script que faz o levantamento dos dados da rede
+Savar_Dados_Elem = 0 # Habilita que os dados de pot e tensão dos elementos sejam salvos
+Criar_GD = 1         # Aciona a inserção de GDs na rede
+Num_GDs = 2          # Definição do número de GDs que serão adicionadas
+Calc_HC = 1          # Aciona o cálculo do HC
 All_GDs = 1
-Use_PV = 1          # 1- Usa o PVSystem  0 - Usa geradore
-Norma = 1           #  # 0 - PRODIST # 1 - IEEE
-Num_Simulations = 2# Deifnie o número de simulações que serão realizadas
+Use_PV = 1           # 1- Usa o PVSystem  0 - Usa geradore
+Norma = 1            #  # 0 - PRODIST # 1 - IEEE
+Num_Simulations = 2  # Deifnie o número de simulações que serão realizadas
 
 # PVSystem
 FP_1 = 1
@@ -144,8 +188,8 @@ inv_alfa = complex(-0.5, -0.866025403784)
 # Intervalo de simulação
 ## Entre com a hora sem o ":", por exemplo: 13:00 -> 1300
 
-Inicio_Sim = 1000
-Fim_Sim = 1500
+Inicio_Sim = 0000#1000
+Fim_Sim = 2400#1500
 
 if Norma == 1:
     limite_superior = 1.05

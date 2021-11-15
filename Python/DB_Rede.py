@@ -17,6 +17,78 @@ def Refresh_Or_Create_Tables(Rede):
     # To do:
     #   1- Colocar tabela com todos os valores de tensão ()
 
+    # Definição da tabela Voltage_Elemt_Data
+    DB = 'Voltage_Elemt_Data'
+    if len(pd.read_sql(
+            'SELECT TABLE_NAME '
+            'FROM INFORMATION_SCHEMA.TABLES '
+            'WHERE TABLE_NAME = \'' + DB + '\'', engine)) == 0:
+        print('Create Table :' + str(DB))
+        Barras = sql.Table(str(DB), metadata,
+                           sql.Column('Nome_ID', sql.Integer, primary_key=True),
+                           sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
+                           sql.Column('Elementos', sql.String),
+                           sql.Column('Fase', sql.String)
+                           )
+
+    else:
+        engine.execute('DBCC CHECKIDENT(\'' + DB + '\', RESEED, 0)') # Redefine a PK para começar do zero novamente
+        engine.execute('DELETE FROM ' + str(DB))
+
+    # Definição da tabela Voltage_Elemt_Data_Ang
+    DB = 'Voltage_Elemt_Data_Ang'
+    if len(pd.read_sql(
+            'SELECT TABLE_NAME '
+            'FROM INFORMATION_SCHEMA.TABLES '
+            'WHERE TABLE_NAME = \'' + DB + '\'', engine)) == 0:
+        print('Create Table :' + str(DB))
+        Barras = sql.Table(str(DB), metadata,
+                           sql.Column('Nome_ID', sql.Integer, primary_key=True),
+                           sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
+                           sql.Column('Elementos', sql.String),
+                           sql.Column('Fase', sql.String)
+                           )
+
+    else:
+        engine.execute('DBCC CHECKIDENT(\'' + DB + '\', RESEED, 0)') # Redefine a PK para começar do zero novamente
+        engine.execute('DELETE FROM ' + str(DB))
+
+    # Definição da tabela Power_Q_Elemt_Data
+    DB = 'Power_Q_Elemt_Data'
+    if len(pd.read_sql(
+            'SELECT TABLE_NAME '
+            'FROM INFORMATION_SCHEMA.TABLES '
+            'WHERE TABLE_NAME = \'' + DB + '\'', engine)) == 0:
+        print('Create Table :' + str(DB))
+        Barras = sql.Table(str(DB), metadata,
+                           sql.Column('Nome_ID', sql.Integer, primary_key=True),
+                           sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
+                           sql.Column('Elementos', sql.String),
+                           sql.Column('Fase', sql.String)
+                           )
+
+    else:
+        engine.execute('DBCC CHECKIDENT(\'' + DB + '\', RESEED, 0)') # Redefine a PK para começar do zero novamente
+        engine.execute('DELETE FROM ' + str(DB))
+
+    # Definição da tabela Power_P_Elemt_Data
+    DB = 'Power_P_Elemt_Data'
+    if len(pd.read_sql(
+            'SELECT TABLE_NAME '
+            'FROM INFORMATION_SCHEMA.TABLES '
+            'WHERE TABLE_NAME = \'' + DB + '\'', engine)) == 0:
+        print('Create Table :' + str(DB))
+        Barras = sql.Table(str(DB), metadata,
+                           sql.Column('Nome_ID', sql.Integer, primary_key=True),
+                           sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
+                           sql.Column('Elementos', sql.String),
+                           sql.Column('Fase', sql.String)
+                           )
+
+    else:
+        engine.execute('DBCC CHECKIDENT(\'' + DB + '\', RESEED, 0)') # Redefine a PK para começar do zero novamente
+        engine.execute('DELETE FROM ' + str(DB))
+
     # Definição da tabela Check_Report
     DB = 'Check_Report'
     if len(pd.read_sql(
@@ -56,7 +128,25 @@ def Refresh_Or_Create_Tables(Rede):
         engine.execute('DELETE FROM ' + str(DB))
 
     # Definição da tabela Current_Data
-    DB = 'Current_Data'
+    DB = 'Current_Elemt_Data'
+    if len(pd.read_sql(
+            'SELECT TABLE_NAME '
+            'FROM INFORMATION_SCHEMA.TABLES '
+            'WHERE TABLE_NAME = \'' + DB + '\'', engine)) == 0:
+        print('Create Table :' + str(DB))
+        Barras = sql.Table(str(DB), metadata,
+                           sql.Column('Nome_ID', sql.Integer, primary_key=True),
+                           sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
+                           sql.Column('Elementos', sql.String),
+                           sql.Column('Fase', sql.String)
+                           )
+
+    else:
+        engine.execute('DBCC CHECKIDENT(\'' + DB + '\', RESEED, 0)') # Redefine a PK para começar do zero novamente
+        engine.execute('DELETE FROM ' + str(DB))
+
+    # Definição da tabela Current_Elemt_Data_Ang
+    DB = 'Current_Elemt_Data_Ang'
     if len(pd.read_sql(
             'SELECT TABLE_NAME '
             'FROM INFORMATION_SCHEMA.TABLES '
@@ -231,7 +321,8 @@ def Adjust_tables_to_timestemp(engine, Rede):
     # o seguinte vetor. A ideia dessa função consiste em adicionar N colunas com que irá possíbilitar salvar
     # todos os valores presentes em um dia
 
-    DB = ['PVPowerData', 'MonitoresData', 'Current_Data', 'Voltage_Data']
+    DB = ['PVPowerData', 'MonitoresData', 'Current_Elemt_Data', 'Current_Elemt_Data_Ang', 'Voltage_Data',
+          'Voltage_Elemt_Data', 'Voltage_Elemt_Data_Ang', 'Power_P_Elemt_Data', 'Power_Q_Elemt_Data']
 
     for table in DB:
         if pd.read_sql('SELECT COUNT(COLUMN_NAME) AS resultado FROM INFORMATION_SCHEMA.COLUMNS '
@@ -240,7 +331,7 @@ def Adjust_tables_to_timestemp(engine, Rede):
             for i in range(originalSteps(Rede)):
                 engine.execute("ALTER TABLE " + table + " ADD Time_" + str(i) + " float(53)")
 
-def Save_Data(Simulation, DF_Voltage_Data, DF_Corrente_Data):
+def Save_Data(Simulation, DF_Voltage_Data, DF_Corrente_Data, DF_Current_Elemt_Data_Ang):
 
     from Definitions import DF_Geradores, DF_General, DF_Barras, DF_Elements, DF_PV, DF_PVPowerData,\
         DF_Monitors_Data, DF_Check_Report
@@ -256,7 +347,16 @@ def Save_Data(Simulation, DF_Voltage_Data, DF_Corrente_Data):
 
     # Corrigir essa ref -> Por algum motivo não está sendo armazenada a global
     DF_Voltage_Data.to_sql('Voltage_Data', sqlalchemy(), if_exists='append', index=False)
-    DF_Corrente_Data.to_sql('Current_Data', sqlalchemy(), if_exists='append', index=False)
+    DF_Corrente_Data.to_sql('Current_Elemt_Data', sqlalchemy(), if_exists='append', index=False)
+    DF_Current_Elemt_Data_Ang.to_sql('Current_Elemt_Data_Ang', sqlalchemy(), if_exists='append', index=False)
+
+def Save_Data_Secondary(DF_Power_P_Elemt_Data, DF_Power_Q_Elemt_Data, DF_Voltage_Elemt_Data,
+                        DF_Voltage_Elemt_Data_Ang):
+
+    DF_Power_P_Elemt_Data.to_sql('Power_P_Elemt_Data', sqlalchemy(), if_exists='append', index=False)
+    DF_Power_Q_Elemt_Data.to_sql('Power_Q_Elemt_Data', sqlalchemy(), if_exists='append', index=False)
+    DF_Voltage_Elemt_Data.to_sql('Voltage_Elemt_Data', sqlalchemy(), if_exists='append', index=False)
+    DF_Voltage_Elemt_Data_Ang.to_sql('Voltage_Elemt_Data_Ang', sqlalchemy(), if_exists='append', index=False)
 
 def Save_General_Data(Simulation):
 
@@ -348,4 +448,116 @@ def Process_Data(Rede, Simulation):
 
     DF_Corrente_Data.insert(loc=0, column='Simulation', value=Simulation)
 
-    return DF_Voltage_Data, DF_Corrente_Data
+    # Process Element Currents Angle in each simulation
+    global DF_Current_Elemt_Data_Ang
+    DF_Corrente_Ang_A_Temp = DF_Corrente_Ang_A.copy(deep=True)
+    DF_Corrente_Ang_B_Temp = DF_Corrente_Ang_B.copy(deep=True)
+    DF_Corrente_Ang_C_Temp = DF_Corrente_Ang_C.copy(deep=True)
+
+    DF_Corrente_Ang_A_Temp.columns = Adjust_Colum_Name(DF_Corrente_Ang_A_Temp)
+    DF_Corrente_Ang_B_Temp.columns = Adjust_Colum_Name(DF_Corrente_Ang_B_Temp)
+    DF_Corrente_Ang_C_Temp.columns = Adjust_Colum_Name(DF_Corrente_Ang_C_Temp)
+
+    DF_Corrente_Ang_A_Temp.insert(loc=1, column='Fase', value='A') \
+        if 'Fase' not in DF_Corrente_Ang_A_Temp else 0
+    DF_Corrente_Ang_B_Temp.insert(loc=1, column='Fase', value='B') \
+        if 'Fase' not in DF_Corrente_Ang_B_Temp else 0
+    DF_Corrente_Ang_C_Temp.insert(loc=1, column='Fase', value='C') \
+        if 'Fase' not in DF_Corrente_Ang_C_Temp else 0
+
+    DF_Current_Elemt_Data_Ang = pd.concat([DF_Corrente_Ang_A_Temp, DF_Corrente_Ang_B_Temp, DF_Corrente_Ang_C_Temp])
+
+    DF_Current_Elemt_Data_Ang.insert(loc=0, column='Simulation', value=Simulation)
+
+    return DF_Voltage_Data, DF_Corrente_Data, DF_Current_Elemt_Data_Ang
+
+def Process_Data_Secondary(Rede, Simulation):
+
+
+    from FunctionsSecond import Adjust_Colum_Name
+
+    # Process Element Voltage in each simulation
+    global DF_Voltage_Elemt_Data
+    DF_Voltage_A_Temp = DF_Voltage_A.copy(deep=True)
+    DF_Voltage_B_Temp = DF_Voltage_B.copy(deep=True)
+    DF_Voltage_C_Temp = DF_Voltage_C.copy(deep=True)
+
+    DF_Voltage_A_Temp.columns = Adjust_Colum_Name(DF_Voltage_A_Temp)
+    DF_Voltage_B_Temp.columns = Adjust_Colum_Name(DF_Voltage_B_Temp)
+    DF_Voltage_C_Temp.columns = Adjust_Colum_Name(DF_Voltage_C_Temp)
+
+    DF_Voltage_A_Temp.insert(loc=1, column='Fase', value='A') \
+        if 'Fase' not in DF_Voltage_A_Temp else 0
+    DF_Voltage_B_Temp.insert(loc=1, column='Fase', value='B') \
+        if 'Fase' not in DF_Voltage_B_Temp else 0
+    DF_Voltage_C_Temp.insert(loc=1, column='Fase', value='C') \
+        if 'Fase' not in DF_Voltage_C_Temp else 0
+
+    DF_Voltage_Elemt_Data = pd.concat([DF_Voltage_A_Temp, DF_Voltage_B_Temp, DF_Voltage_C_Temp])
+
+    DF_Voltage_Elemt_Data.insert(loc=0, column='Simulation', value=Simulation)
+
+    # Process Element Voltage Angle in each simulation
+    global DF_Voltage_Elemt_Data_Ang
+    DF_Voltage_Ang_A_Temp = DF_Voltage_Ang_A.copy(deep=True)
+    DF_Voltage_Ang_B_Temp = DF_Voltage_Ang_B.copy(deep=True)
+    DF_Voltage_Ang_C_Temp = DF_Voltage_Ang_C.copy(deep=True)
+
+    DF_Voltage_Ang_A_Temp.columns = Adjust_Colum_Name(DF_Voltage_Ang_A_Temp)
+    DF_Voltage_Ang_B_Temp.columns = Adjust_Colum_Name(DF_Voltage_Ang_B_Temp)
+    DF_Voltage_Ang_C_Temp.columns = Adjust_Colum_Name(DF_Voltage_Ang_C_Temp)
+
+    DF_Voltage_Ang_A_Temp.insert(loc=1, column='Fase', value='A') \
+        if 'Fase' not in DF_Voltage_Ang_A_Temp else 0
+    DF_Voltage_Ang_B_Temp.insert(loc=1, column='Fase', value='B') \
+        if 'Fase' not in DF_Voltage_Ang_B_Temp else 0
+    DF_Voltage_Ang_C_Temp.insert(loc=1, column='Fase', value='C') \
+        if 'Fase' not in DF_Voltage_Ang_C_Temp else 0
+
+    DF_Voltage_Elemt_Data_Ang = pd.concat([DF_Voltage_Ang_A_Temp, DF_Voltage_Ang_B_Temp, DF_Voltage_Ang_C_Temp])
+
+    DF_Voltage_Elemt_Data_Ang.insert(loc=0, column='Simulation', value=Simulation)
+
+    # Process Element Active Power in each simulation
+    global DF_Power_P_Elemt_Data
+    DF_Pot_P_A_Temp = DF_Pot_P_A.copy(deep=True)
+    DF_Pot_P_B_Temp = DF_Pot_P_B.copy(deep=True)
+    DF_Pot_P_C_Temp = DF_Pot_P_C.copy(deep=True)
+
+    DF_Pot_P_A_Temp.columns = Adjust_Colum_Name(DF_Pot_P_A_Temp)
+    DF_Pot_P_B_Temp.columns = Adjust_Colum_Name(DF_Pot_P_B_Temp)
+    DF_Pot_P_C_Temp.columns = Adjust_Colum_Name(DF_Pot_P_C_Temp)
+
+    DF_Pot_P_A_Temp.insert(loc=1, column='Fase', value='A') \
+        if 'Fase' not in DF_Pot_P_A_Temp else 0
+    DF_Pot_P_B_Temp.insert(loc=1, column='Fase', value='B') \
+        if 'Fase' not in DF_Pot_P_B_Temp else 0
+    DF_Pot_P_C_Temp.insert(loc=1, column='Fase', value='C') \
+        if 'Fase' not in DF_Pot_P_C_Temp else 0
+
+    DF_Power_P_Elemt_Data = pd.concat([DF_Pot_P_A_Temp, DF_Pot_P_B_Temp, DF_Pot_P_C_Temp])
+
+    DF_Power_P_Elemt_Data.insert(loc=0, column='Simulation', value=Simulation)
+
+    # Process Element Reactive Power in each simulation
+    global DF_Power_Q_Elemt_Data
+    DF_Pot_Q_A_Temp = DF_Pot_Q_A.copy(deep=True)
+    DF_Pot_Q_B_Temp = DF_Pot_Q_B.copy(deep=True)
+    DF_Pot_Q_C_Temp = DF_Pot_Q_C.copy(deep=True)
+
+    DF_Pot_Q_A_Temp.columns = Adjust_Colum_Name(DF_Pot_Q_A_Temp)
+    DF_Pot_Q_B_Temp.columns = Adjust_Colum_Name(DF_Pot_Q_B_Temp)
+    DF_Pot_Q_C_Temp.columns = Adjust_Colum_Name(DF_Pot_Q_C_Temp)
+
+    DF_Pot_Q_A_Temp.insert(loc=1, column='Fase', value='A') \
+        if 'Fase' not in DF_Pot_Q_A_Temp else 0
+    DF_Pot_Q_B_Temp.insert(loc=1, column='Fase', value='B') \
+        if 'Fase' not in DF_Pot_Q_B_Temp else 0
+    DF_Pot_Q_C_Temp.insert(loc=1, column='Fase', value='C') \
+        if 'Fase' not in DF_Pot_Q_C_Temp else 0
+
+    DF_Power_Q_Elemt_Data = pd.concat([DF_Pot_Q_A_Temp, DF_Pot_Q_B_Temp, DF_Pot_Q_C_Temp])
+
+    DF_Power_Q_Elemt_Data.insert(loc=0, column='Simulation', value=Simulation)
+
+    return DF_Voltage_Elemt_Data, DF_Voltage_Elemt_Data_Ang, DF_Power_P_Elemt_Data, DF_Power_Q_Elemt_Data
