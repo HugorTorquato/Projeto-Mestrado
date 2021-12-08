@@ -10,7 +10,7 @@ if __name__ == "__main__":
 
     Rede = DSS(Rede_Path + "\Master.dss")
 
-    Version(Rede), Compila_DSS(Rede), Inicializa(Rede), Refresh_Or_Create_Tables(Rede)
+    Version(Rede), Compila_DSS(Rede), Inicializa(Rede), Refresh_Or_Create_Tables(Rede), Refresh_Or_Create_Views(Rede)
 
     if Salva_Dados:
         Salvar_Dados_Rede(Rede)
