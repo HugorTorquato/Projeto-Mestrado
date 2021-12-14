@@ -31,14 +31,14 @@ def Adicionar_GDs(Rede, Pot_GD, Simulation):
                            "temp=(File=C:\\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\Temp.txt)"
     Rede.dssText.Command = "New LoadShape.irrad npts=96 minterval=15 " \
                            "mult=(file=C:\\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\Irrad.txt)"
-    # Rede.dssText.Command = "New XYCurve.vv_curve npts=4 Yarray=(1.0,1.0,-1.0,-1.0) " \
-    #                       "XArray = (0.5,0.95,1.05,1.5)"
+    Rede.dssText.Command = "New XYCurve.vv_curve npts=4 Yarray=(1.0,1.0,-1.0,-1.0) " \
+                           "XArray = (0.5,0.95,1.05,1.5)"
 
-    # Rede.dssText.Command = "New InvControl.InvPVCtrl mode=VOLTVAR voltage_curvex_ref=rated vvc_curve1=vv_curve EventLog=yes"
+    Rede.dssText.Command = "New InvControl.InvPVCtrl mode=VOLTVAR voltage_curvex_ref=rated vvc_curve1=vv_curve"# EventLog=yes"
 
     if Use_PV:
         [Create_PV(Rede, 'PV_' + str(i), Pot_GD, FP, 'Irrad', 'Temp', Simulation) for i in range(Num_GDs)]
-        print(DF_PV.head())
+        print(DF_PV.head(10)) # Printa os dados gerais das GDs ( resumo )
     else:
         [Create_GD(Rede, 'GD_' + str(i), Pot_GD, 0, '_GD_' + str(i + 1), Simulation) for i in range(Num_GDs)]
 
@@ -119,9 +119,17 @@ def Fase2String(STRING):
     return a
 
 def FindBusGD(Num_GDs):
-    from Definitions import DF_Tensao_A, Barras_GDs
+    from Definitions import DF_Tensao_A, Barras_GDs, Debug_VV
 
-    #[Barras_GDs.append(random2.choice(DF_Tensao_A.Barras.values)) for i in range(Num_GDs)]
+    if Debug_VV == 1:
+        Barras_GDs_list = ['bus_33998182_003', 'bus_33998182_031', 'bus_33998182_011',
+             'bus_33998182_013', 'bus_33998182_027', 'bus_33998182_022']
+
+        for i in range(Num_GDs):
+            Barras_GDs.append(Barras_GDs_list[i])
+
+        return
+
     vet_choice = list(DF_Tensao_A.Barras.values)
     for i in range(Num_GDs):
         choice = random2.choice(vet_choice)

@@ -171,6 +171,8 @@ Use_PV = 1           # 1- Usa o PVSystem  0 - Usa geradore
 Norma = 1            #  # 0 - PRODIST # 1 - IEEE
 Num_Simulations = 2  # Deifnie o número de simulações que serão realizadas
 
+Debug_VV = 1         # Modo Debug para mensurar e comparar o comportamento do VV no sistema ( 1 - liga 0 - desliga)
+
 # PVSystem
 FP_1 = 1
 Const_Irrad = .705
