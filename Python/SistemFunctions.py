@@ -75,7 +75,7 @@ def Solve_Hora_por_Hora(Rede, Simulation, Pot_GD):
     # Essa função é o coração do código, aqui que são feitos todos os comandos e designações para os calculos durante
     # a simulação diária
 
-    from Monitores import Adicionar_Monitores, Export_Random_Monitor_Test
+    from Monitores import Adicionar_Monitores, Export_Random_Monitor_Test, Debug_Loads
     from FunctionsSecond import Adicionar_EnergyMeter, Converter_Intervalo_de_Simulacao
 
     # Feature:
@@ -116,8 +116,10 @@ def Solve_Hora_por_Hora(Rede, Simulation, Pot_GD):
             Data_PV(Rede, itera)
 
         Rede.dssSolution.FinishTimeStep()
-    if Simulation > 2:
-        Export_Random_Monitor_Test(Rede, "InvControl", "PVSystem.pv_0")
+        if Simulation > 2:
+            Export_Random_Monitor_Test(Rede, "InvControl", "PVSystem.pv_0")
+
+    Rede.dssText.Command = "Export EventLog file=" + Debug_Path + "/Debug_" + str(Simulation)
 
     #print(DF_Tensao_A.head())
 

@@ -31,29 +31,14 @@ def Adicionar_GDs(Rede, Pot_GD, Simulation):
                            "temp=(File=C:\\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\Temp.txt)"
     Rede.dssText.Command = "New LoadShape.irrad npts=96 minterval=15 " \
                            "mult=(file=C:\\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\Irrad.txt)"
-    Rede.dssText.Command = "New XYcurve.generic npts=4 Xarray=(0.5,0.95,1.05,1.5) Yarray=(1.0,1.0,-1.0,-1.0)"
+    Rede.dssText.Command = "New XYcurve.generic npts=4 Xarray=(0.5,0.89,0.92,0.95,1,1.02,1.05,1.1,1.5) " \
+                           "Yarray=(1.0,1.0,1,0,0,0,1,-1.0,-1.0)"
     Rede.dssText.Command = "New XYCurve.vv_curve npts=7 Yarray=[1 1 0 0 0 -1 -1] " \
                            "XArray = [0.5 0.87 0.92 1 1.05 1.01 1.5]"
 
     if Use_PV:
         [Create_PV(Rede, 'PV_' + str(i), Pot_GD, FP, 'Irrad', 'Temp', Simulation) for i in range(Num_GDs)]
         print(DF_PV.head(10)) # Printa os dados gerais das GDs ( resumo )
-
-        if Simulation > 2:
-            Rede.dssText.Command = "set maxcontroliter=200"
-
-            Rede.dssText.Command = "New InvControl.InvPVCtrl pvsystemlist=pv_0 mode=VOLTVAR voltage_curvex_ref=rated " \
-                                   "vvc_curve1=generic " \
-                                   "deltaQ_factor=0.2 RefReactivePower=VARAVAL varchangetolerance=0.025"# EventLog=yes "
-
-            ## deltaQ_factor -> Mudança máxima da pot reativa da solução anterior para a desejada durante
-            #                   cada iteração de controle
-            ## RefReactivePower -> Limita a saída de pot reativa ao limite dsponível no inversor, caso seja requisitado
-            #                       mais que o kva permitido, o kvar vai ser limitado
-            ## varchangetolerence -> Diferença entre o pot reativa desejada para a obtida. Um dos parâmetrso que limita
-            #                        o número de iterações feita por cada controle
-            ## maxcontroliter -> Número máximo de iterações por controle, default é 15. Um número baixo pode não ser
-            #                    suficiente e, casos mais complesxo de multiplos GDs
     else:
         [Create_GD(Rede, 'GD_' + str(i), Pot_GD, 0, '_GD_' + str(i + 1), Simulation) for i in range(Num_GDs)]
 
@@ -86,12 +71,9 @@ def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
     # pot dc = ppmppx x irrad x (1-irrad_tempo) x temp_por_pot
     # pot ac = pot dc x eff
 
-
-
     Rede.dssText.Command = "New PVSystem." + Nome + " phases=" + \
                            str(Identify_Phases(DF_PV.loc[index, 'Phases'])[1]) + \
-                           " bus1=" + \
-                           str(DF_PV.loc[index, 'Bus']) + \
+                           " bus1=" + str(DF_PV.loc[index, 'Bus']) + \
                            str(Identify_Phases(DF_PV.loc[index, 'Phases'])[0]) + \
                            " Pmpp=" + str(Pmp) + \
                            " kv=" + str(Rede.dssBus.kVBase) + \
@@ -102,6 +84,23 @@ def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
                            " pf=1 VarFollowInverter=true " \
                            " irradiance=" + str(Const_Irrad) + " temperature=" + str(Const_Temp) + \
                            " daily=irrad Tdaily=Temp wattpriority=yes debugtrace=yes"
+    if Simulation > 2 and Debug_VV == 1:
+        Rede.dssText.Command = "set maxcontroliter=2000"
+
+        Rede.dssText.Command ="New InvControl.InvPVCtrl_" + Nome + " DERList=PVSystem." + Nome + \
+                              " pvsystemlist=pv_0 mode=VOLTVAR voltage_curvex_ref=rated " \
+                           "vvc_curve1=generic monVoltageCalc=" + str(Identify_Phases(DF_PV.loc[index, 'Phases'])[0])+\
+                           " deltaQ_factor=0.2 RefReactivePower=VARAVAL varchangetolerance=0.025"# EventLog=yes "
+
+    ## deltaQ_factor -> Mudança máxima da pot reativa da solução anterior para a desejada durante
+    #                   cada iteração de controle
+    ## RefReactivePower -> Limita a saída de pot reativa ao limite dsponível no inversor, caso seja requisitado
+    #                       mais que o kva permitido, o kvar vai ser limitado
+    ## varchangetolerence -> Diferença entre o pot reativa desejada para a obtida. Um dos parâmetrso que limita
+    #                        o número de iterações feita por cada controle
+    ## maxcontroliter -> Número máximo de iterações por controle, default é 15. Um número baixo pode não ser
+    #                    suficiente e, casos mais complesxo de multiplos GDs
+
 
     # Define um monitor para observar as configurações do PV durante o InvControl
     Define_Random_Monior_Test(Rede, "InvControl", "PVSystem." + Nome, 1, 3)
@@ -152,16 +151,18 @@ def Create_GD(Rede, Nome, kW, kvar, LoadShape, Simulation):
 def Fase2String(STRING):
     a = ''
     for i in STRING:
-        if i != 'N':
-            a += str(i)
+        #if i != 'N':
+       a += str(i)
     return a
 
 def FindBusGD(Num_GDs):
     from Definitions import DF_Tensao_A, Barras_GDs, Debug_VV
 
     if Debug_VV == 1:
-        Barras_GDs_list = ['bus_33998182_017']#, 'bus_33998182_011',
+        Barras_GDs_list = ['bus_33998182_039']#, 'bus_33998182_011',
             # 'bus_33998182_013', 'bus_33998182_027', 'bus_33998182_022']
+        #Barras_GDs_list = ['bus_33998182_039', 'bus_33998182_011',
+        #                 'bus_33998182_013', 'bus_33998182_027', 'bus_33998182_022']
 
         for i in range(Num_GDs):
             Barras_GDs.append(Barras_GDs_list[i])

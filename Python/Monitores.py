@@ -1,4 +1,6 @@
 # coding: utf-8
+import os
+
 from Definitions import *
 import pandas as pd
 
@@ -31,12 +33,10 @@ def Define_Monitor(Rede, Lista_Monitores):
                                + " terminal=1 mode=0"
 
 def Define_Random_Monior_Test(Rede, description, element, terminal, mode):
-    print(description)
     Rede.dssText.Command = "New monitor." + str(description) + "_" + str(element.split('.')[1]) + " element=" \
                            + str(element) + " terminal=" + str(terminal) + " mode=" + str(mode)
 
 def Export_Random_Monitor_Test(Rede, description, element):
-    print(description + "2")
     Rede.dssText.Command = "Export monitors " + str(description) + "_" + str(element.split('.')[1]) + " " \
                           "file = " + Debug_Path + "\\" + str(description) + "_" + str(element.split('.')[1])
 
@@ -118,3 +118,16 @@ def Export_And_Read_Monitors_Data(Rede, Lista_Monitores, Simulation):
 
             else:
                 print("Medição não presente nos arquivos - Export_And_Read_Monitors_Data()")
+
+def Debug_Loads(Rede, Simulation):
+
+    #if os.path.isfile(Debug_Path + "/Debug_Load.txt") is True and Simulation == 1:
+    #    os.remove(Debug_Path + "/Debug_Load.txt")
+
+    file = open(Debug_Path + "/Debug_Load.txt", 'a')
+
+    for load in Rede.dssLoads.AllNames:
+        Rede.dssLoads.Name = load
+        file.write(str(Simulation) + ", " + str(Rede.dssLoads.Name) + ", " + str(Rede.dssLoads.Model) + "\n")
+
+    # não muda a definição do modelo, pode ser que mude internamente... mas a definição não
