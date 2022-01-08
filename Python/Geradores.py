@@ -31,8 +31,8 @@ def Adicionar_GDs(Rede, Pot_GD, Simulation):
                            "temp=(File=C:\\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\Temp.txt)"
     Rede.dssText.Command = "New LoadShape.irrad npts=96 minterval=15 " \
                            "mult=(file=C:\\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\Irrad.txt)"
-    Rede.dssText.Command = "New XYcurve.generic npts=4 Xarray=(0.5,0.89,0.92,0.95,1,1.02,1.05,1.1,1.5) " \
-                           "Yarray=(1.0,1.0,1,0,0,0,1,-1.0,-1.0)"
+    Rede.dssText.Command = "New XYcurve.generic npts=4 Xarray=(0.5,0.89,0.92,1,1.05,1.1,1.5) " \
+                           "Yarray=(1.0,1.0,0.5,0,-0.5,-1.0,-1.0)"
     Rede.dssText.Command = "New XYCurve.vv_curve npts=7 Yarray=[1 1 0 0 0 -1 -1] " \
                            "XArray = [0.5 0.87 0.92 1 1.05 1.01 1.5]"
 
