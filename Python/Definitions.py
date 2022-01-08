@@ -164,12 +164,12 @@ DF_TESTE = pd.DataFrame({
 Salva_Dados = 0      # Aciona o script que faz o levantamento dos dados da rede
 Savar_Dados_Elem = 1 # Habilita que os dados de pot e tensão dos elementos sejam salvos
 Criar_GD = 1         # Aciona a inserção de GDs na rede
-Num_GDs = 6         # Definição do número de GDs que serão adicionadas
+Num_GDs = 1         # Definição do número de GDs que serão adicionadas
 Calc_HC = 1          # Aciona o cálculo do HC
 All_GDs = 1
 Use_PV = 1           # 1- Usa o PVSystem  0 - Usa geradore
 Norma = 1            #  # 0 - PRODIST # 1 - IEEE
-Num_Simulations = 2  # Deifnie o número de simulações que serão realizadas
+Num_Simulations = 3  # Deifnie o número de simulações que serão realizadas
 
 Debug_VV = 1         # Modo Debug para mensurar e comparar o comportamento do VV no sistema ( 1 - liga 0 - desliga)
 
@@ -178,7 +178,7 @@ FP_1 = 1
 Const_Irrad = .705
 Const_Temp = 25
 FP = 1
-Incremento_gd = 1 # Valores em porcentagem (%)
+Incremento_gd = 20# Valores em porcentagem (%)
 
 Steps_wtout_unbalance = 10
 
@@ -190,8 +190,10 @@ inv_alfa = complex(-0.5, -0.866025403784)
 # Intervalo de simulação
 ## Entre com a hora sem o ":", por exemplo: 13:00 -> 1300
 
-Inicio_Sim = 0000#0000#1000
-Fim_Sim = 2400#2400#1500
+Inicio_Sim = 1000#0000#1000
+Fim_Sim = 1500#2400#1500
+#Inicio_Sim = 0000#0000#1000
+#Fim_Sim = 2400#2400#1500
 
 if Norma == 1:
     limite_superior = 1.05
