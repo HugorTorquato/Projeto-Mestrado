@@ -190,10 +190,13 @@ inv_alfa = complex(-0.5, -0.866025403784)
 # Intervalo de simulação
 ## Entre com a hora sem o ":", por exemplo: 13:00 -> 1300
 
-Inicio_Sim = 1000#0000#1000
-Fim_Sim = 1500#2400#1500
-#Inicio_Sim = 0000#0000#1000
-#Fim_Sim = 2400#2400#1500
+# Simulação com intervalo limitado
+#Inicio_Sim = 1000
+#Fim_Sim = 1500
+
+# Simulação completa
+Inicio_Sim = 0000
+Fim_Sim = 2400
 
 if Norma == 1:
     limite_superior = 1.05

@@ -11,6 +11,7 @@
       <change beforePath="$PROJECT_DIR$/Redes/Teste_VV_VW/Daily_VVVW_varMax_PMPPPU_kVAlimitation_Ppriority_Mon_pv_currents_1.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Redes/Teste_VV_VW/Daily_VVVW_varMax_PMPPPU_kVAlimitation_Ppriority_Mon_pv_currents_1.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Redes/Teste_VV_VW/Daily_VVVW_varMax_PMPPPU_kVAlimitation_Ppriority_Mon_pv_powers_1.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Redes/Teste_VV_VW/Daily_VVVW_varMax_PMPPPU_kVAlimitation_Ppriority_Mon_pv_powers_1.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Redes/Teste_VV_VW/Daily_VVVW_varMax_PMPPPU_kVAlimitation_Ppriority_Mon_pv_v_1.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Redes/Teste_VV_VW/Daily_VVVW_varMax_PMPPPU_kVAlimitation_Ppriority_Mon_pv_v_1.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python/SistemFunctions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/SistemFunctions.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -211,5 +212,16 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Adicionado verificação apra overcurrent" />
     <option name="LAST_COMMIT_MESSAGE" value="Adicionado verificação apra overcurrent" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Python/FunctionsSecond.py</url>
+          <line>127</line>
+          <option name="timeStamp" value="15" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
