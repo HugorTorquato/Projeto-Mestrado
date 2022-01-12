@@ -4,6 +4,13 @@
     <list default="true" id="c0a353b0-9d94-497b-99cd-a779928dfe5d" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Python/Definitions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/Definitions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python/Geradores.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/Geradores.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Redes/Teste_VV_VW/Daily_VVVW_varMax_PMPPPU_kVAlimitation_Ppriority_MONITOR-PV_POWERS-ch1-ch3-ch5.DSV" beforeDir="false" afterPath="$PROJECT_DIR$/Redes/Teste_VV_VW/Daily_VVVW_varMax_PMPPPU_kVAlimitation_Ppriority_MONITOR-PV_POWERS-ch1-ch3-ch5.DSV" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Redes/Teste_VV_VW/Daily_VVVW_varMax_PMPPPU_kVAlimitation_Ppriority_MONITOR-PV_POWERS-ch2-ch4-ch6.DSV" beforeDir="false" afterPath="$PROJECT_DIR$/Redes/Teste_VV_VW/Daily_VVVW_varMax_PMPPPU_kVAlimitation_Ppriority_MONITOR-PV_POWERS-ch2-ch4-ch6.DSV" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Redes/Teste_VV_VW/Daily_VVVW_varMax_PMPPPU_kVAlimitation_Ppriority_MONITOR-PV_V-ch7-ch8.DSV" beforeDir="false" afterPath="$PROJECT_DIR$/Redes/Teste_VV_VW/Daily_VVVW_varMax_PMPPPU_kVAlimitation_Ppriority_MONITOR-PV_V-ch7-ch8.DSV" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Redes/Teste_VV_VW/Daily_VVVW_varMax_PMPPPU_kVAlimitation_Ppriority_Mon_pv_currents_1.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Redes/Teste_VV_VW/Daily_VVVW_varMax_PMPPPU_kVAlimitation_Ppriority_Mon_pv_currents_1.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Redes/Teste_VV_VW/Daily_VVVW_varMax_PMPPPU_kVAlimitation_Ppriority_Mon_pv_powers_1.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Redes/Teste_VV_VW/Daily_VVVW_varMax_PMPPPU_kVAlimitation_Ppriority_Mon_pv_powers_1.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Redes/Teste_VV_VW/Daily_VVVW_varMax_PMPPPU_kVAlimitation_Ppriority_Mon_pv_v_1.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Redes/Teste_VV_VW/Daily_VVVW_varMax_PMPPPU_kVAlimitation_Ppriority_Mon_pv_v_1.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Python/SistemFunctions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/SistemFunctions.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

@@ -1,4 +1,6 @@
 # coding: utf-8
+import time
+
 from Geradores import *
 
 def Inicializa(Rede):
@@ -74,7 +76,7 @@ def Solve_Hora_por_Hora(Rede, Simulation, Pot_GD):
     # a simulação diária
 
     from Definitions import DF_Tensao_A
-    from Monitores import Adicionar_Monitores
+    from Monitores import Adicionar_Monitores, Export_Random_Monitor_Test, Debug_Loads
     from FunctionsSecond import Adicionar_EnergyMeter, Converter_Intervalo_de_Simulacao
 
     # Feature:
@@ -115,8 +117,12 @@ def Solve_Hora_por_Hora(Rede, Simulation, Pot_GD):
             Data_PV(Rede, itera)
 
         Rede.dssSolution.FinishTimeStep()
+        if Simulation > 2:
+            Export_Random_Monitor_Test(Rede, "InvControl", "PVSystem.pv_0")
 
-    print(DF_Tensao_A.head())
+    Rede.dssText.Command = "Export EventLog file=" + Debug_Path + "/Debug_" + str(Simulation)
+
+    #print(DF_Tensao_A.head())
 
 def HC(Rede):
 
@@ -172,7 +178,7 @@ def HC(Rede):
             print('-----------------------------------------------------')
 
             if Sem_GD == 0:
-                print('--------------------- S/ GD -------------------------')
+                print('--------------------- C/ GD -------------------------')
                 print('-----------------------------------------------------')
                 Sem_GD = 1
                 break

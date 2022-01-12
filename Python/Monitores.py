@@ -1,4 +1,6 @@
 # coding: utf-8
+import os
+
 from Definitions import *
 import pandas as pd
 
@@ -20,15 +22,24 @@ def Define_Monitor(Rede, Lista_Monitores):
     # -> modelo 1 -> Medidores de Pot ( Atia e Reativa )
     # -> modelo 2 -> Medidores de V & I (Tensão e corrente )
     #
-    # Se adicionar mais algum modelo, lembrar de modificar a função "", ela vai salvar e ler os arquivos depois de
-    # cada simulação, e a implementação é baseada nem dois modelos de medidores. Se Adicionar maisum, tem de
-    # adicionar lá também.
+    # Se adicionar mais algum modelo, lembrar de modificar a função "Export_And_Read_Monitors_Data", ela vai salvar e
+    # ler os arquivos depois de cada simulação, e a implementação é baseada nem dois modelos de medidores. Se Adicionar
+    # maisum, tem de adicionar lá também.
 
     for element in Lista_Monitores:
         Rede.dssText.Command = "New monitor." + str(element.split('.')[1]) + "_power element=" + str(element) + \
                                " terminal=1 mode=1 ppolar=no"
         Rede.dssText.Command = "New monitor." + str(element.split('.')[1]) + "_voltage element=" + str(element) \
                                + " terminal=1 mode=0"
+
+def Define_Random_Monior_Test(Rede, description, element, terminal, mode):
+    Rede.dssText.Command = "New monitor." + str(description) + "_" + str(element.split('.')[1]) + " element=" \
+                           + str(element) + " terminal=" + str(terminal) + " mode=" + str(mode)
+
+def Export_Random_Monitor_Test(Rede, description, element):
+    Rede.dssText.Command = "Export monitors " + str(description) + "_" + str(element.split('.')[1]) + " " \
+                          "file = " + Debug_Path + "\\" + str(description) + "_" + str(element.split('.')[1])
+
 def Move_Files():
 
     import os
@@ -107,3 +118,16 @@ def Export_And_Read_Monitors_Data(Rede, Lista_Monitores, Simulation):
 
             else:
                 print("Medição não presente nos arquivos - Export_And_Read_Monitors_Data()")
+
+def Debug_Loads(Rede, Simulation):
+
+    #if os.path.isfile(Debug_Path + "/Debug_Load.txt") is True and Simulation == 1:
+    #    os.remove(Debug_Path + "/Debug_Load.txt")
+
+    file = open(Debug_Path + "/Debug_Load.txt", 'a')
+
+    for load in Rede.dssLoads.AllNames:
+        Rede.dssLoads.Name = load
+        file.write(str(Simulation) + ", " + str(Rede.dssLoads.Name) + ", " + str(Rede.dssLoads.Model) + "\n")
+
+    # não muda a definição do modelo, pode ser que mude internamente... mas a definição não
