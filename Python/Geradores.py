@@ -32,9 +32,10 @@ def Adicionar_GDs(Rede, Pot_GD, Simulation):
     Rede.dssText.Command = "New LoadShape.irrad npts=96 minterval=15 " \
                            "mult=(file=C:\\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\Irrad.txt)"
     Rede.dssText.Command = "New XYcurve.generic npts=4 Xarray=(0.5,0.89,0.92,1,1.05,1.1,1.5) " \
-                           "Yarray=(1.0,1.0,0.5,0,-0.5,-1.0,-1.0)"
+                           "Yarray=(1.0,1.0,0.8,0,-0.5,-1.0,-1.0)"
     Rede.dssText.Command = "New XYCurve.vv_curve npts=7 Yarray=[1 1 0 0 0 -1 -1] " \
                            "XArray = [0.5 0.87 0.92 1 1.05 1.01 1.5]"
+    Rede.dssText.Command = "New XYcurve.vw_curve npts=3 yarray=[1 1 0] xarray=[1 1.02 1.7]"
 
     if Use_PV:
         [Create_PV(Rede, 'PV_' + str(i), Pot_GD, FP, 'Irrad', 'Temp', Simulation) for i in range(Num_GDs)]
@@ -78,19 +79,28 @@ def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
                            " Pmpp=" + str(Pmp) + \
                            " kv=" + str(Rede.dssBus.kVBase) + \
                            " kVA=" + str(Pmp * 1.15) + \
-                           " kvarMax=" + str(Pmp * 1.2) + \
                            " con=wye" \
                            " %Cutin=0.1 %cutout=0.1 EffCurve=Eff P-TCurve=FactorPVsT" \
                            " pf=1 VarFollowInverter=true " \
                            " irradiance=" + str(Const_Irrad) + " temperature=" + str(Const_Temp) + \
                            " daily=irrad Tdaily=Temp wattpriority=yes debugtrace=yes"
-    if Simulation > 2 and Debug_VV == 1:
+    if Simulation == 3 and Debug_VV == 1:
         Rede.dssText.Command = "set maxcontroliter=2000"
 
         Rede.dssText.Command ="New InvControl.InvPVCtrl_" + Nome + " DERList=PVSystem." + Nome + \
-                              " pvsystemlist=pv_0 mode=VOLTVAR voltage_curvex_ref=rated " \
-                           "vvc_curve1=generic monVoltageCalc=" + str(Identify_Phases(DF_PV.loc[index, 'Phases'])[0])+\
+                              " mode=VOLTVAR voltage_curvex_ref=rated " \
+                           "vvc_curve1=generic monVoltageCalc=MIN" +\
                            " deltaQ_factor=0.2 RefReactivePower=VARAVAL varchangetolerance=0.025"# EventLog=yes "
+
+    if Simulation > 3 and Debug_VV == 1:
+        Rede.dssText.Command = "set maxcontroliter=2000"
+
+        Rede.dssText.Command ="New InvControl.InvPVCtrl_" + Nome + " DERList=PVSystem." + Nome + \
+                              " Combimode=VV_VW voltage_curvex_ref=rated" \
+                              " vvc_curve1=generic monVoltageCalc=MIN"+ \
+                              " deltaQ_factor=0.2 RefReactivePower=VARAVAL varchangetolerance=0.025" \
+                              " voltwatt_curve=vw_curve DeltaP_factor=0.45 activePchangetolerance=0.025" \
+                              " VoltwattYAxis=PMPPPU"# EventLog=yes "
 
     ## deltaQ_factor -> Mudança máxima da pot reativa da solução anterior para a desejada durante
     #                   cada iteração de controle
@@ -159,10 +169,10 @@ def FindBusGD(Num_GDs):
     from Definitions import DF_Tensao_A, Barras_GDs, Debug_VV
 
     if Debug_VV == 1:
-        Barras_GDs_list = ['bus_33998182_039']#, 'bus_33998182_011',
+        #Barras_GDs_list = ['bus_33998182_039']#, 'bus_33998182_011',
             # 'bus_33998182_013', 'bus_33998182_027', 'bus_33998182_022']
-        #Barras_GDs_list = ['bus_33998182_039', 'bus_33998182_011',
-        #                 'bus_33998182_013', 'bus_33998182_027', 'bus_33998182_022']
+        Barras_GDs_list = ['bus_33998182_039', 'bus_33998182_011',
+                         'bus_33998182_013', 'bus_33998182_027', 'bus_33998182_022']
 
         for i in range(Num_GDs):
             Barras_GDs.append(Barras_GDs_list[i])

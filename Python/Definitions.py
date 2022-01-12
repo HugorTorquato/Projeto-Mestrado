@@ -164,12 +164,12 @@ DF_TESTE = pd.DataFrame({
 Salva_Dados = 0      # Aciona o script que faz o levantamento dos dados da rede
 Savar_Dados_Elem = 1 # Habilita que os dados de pot e tensão dos elementos sejam salvos
 Criar_GD = 1         # Aciona a inserção de GDs na rede
-Num_GDs = 1         # Definição do número de GDs que serão adicionadas
+Num_GDs = 5         # Definição do número de GDs que serão adicionadas
 Calc_HC = 1          # Aciona o cálculo do HC
 All_GDs = 1
 Use_PV = 1           # 1- Usa o PVSystem  0 - Usa geradore
 Norma = 1            #  # 0 - PRODIST # 1 - IEEE
-Num_Simulations = 3  # Deifnie o número de simulações que serão realizadas
+Num_Simulations = 4  # Deifnie o número de simulações que serão realizadas
 
 Debug_VV = 1         # Modo Debug para mensurar e comparar o comportamento do VV no sistema ( 1 - liga 0 - desliga)
 
