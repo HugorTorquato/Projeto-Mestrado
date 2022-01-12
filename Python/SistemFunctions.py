@@ -73,6 +73,7 @@ def Solve_Hora_por_Hora(Rede, Simulation, Pot_GD):
     # Essa função é o coração do código, aqui que são feitos todos os comandos e designações para os calculos durante
     # a simulação diária
 
+    from Definitions import DF_Tensao_A
     from Monitores import Adicionar_Monitores
     from FunctionsSecond import Adicionar_EnergyMeter, Converter_Intervalo_de_Simulacao
 
