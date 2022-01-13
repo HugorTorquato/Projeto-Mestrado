@@ -21,6 +21,15 @@ def Inicializa(Rede):
     DF_Tensao_C.insert(0, 'Barras', Nome_Barras(Rede), allow_duplicates=True)
     [DF_Tensao_C.insert(i + 1, str(i), 0) for i in range(Tamanho_pmult(Rede))]
 
+    DF_Tensao_Ang_A.insert(0, 'Barras', Nome_Barras(Rede), allow_duplicates=True)
+    [DF_Tensao_Ang_A.insert(i + 1, str(i), 0) for i in range(Tamanho_pmult(Rede))]
+
+    DF_Tensao_Ang_B.insert(0, 'Barras', Nome_Barras(Rede), allow_duplicates=True)
+    [DF_Tensao_Ang_B.insert(i + 1, str(i), 0) for i in range(Tamanho_pmult(Rede))]
+
+    DF_Tensao_Ang_C.insert(0, 'Barras', Nome_Barras(Rede), allow_duplicates=True)
+    [DF_Tensao_Ang_C.insert(i + 1, str(i), 0) for i in range(Tamanho_pmult(Rede))]
+
     # Dataframe de desq de tensão
     DF_Desq_IEC.insert(0, 'Barras', Nome_Barras(Rede), allow_duplicates=True)
     [DF_Desq_IEC.insert(i + 1, str(i), 0) for i in range(Tamanho_pmult(Rede))]
@@ -120,7 +129,7 @@ def Solve_Hora_por_Hora(Rede, Simulation, Pot_GD):
         if Simulation > 2:
             Export_Random_Monitor_Test(Rede, "InvControl", "PVSystem.pv_0")
 
-    Rede.dssText.Command = "Export EventLog file=" + Debug_Path + "/Debug_" + str(Simulation)
+    #Rede.dssText.Command = "Export EventLog file=" + Debug_Path + "/Debug_" + str(Simulation)
 
     #print(DF_Tensao_A.head())
 
@@ -132,7 +141,7 @@ def HC(Rede):
     from FunctionsSecond import Limpar_DF, Check, Identify_Overcurrent_Limits, \
         Max_and_Min_Voltage_DF
     from Definitions import Num_GDs, DF_Geradores, DF_Barras, DF_General, DF_Elements, DF_PV,\
-        DF_PVPowerData, DF_Lista_Monitors, DF_Tensao_A, DF_Tensao_B, DF_Tensao_C
+        DF_PVPowerData, DF_Lista_Monitors, DF_Tensao_A, DF_Tensao_B, DF_Tensao_C, Incremento_gd
     from Geradores import FindBusGD
 
     # Define o primeiro transformador como o ponto de PCC e o incremento de pot em cada verificação do HC é
@@ -191,18 +200,8 @@ def HC(Rede):
         Export_And_Read_Monitors_Data(Rede, DF_Lista_Monitors, Simulation)
         Power_measurement_PV(Rede, Simulation)
 
-        DF_Voltage_Data, DF_Corrente_Data, DF_Current_Elemt_Data_Ang = Process_Data(Rede, Simulation)
-        Save_General_Data(Simulation)
-        Save_Data(Simulation, DF_Voltage_Data, DF_Corrente_Data, DF_Current_Elemt_Data_Ang)
-
-        if Savar_Dados_Elem == 1:
-            DF_Voltage_Elemt_Data, DF_Voltage_Elemt_Data_Ang, DF_Power_P_Elemt_Data, DF_Power_Q_Elemt_Data = \
-                Process_Data_Secondary(Rede, Simulation)
-
-            Save_Data_Secondary(DF_Power_P_Elemt_Data, DF_Power_Q_Elemt_Data, DF_Voltage_Elemt_Data,
-                                DF_Voltage_Elemt_Data_Ang)
-
-
+        Process_Data(Rede, Simulation)
+        #Save_General_Data(Simulation)
 
         # Olhar isso aqui direito... parece que n está computando o valor limite certinho
         # Apresenta o valor de pot já com a violação

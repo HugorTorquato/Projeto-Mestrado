@@ -47,7 +47,6 @@ def Correntes_elementos(Rede, itera):
 
         count += 1
 
-
 def Dados_Elements(Rede, itera):
     # Essa função é separada da coleta das correntes pq pode ser ou não habilitada, depende do "Savar_Dados_Elem"
 
@@ -127,13 +126,11 @@ def Dados_Elements(Rede, itera):
 
     return
 
-
 def get_resultados_potencia(self):
     # self.dssText.Command = "Show power kva elements"
     # self.dssText.Command = "Show Voltages LN Nodes"
     # self.dssText.Command = "Show Taps"
     self.dssText.Command = "Show Currents"
-
 
 def Tensao_Barras(Rede, itera):
     puVmag_Buses = []
@@ -152,7 +149,7 @@ def Tensao_Barras(Rede, itera):
 
     for Barra in Bus_Names:
         # Feature:
-        # -> Criar e adicionar a atribuição do DF para o angulo da tensão tbm
+        # -> Não parece estar salvando corretamente a respectiva fase de cada barra, pode ser melhorado
 
         # puVmag = []
         angle = []
@@ -186,26 +183,49 @@ def Tensao_Barras(Rede, itera):
             Vmedio = tensao1
 
         if len(VmagAngle) == 6:
-            angle.append(VmagAngle[1])
-            angle.append(VmagAngle[3])
-            angle.append(VmagAngle[5])
+            DF_Tensao_Ang_A.loc[DF_Tensao_Ang_A.index == count, str(itera)] = VmagAngle[1]
+            DF_Tensao_Ang_B.loc[DF_Tensao_Ang_B.index == count, str(itera)] = VmagAngle[3]
+            DF_Tensao_Ang_C.loc[DF_Tensao_Ang_C.index == count, str(itera)] = VmagAngle[5]
             angle1 = VmagAngle[1] + int(30)
             angle2 = VmagAngle[3] + int(30)
             angle3 = VmagAngle[5] + int(30)
         elif len(VmagAngle) == 4:
-            angle.append(VmagAngle[1])
-            angle.append(VmagAngle[3])
-            angle.append(0)
+            DF_Tensao_Ang_A.loc[DF_Tensao_Ang_A.index == count, str(itera)] = VmagAngle[1]
+            DF_Tensao_Ang_B.loc[DF_Tensao_Ang_B.index == count, str(itera)] = VmagAngle[3]
+            DF_Tensao_Ang_C.loc[DF_Tensao_Ang_C.index == count, str(itera)] = 0
             angle1 = VmagAngle[1] + int(30)
             angle2 = VmagAngle[3] + int(30)
             angle3 = 0
         elif len(VmagAngle) == 2:
-            angle.append(VmagAngle[1])
-            angle.append(0)
-            angle.append(0)
+            DF_Tensao_Ang_A.loc[DF_Tensao_Ang_A.index == count, str(itera)] = VmagAngle[1]
+            DF_Tensao_Ang_B.loc[DF_Tensao_Ang_B.index == count, str(itera)] = 0
+            DF_Tensao_Ang_C.loc[DF_Tensao_Ang_C.index == count, str(itera)] = 0
             angle1 = VmagAngle[1] + int(30)
             angle2 = 0
             angle3 = 0
+
+#
+#        if len(VmagAngle) == 6:
+#            angle.append(VmagAngle[1])
+#            angle.append(VmagAngle[3])
+#            angle.append(VmagAngle[5])
+#            angle1 = VmagAngle[1] + int(30)
+#            angle2 = VmagAngle[3] + int(30)
+#            angle3 = VmagAngle[5] + int(30)
+#        elif len(VmagAngle) == 4:
+#            angle.append(VmagAngle[1])
+#            angle.append(VmagAngle[3])
+#            angle.append(0)
+#            angle1 = VmagAngle[1] + int(30)
+#            angle2 = VmagAngle[3] + int(30)
+#            angle3 = 0
+#        elif len(VmagAngle) == 2:
+#            angle.append(VmagAngle[1])
+#            angle.append(0)
+#            angle.append(0)
+#            angle1 = VmagAngle[1] + int(30)
+#            angle2 = 0
+#            angle3 = 0
 
         max_IEEE, min_IEEE = Max_Min(tensao1 / sqrt3, tensao2 / sqrt3, tensao3 / sqrt3)
         max_NEMA, min_NEMA = Max_Min(tensao1, tensao2, tensao3)
@@ -220,9 +240,8 @@ def Tensao_Barras(Rede, itera):
 
         count += 1
         # puVmag_Buses.append(puVmag)
-        angle_Buses.append(angle)
+        #angle_Buses.append(angle)
     # print(DF_Tensao_A.head())
-
 
 def Max_Min(Tensao1, Tensao2, Tensao3):
     Vet_Max_Min = [Tensao1, Tensao2, Tensao3]
