@@ -172,7 +172,7 @@ Calc_HC = 1          # Aciona o cálculo do HC
 All_GDs = 1
 Use_PV = 1           # 1- Usa o PVSystem  0 - Usa geradore
 Norma = 1            #  # 0 - PRODIST # 1 - IEEE
-Num_Simulations = 2  # Deifnie o número de simulações que serão realizadas
+Num_Simulations = 4  # Deifnie o número de simulações que serão realizadas
 
 Debug_VV = 1         # Modo Debug para mensurar e comparar o comportamento do VV no sistema ( 1 - liga 0 - desliga)
 
@@ -181,7 +181,7 @@ FP_1 = 1
 Const_Irrad = .705
 Const_Temp = 25
 FP = 1
-Incremento_gd = 10# Valores em porcentagem (%)
+Incremento_gd = 1# Valores em porcentagem (%)
 
 Steps_wtout_unbalance = 10
 
@@ -190,19 +190,22 @@ sqrt3 = np.sqrt(3)
 alfa = complex(-0.5, 0.866025403784)
 inv_alfa = complex(-0.5, -0.866025403784)
 
-# Intervalo de simulação
-## Entre com a hora sem o ":", por exemplo: 13:00 -> 1300
-
 #############################################################################
 ###################### Definir Tempo de Simulação ###########################
 #############################################################################
+
+## Entre com a hora sem o ":", por exemplo: 13:00 -> 1300
+
 # Simulação com intervalo limitado
 Inicio_Sim = 1000
 Fim_Sim = 1500
 
 # Simulação completa
-#Inicio_Sim = 0000
-#Fim_Sim = 2400
+Inicio_Sim = 0000
+Fim_Sim = 2400
+
+# Adicionar Log aqui
+
 #############################################################################
 #############################################################################
 
