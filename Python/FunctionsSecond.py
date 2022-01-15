@@ -161,46 +161,46 @@ def Tensao_Barras(Rede, itera):
             DF_Tensao_A.loc[DF_Tensao_A.index == count, str(itera)] = VmagAngle[0]  # puVmag.append(VmagAngle[0])
             DF_Tensao_B.loc[DF_Tensao_B.index == count, str(itera)] = VmagAngle[2]  # puVmag.append(VmagAngle[0])
             DF_Tensao_C.loc[DF_Tensao_C.index == count, str(itera)] = VmagAngle[4]  # puVmag.append(VmagAngle[0])
-            tensao1 = VmagAngle[0] * sqrt3
-            tensao2 = VmagAngle[2] * sqrt3
-            tensao3 = VmagAngle[4] * sqrt3
+            tensao1 = VmagAngle[0]# * sqrt3
+            tensao2 = VmagAngle[2]# * sqrt3
+            tensao3 = VmagAngle[4]# * sqrt3
             Vmedio = (tensao1 + tensao2 + tensao3) / 3
         elif len(VmagAngle) == 4:
             DF_Tensao_A.loc[DF_Tensao_A.index == count, str(itera)] = VmagAngle[0]  # puVmag.append(VmagAngle[0])
             DF_Tensao_B.loc[DF_Tensao_B.index == count, str(itera)] = VmagAngle[2]  # puVmag.append(VmagAngle[0])
             DF_Tensao_C.loc[DF_Tensao_C.index == count, str(itera)] = 0  # puVmag.append(0)
-            tensao1 = VmagAngle[0] * sqrt3
-            tensao2 = VmagAngle[2] * sqrt3
+            tensao1 = VmagAngle[0]# * sqrt3
+            tensao2 = VmagAngle[2]# * sqrt3
             tensao3 = 0
             vmedio = (tensao1 + tensao2) / 2
         elif len(VmagAngle) == 2:
             DF_Tensao_A.loc[DF_Tensao_A.index == count, str(itera)] = VmagAngle[0]  # puVmag.append(VmagAngle[0])
             DF_Tensao_B.loc[DF_Tensao_B.index == count, str(itera)] = 0  # puVmag.append(0)
             DF_Tensao_C.loc[DF_Tensao_C.index == count, str(itera)] = 0  # puVmag.append(0)
-            tensao1 = VmagAngle[0] * sqrt3
+            tensao1 = VmagAngle[0]# * sqrt3
             tensao2 = 0
             tensao3 = 0
             Vmedio = tensao1
 
-        if len(VmagAngle) == 6:
+        if len(VmagAngle) == 6 or len(VmagAngle) == 8:
             DF_Tensao_Ang_A.loc[DF_Tensao_Ang_A.index == count, str(itera)] = VmagAngle[1]
             DF_Tensao_Ang_B.loc[DF_Tensao_Ang_B.index == count, str(itera)] = VmagAngle[3]
             DF_Tensao_Ang_C.loc[DF_Tensao_Ang_C.index == count, str(itera)] = VmagAngle[5]
-            angle1 = VmagAngle[1] + int(30)
-            angle2 = VmagAngle[3] + int(30)
-            angle3 = VmagAngle[5] + int(30)
+            angle1 = VmagAngle[1]# + int(30)
+            angle2 = VmagAngle[3]# + int(30)
+            angle3 = VmagAngle[5]# + int(30)
         elif len(VmagAngle) == 4:
             DF_Tensao_Ang_A.loc[DF_Tensao_Ang_A.index == count, str(itera)] = VmagAngle[1]
             DF_Tensao_Ang_B.loc[DF_Tensao_Ang_B.index == count, str(itera)] = VmagAngle[3]
             DF_Tensao_Ang_C.loc[DF_Tensao_Ang_C.index == count, str(itera)] = 0
-            angle1 = VmagAngle[1] + int(30)
-            angle2 = VmagAngle[3] + int(30)
+            angle1 = VmagAngle[1]# + int(30)
+            angle2 = VmagAngle[3]# + int(30)
             angle3 = 0
         elif len(VmagAngle) == 2:
             DF_Tensao_Ang_A.loc[DF_Tensao_Ang_A.index == count, str(itera)] = VmagAngle[1]
             DF_Tensao_Ang_B.loc[DF_Tensao_Ang_B.index == count, str(itera)] = 0
             DF_Tensao_Ang_C.loc[DF_Tensao_Ang_C.index == count, str(itera)] = 0
-            angle1 = VmagAngle[1] + int(30)
+            angle1 = VmagAngle[1]# + int(30)
             angle2 = 0
             angle3 = 0
 
@@ -227,12 +227,14 @@ def Tensao_Barras(Rede, itera):
 #            angle2 = 0
 #            angle3 = 0
 
-        max_IEEE, min_IEEE = Max_Min(tensao1 / sqrt3, tensao2 / sqrt3, tensao3 / sqrt3)
+        #max_IEEE, min_IEEE = Max_Min(tensao1 / sqrt3, tensao2 / sqrt3, tensao3 / sqrt3)
+        max_IEEE, min_IEEE = Max_Min(tensao1, tensao2, tensao3)
         max_NEMA, min_NEMA = Max_Min(tensao1, tensao2, tensao3)
 
         # Se precisar usar as demais normas masta descomentar o código
         DF_Desq_IEC.loc[DF_Tensao_A.index == count, str(itera)] = \
-            IEC(tensao1 / sqrt3, tensao2 / sqrt3, tensao3 / sqrt3, angle1, angle2, angle3)
+            IEC(tensao1, tensao2, tensao3, angle1, angle2, angle3)
+            #IEC(tensao1 / sqrt3, tensao2 / sqrt3, tensao3 / sqrt3, angle1, angle2, angle3)
         DF_Desq_IEEE.loc[DF_Tensao_A.index == count, str(itera)] = \
             IEEE(tensao1, tensao2, tensao3, max_IEEE, min_IEEE)
         DF_Desq_NEMA.loc[DF_Tensao_A.index == count, str(itera)] = \
