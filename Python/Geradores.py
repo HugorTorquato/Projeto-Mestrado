@@ -171,8 +171,19 @@ def FindBusGD(Num_GDs):
     if Debug_VV == 1:
         #Barras_GDs_list = ['bus_33998182_039']#, 'bus_33998182_011',
             # 'bus_33998182_013', 'bus_33998182_027', 'bus_33998182_022']
-        Barras_GDs_list = ['bus_33998182_039', 'bus_33998182_011',
-                         'bus_33998182_013', 'bus_33998182_027', 'bus_33998182_022']
+        Barras_GDs_list = ['bus_33998182_039', 'bus_33998182_011', 'bus_33998182_013',
+                         'bus_33998182_027', 'bus_33998182_022']
+
+        #3f - undervoltage com VV
+        Barras_GDs_list = ['bus_33998182_017', 'bus_33998182_011', 'bus_33998182_020',
+                           'bus_33998182_021', 'bus_33998182_023']
+
+        #1f - undervoltage com VV
+        Barras_GDs_list = ['bus_33998182_015', 'bus_33998182_011', 'bus_33998182_032',
+                           'bus_33998182_037', 'bus_33998182_027']
+
+        Barras_GDs_list = ['bus_33998182_015', 'bus_33998182_011', 'bus_33998182_025',
+                           'bus_33998182_037', 'bus_33998182_026']
 
         for i in range(Num_GDs):
             Barras_GDs.append(Barras_GDs_list[i])

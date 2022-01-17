@@ -178,7 +178,10 @@ def HC(Rede):
             Solve_Hora_por_Hora(Rede, Simulation, Pot_GD)  # Chamada da função que levanta o perfil diário
 
             Nummero_Simulacoes += 1
-            Pot_GD += Incremento_Pot_gd if Criar_GD and Nummero_Simulacoes > 0 else 0
+            if Nummero_Simulacoes < 3:
+                Pot_GD += 2*Incremento_Pot_gd if Criar_GD and Nummero_Simulacoes > 0 else 0
+            else :
+                Pot_GD += Incremento_Pot_gd if Criar_GD and Nummero_Simulacoes > 0 else 0
 
             print('-----------------------------------------------------')
             #print(DF_Tensao_A.head())

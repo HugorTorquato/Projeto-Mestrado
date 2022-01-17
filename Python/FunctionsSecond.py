@@ -132,6 +132,40 @@ def get_resultados_potencia(self):
     # self.dssText.Command = "Show Taps"
     self.dssText.Command = "Show Currents"
 
+def Identify_Position(Fase, Nodes):
+
+    if Fase == 1:
+        Voltage = 0
+        Angle = 1
+        return Voltage, Angle
+
+    if Fase == 2 and 1 not in Nodes:
+        Voltage = 0
+        Angle = 1
+        return Voltage, Angle
+    elif Fase == 2:
+        Voltage = 2
+        Angle = 3
+        return Voltage, Angle
+
+    if Fase == 3 and 1 not in Nodes:
+        if 2 not in Nodes:
+            Voltage = 0
+            Angle = 1
+            return Voltage, Angle
+        else:
+            Voltage = 2
+            Angle = 3
+            return Voltage, Angle
+    elif 2 not in Nodes:
+        Voltage = 2
+        Angle = 3
+        return Voltage, Angle
+    else:
+        Voltage = 4
+        Angle = 5
+        return Voltage, Angle
+
 def Tensao_Barras(Rede, itera):
     puVmag_Buses = []
     angle_Buses = []
@@ -156,53 +190,76 @@ def Tensao_Barras(Rede, itera):
         Rede.dssCircuit.SetActiveBus(Barra)
         ativa_barra(Rede, Barra)  # Ativa a barra
         VmagAngle = puVmagAngle(Rede)
+        Nodes = Rede.dssBus.Nodes
 
-        if len(VmagAngle) == 6 or len(VmagAngle) == 8:
-            DF_Tensao_A.loc[DF_Tensao_A.index == count, str(itera)] = VmagAngle[0]  # puVmag.append(VmagAngle[0])
-            DF_Tensao_B.loc[DF_Tensao_B.index == count, str(itera)] = VmagAngle[2]  # puVmag.append(VmagAngle[0])
-            DF_Tensao_C.loc[DF_Tensao_C.index == count, str(itera)] = VmagAngle[4]  # puVmag.append(VmagAngle[0])
-            tensao1 = VmagAngle[0]# * sqrt3
-            tensao2 = VmagAngle[2]# * sqrt3
-            tensao3 = VmagAngle[4]# * sqrt3
-            Vmedio = (tensao1 + tensao2 + tensao3) / 3
-        elif len(VmagAngle) == 4:
-            DF_Tensao_A.loc[DF_Tensao_A.index == count, str(itera)] = VmagAngle[0]  # puVmag.append(VmagAngle[0])
-            DF_Tensao_B.loc[DF_Tensao_B.index == count, str(itera)] = VmagAngle[2]  # puVmag.append(VmagAngle[0])
-            DF_Tensao_C.loc[DF_Tensao_C.index == count, str(itera)] = 0  # puVmag.append(0)
-            tensao1 = VmagAngle[0]# * sqrt3
-            tensao2 = VmagAngle[2]# * sqrt3
-            tensao3 = 0
-            vmedio = (tensao1 + tensao2) / 2
-        elif len(VmagAngle) == 2:
-            DF_Tensao_A.loc[DF_Tensao_A.index == count, str(itera)] = VmagAngle[0]  # puVmag.append(VmagAngle[0])
-            DF_Tensao_B.loc[DF_Tensao_B.index == count, str(itera)] = 0  # puVmag.append(0)
-            DF_Tensao_C.loc[DF_Tensao_C.index == count, str(itera)] = 0  # puVmag.append(0)
-            tensao1 = VmagAngle[0]# * sqrt3
-            tensao2 = 0
-            tensao3 = 0
-            Vmedio = tensao1
 
-        if len(VmagAngle) == 6 or len(VmagAngle) == 8:
-            DF_Tensao_Ang_A.loc[DF_Tensao_Ang_A.index == count, str(itera)] = VmagAngle[1]
-            DF_Tensao_Ang_B.loc[DF_Tensao_Ang_B.index == count, str(itera)] = VmagAngle[3]
-            DF_Tensao_Ang_C.loc[DF_Tensao_Ang_C.index == count, str(itera)] = VmagAngle[5]
-            angle1 = VmagAngle[1]# + int(30)
-            angle2 = VmagAngle[3]# + int(30)
-            angle3 = VmagAngle[5]# + int(30)
-        elif len(VmagAngle) == 4:
-            DF_Tensao_Ang_A.loc[DF_Tensao_Ang_A.index == count, str(itera)] = VmagAngle[1]
-            DF_Tensao_Ang_B.loc[DF_Tensao_Ang_B.index == count, str(itera)] = VmagAngle[3]
-            DF_Tensao_Ang_C.loc[DF_Tensao_Ang_C.index == count, str(itera)] = 0
-            angle1 = VmagAngle[1]# + int(30)
-            angle2 = VmagAngle[3]# + int(30)
-            angle3 = 0
-        elif len(VmagAngle) == 2:
-            DF_Tensao_Ang_A.loc[DF_Tensao_Ang_A.index == count, str(itera)] = VmagAngle[1]
-            DF_Tensao_Ang_B.loc[DF_Tensao_Ang_B.index == count, str(itera)] = 0
-            DF_Tensao_Ang_C.loc[DF_Tensao_Ang_C.index == count, str(itera)] = 0
-            angle1 = VmagAngle[1]# + int(30)
-            angle2 = 0
-            angle3 = 0
+        DF_Tensao_A.loc[DF_Tensao_A.index == count, str(itera)] = VmagAngle[Identify_Position(1, Nodes)[0]] if 1 in Nodes else 0
+        tensao1 = VmagAngle[Identify_Position(1, Nodes)[0]] if 1 in Nodes else 0
+
+        DF_Tensao_B.loc[DF_Tensao_B.index == count, str(itera)] = VmagAngle[Identify_Position(2, Nodes)[0]] if 2 in Nodes else 0
+        tensao2 = VmagAngle[Identify_Position(2, Nodes)[0]] if 2 in Nodes else 0
+
+        DF_Tensao_C.loc[DF_Tensao_C.index == count, str(itera)] = VmagAngle[Identify_Position(3, Nodes)[0]] if 3 in Nodes else 0
+        tensao3 = VmagAngle[Identify_Position(3, Nodes)[0]] if 3 in Nodes else 0
+
+        Vmedio = (tensao1 + tensao2 + tensao3) / 3
+
+        DF_Tensao_Ang_A.loc[DF_Tensao_Ang_A.index == count, str(itera)] = VmagAngle[Identify_Position(1, Nodes)[1]] if 1 in Nodes else 0
+        angle1 = VmagAngle[Identify_Position(1, Nodes)[1]] if 1 in Nodes else 0
+
+        DF_Tensao_Ang_B.loc[DF_Tensao_Ang_B.index == count, str(itera)] = VmagAngle[Identify_Position(2, Nodes)[1]] if 2 in Nodes else 0
+        angle2 = VmagAngle[Identify_Position(2, Nodes)[1]] if 2 in Nodes else 0
+
+        DF_Tensao_Ang_C.loc[DF_Tensao_Ang_C.index == count, str(itera)] = VmagAngle[Identify_Position(3, Nodes)[1]] if 3 in Nodes else 0
+        angle3 = VmagAngle[Identify_Position(3, Nodes)[1]] if 3 in Nodes else 0
+
+#
+#        if len(VmagAngle) == 6 or len(VmagAngle) == 8:
+#            DF_Tensao_A.loc[DF_Tensao_A.index == count, str(itera)] = VmagAngle[0]  # puVmag.append(VmagAngle[0])
+#            DF_Tensao_B.loc[DF_Tensao_B.index == count, str(itera)] = VmagAngle[2]  # puVmag.append(VmagAngle[0])
+#            DF_Tensao_C.loc[DF_Tensao_C.index == count, str(itera)] = VmagAngle[4]  # puVmag.append(VmagAngle[0])
+#            tensao1 = VmagAngle[0]# * sqrt3
+#            tensao2 = VmagAngle[2]# * sqrt3
+#            tensao3 = VmagAngle[4]# * sqrt3
+#            Vmedio = (tensao1 + tensao2 + tensao3) / 3
+#        elif len(VmagAngle) == 4:
+#            DF_Tensao_A.loc[DF_Tensao_A.index == count, str(itera)] = VmagAngle[0]  # puVmag.append(VmagAngle[0])
+#            DF_Tensao_B.loc[DF_Tensao_B.index == count, str(itera)] = VmagAngle[2]  # puVmag.append(VmagAngle[0])
+#            DF_Tensao_C.loc[DF_Tensao_C.index == count, str(itera)] = 0  # puVmag.append(0)
+#            tensao1 = VmagAngle[0]# * sqrt3
+#            tensao2 = VmagAngle[2]# * sqrt3
+#            tensao3 = 0
+#            vmedio = (tensao1 + tensao2) / 2
+#        elif len(VmagAngle) == 2:
+#            DF_Tensao_A.loc[DF_Tensao_A.index == count, str(itera)] = VmagAngle[0]  # puVmag.append(VmagAngle[0])
+#            DF_Tensao_B.loc[DF_Tensao_B.index == count, str(itera)] = 0  # puVmag.append(0)
+#            DF_Tensao_C.loc[DF_Tensao_C.index == count, str(itera)] = 0  # puVmag.append(0)
+#            tensao1 = VmagAngle[0]# * sqrt3
+#            tensao2 = 0
+#            tensao3 = 0
+#            Vmedio = tensao1
+#
+#        if len(VmagAngle) == 6 or len(VmagAngle) == 8:
+#            DF_Tensao_Ang_A.loc[DF_Tensao_Ang_A.index == count, str(itera)] = VmagAngle[1]
+#            DF_Tensao_Ang_B.loc[DF_Tensao_Ang_B.index == count, str(itera)] = VmagAngle[3]
+#            DF_Tensao_Ang_C.loc[DF_Tensao_Ang_C.index == count, str(itera)] = VmagAngle[5]
+#            angle1 = VmagAngle[1]# + int(30)
+#            angle2 = VmagAngle[3]# + int(30)
+#            angle3 = VmagAngle[5]# + int(30)
+#        elif len(VmagAngle) == 4:
+#            DF_Tensao_Ang_A.loc[DF_Tensao_Ang_A.index == count, str(itera)] = VmagAngle[1]
+#            DF_Tensao_Ang_B.loc[DF_Tensao_Ang_B.index == count, str(itera)] = VmagAngle[3]
+#            DF_Tensao_Ang_C.loc[DF_Tensao_Ang_C.index == count, str(itera)] = 0
+#            angle1 = VmagAngle[1]# + int(30)
+#            angle2 = VmagAngle[3]# + int(30)
+#            angle3 = 0
+#        elif len(VmagAngle) == 2:
+#            DF_Tensao_Ang_A.loc[DF_Tensao_Ang_A.index == count, str(itera)] = VmagAngle[1]
+#            DF_Tensao_Ang_B.loc[DF_Tensao_Ang_B.index == count, str(itera)] = 0
+#            DF_Tensao_Ang_C.loc[DF_Tensao_Ang_C.index == count, str(itera)] = 0
+#            angle1 = VmagAngle[1]# + int(30)
+#            angle2 = 0
+#            angle3 = 0
 
 #
 #        if len(VmagAngle) == 6:
@@ -322,7 +379,8 @@ def IEEE(Tensao1, Tensao2, Tensao3, max, min):  # limite de 2.5%
 
 
 def NEMA(Vmedio, Vmax):
-    return ((Vmax - Vmedio) / Vmedio) * 100 if Vmedio != 0 else 0
+    #return ((Vmax - Vmedio) / Vmedio) * 100 if Vmedio != 0 else 0
+    return ((Vmax - Vmedio) / Vmedio) if Vmedio != 0 else 0
 
 
 def ativa_barra(Rede, nome_barra):

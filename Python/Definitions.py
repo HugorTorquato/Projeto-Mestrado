@@ -181,7 +181,7 @@ FP_1 = 1
 Const_Irrad = .705
 Const_Temp = 25
 FP = 1
-Incremento_gd = 1# Valores em porcentagem (%)
+Incremento_gd = 0.5# Valores em porcentagem (%)
 
 Steps_wtout_unbalance = 10
 
