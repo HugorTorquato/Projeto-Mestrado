@@ -35,7 +35,7 @@ def Adicionar_GDs(Rede, Pot_GD, Simulation):
                            "Yarray=(1.0,1.0,0.8,0,-0.5,-1.0,-1.0)"
     Rede.dssText.Command = "New XYCurve.vv_curve npts=7 Yarray=[1 1 0 0 0 -1 -1] " \
                            "XArray = [0.5 0.87 0.92 1 1.05 1.01 1.5]"
-    Rede.dssText.Command = "New XYcurve.vw_curve npts=3 yarray=[1 1 0] xarray=[1 1.02 1.7]"
+    Rede.dssText.Command = "New XYcurve.vw_curve npts=3 yarray=[1 0.95 0.9] xarray=[1 1.02 1.05]"
 
     if Use_PV:
         [Create_PV(Rede, 'PV_' + str(i), Pot_GD, FP, 'Irrad', 'Temp', Simulation) for i in range(Num_GDs)]
@@ -97,7 +97,7 @@ def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
 
         Rede.dssText.Command ="New InvControl.InvPVCtrl_" + Nome + " DERList=PVSystem." + Nome + \
                               " Combimode=VV_VW voltage_curvex_ref=rated" \
-                              " vvc_curve1=generic monVoltageCalc=MIN"+ \
+                              " vvc_curve1=generic monVoltageCalc=MIN" + \
                               " deltaQ_factor=0.2 RefReactivePower=VARAVAL varchangetolerance=0.025" \
                               " voltwatt_curve=vw_curve DeltaP_factor=0.45 activePchangetolerance=0.025" \
                               " VoltwattYAxis=PMPPPU"# EventLog=yes "

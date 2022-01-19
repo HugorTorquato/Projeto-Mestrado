@@ -4,24 +4,7 @@
     <list default="true" id="c0a353b0-9d94-497b-99cd-a779928dfe5d" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Python/Definitions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/Definitions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python/FunctionsSecond.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/FunctionsSecond.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Python/Geradores.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/Geradores.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python/SistemFunctions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/SistemFunctions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Barras.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Barras.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Current_Elemt_Data.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Current_Elemt_Data.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Current_Elemt_Data_Ang.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Current_Elemt_Data_Ang.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/General.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/General.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Grid_Elements.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Grid_Elements.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/MonitoresData.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/MonitoresData.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/PVPowerData.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/PVPowerData.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/PVSystems.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/PVSystems.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Power_P_Elemt_Data.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Power_P_Elemt_Data.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Power_Q_Elemt_Data.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Power_Q_Elemt_Data.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Unbalance_Data.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Unbalance_Data.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Voltage_Data.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Voltage_Data.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Voltage_Data_Ang.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Voltage_Data_Ang.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Voltage_Elemt_Data.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Voltage_Elemt_Data.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Voltage_Elemt_Data_Ang.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Voltage_Elemt_Data_Ang.csv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
