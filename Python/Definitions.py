@@ -181,7 +181,7 @@ FP_1 = 1
 Const_Irrad = .705
 Const_Temp = 25
 FP = 1
-Incremento_gd = 1# Valores em porcentagem (%)
+Incremento_gd = 0.5  # Valores em porcentagem (%) da pot do trafo de entrada
 
 Steps_wtout_unbalance = 10
 
@@ -201,8 +201,8 @@ Inicio_Sim = 1000
 Fim_Sim = 1500
 
 # Simulação completa
-Inicio_Sim = 0000
-Fim_Sim = 2400
+#Inicio_Sim = 0000
+#Fim_Sim = 2400
 
 # Adicionar Log aqui
 
