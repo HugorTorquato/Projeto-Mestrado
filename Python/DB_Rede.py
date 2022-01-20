@@ -138,7 +138,11 @@ def Refresh_Or_Create_Tables(Rede):
                            sql.Column('Nome_ID', sql.Integer, primary_key=True),
                            sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
                            sql.Column('Barras', sql.String),
-                           sql.Column('Fase', sql.String)
+                           sql.Column('Fase', sql.String),
+                           sql.Column('TimeMaxPU', sql.String),
+                           sql.Column('ValueMaxPU', sql.Float),
+                           sql.Column('TimeMinPU', sql.String),
+                           sql.Column('ValueMaxPU', sql.Float)
                            )
 
     else:
@@ -501,6 +505,11 @@ def Process_Data(Rede, Simulation):
     DF_Voltage_Data = pd.concat([DF_Tensao_A_Temp, DF_Tensao_B_Temp, DF_Tensao_C_Temp])
 
     DF_Voltage_Data.insert(loc=0, column='Simulation', value=Simulation)
+    # Exemplo de como adicionar elementos nulos em uma coluna nula
+    DF_Voltage_Data.insert(loc=3, column='TimeMaxPU', value='')
+    DF_Voltage_Data.insert(loc=4, column='ValueMaxPU', value=0)
+    DF_Voltage_Data.insert(loc=5, column='TimeMinPU', value='')
+    DF_Voltage_Data.insert(loc=6, column='ValueMinPU', value=0)
 
     # Process Element Currents Angle in each simulation
     global DF_Voltage_Data_Ang

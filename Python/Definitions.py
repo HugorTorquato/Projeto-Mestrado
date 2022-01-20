@@ -123,7 +123,11 @@ DF_Monitors_Data = pd.DataFrame({'Simulation'     : [],
 
 DF_Voltage_Data = pd.DataFrame({'Simulation'     : [],
                                  'Barras'        : [],
-                                 'Fase'          : []})
+                                 'Fase'          : [],
+                                 'TimeMaxPU'     : [],
+                                 'ValueMaxPU'    : [],
+                                 'TimeMinPU'     : [],
+                                 'ValueMibPU'    : []})
 
 DF_Current_Data = pd.DataFrame({'Simulation'     : [],
                                 'Elementos'      : [],
