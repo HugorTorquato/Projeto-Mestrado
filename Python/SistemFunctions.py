@@ -203,6 +203,7 @@ def HC(Rede):
         Export_And_Read_Monitors_Data(Rede, DF_Lista_Monitors, Simulation)
         Power_measurement_PV(Rede, Simulation)
 
+        Save_General_Data(Simulation)
         Process_Data(Rede, Simulation)
         #Save_General_Data(Simulation)
 
