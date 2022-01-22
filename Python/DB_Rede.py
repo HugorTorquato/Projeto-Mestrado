@@ -1,3 +1,5 @@
+import concurrent.futures
+
 import pandas as pd
 import sqlalchemy as sql
 from Definitions import *
@@ -7,6 +9,7 @@ def sqlalchemy():
     engine = sql.create_engine(
         'mssql+pyodbc://LAPTOP-5R3FI4O0\SQLEXPRESS/DB_Rede_3?driver=ODBC Driver 17 for SQL Server').connect()
 
+    logger.debug("Engine created")
     return engine
 
 def Refresh_Or_Create_Tables(Rede):
@@ -23,7 +26,7 @@ def Refresh_Or_Create_Tables(Rede):
             'SELECT TABLE_NAME '
             'FROM INFORMATION_SCHEMA.TABLES '
             'WHERE TABLE_NAME = \'' + DB + '\'', engine)) == 0:
-        print('Create Table :' + str(DB))
+        logger.info('Create Table :' + str(DB))
         Barras = sql.Table(str(DB), metadata,
                            sql.Column('Nome_ID', sql.Integer, primary_key=True),
                            sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
@@ -41,7 +44,7 @@ def Refresh_Or_Create_Tables(Rede):
             'SELECT TABLE_NAME '
             'FROM INFORMATION_SCHEMA.TABLES '
             'WHERE TABLE_NAME = \'' + DB + '\'', engine)) == 0:
-        print('Create Table :' + str(DB))
+        logger.info('Create Table :' + str(DB))
         Barras = sql.Table(str(DB), metadata,
                            sql.Column('Nome_ID', sql.Integer, primary_key=True),
                            sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
@@ -59,7 +62,7 @@ def Refresh_Or_Create_Tables(Rede):
             'SELECT TABLE_NAME '
             'FROM INFORMATION_SCHEMA.TABLES '
             'WHERE TABLE_NAME = \'' + DB + '\'', engine)) == 0:
-        print('Create Table :' + str(DB))
+        logger.info('Create Table :' + str(DB))
         Barras = sql.Table(str(DB), metadata,
                            sql.Column('Nome_ID', sql.Integer, primary_key=True),
                            sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
@@ -77,7 +80,7 @@ def Refresh_Or_Create_Tables(Rede):
             'SELECT TABLE_NAME '
             'FROM INFORMATION_SCHEMA.TABLES '
             'WHERE TABLE_NAME = \'' + DB + '\'', engine)) == 0:
-        print('Create Table :' + str(DB))
+        logger.info('Create Table :' + str(DB))
         Barras = sql.Table(str(DB), metadata,
                            sql.Column('Nome_ID', sql.Integer, primary_key=True),
                            sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
@@ -95,7 +98,7 @@ def Refresh_Or_Create_Tables(Rede):
             'SELECT TABLE_NAME '
             'FROM INFORMATION_SCHEMA.TABLES '
             'WHERE TABLE_NAME = \'' + DB + '\'', engine)) == 0:
-        print('Create Table :' + str(DB))
+        logger.info('Create Table :' + str(DB))
         Barras = sql.Table(str(DB), metadata,
                            sql.Column('Nome_ID', sql.Integer, primary_key=True),
                            sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
@@ -113,7 +116,7 @@ def Refresh_Or_Create_Tables(Rede):
             'SELECT TABLE_NAME '
             'FROM INFORMATION_SCHEMA.TABLES '
             'WHERE TABLE_NAME = \'' + DB + '\'', engine)) == 0:
-        print('Create Table :' + str(DB))
+        logger.info('Create Table :' + str(DB))
         Barras = sql.Table(str(DB), metadata,
                            sql.Column('Nome_ID', sql.Integer, primary_key=True),
                            sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
@@ -133,7 +136,7 @@ def Refresh_Or_Create_Tables(Rede):
             'SELECT TABLE_NAME '
             'FROM INFORMATION_SCHEMA.TABLES '
             'WHERE TABLE_NAME = \'' + DB + '\'', engine)) == 0:
-        print('Create Table :' + str(DB))
+        logger.info('Create Table :' + str(DB))
         Barras = sql.Table(str(DB), metadata,
                            sql.Column('Nome_ID', sql.Integer, primary_key=True),
                            sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
@@ -142,7 +145,7 @@ def Refresh_Or_Create_Tables(Rede):
                            sql.Column('TimeMaxPU', sql.String),
                            sql.Column('ValueMaxPU', sql.Float),
                            sql.Column('TimeMinPU', sql.String),
-                           sql.Column('ValueMaxPU', sql.Float)
+                           sql.Column('ValueMinPU', sql.Float)
                            )
 
     else:
@@ -155,7 +158,7 @@ def Refresh_Or_Create_Tables(Rede):
             'SELECT TABLE_NAME '
             'FROM INFORMATION_SCHEMA.TABLES '
             'WHERE TABLE_NAME = \'' + DB + '\'', engine)) == 0:
-        print('Create Table :' + str(DB))
+        logger.info('Create Table :' + str(DB))
         Barras = sql.Table(str(DB), metadata,
                            sql.Column('Nome_ID', sql.Integer, primary_key=True),
                            sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
@@ -173,7 +176,7 @@ def Refresh_Or_Create_Tables(Rede):
             'SELECT TABLE_NAME '
             'FROM INFORMATION_SCHEMA.TABLES '
             'WHERE TABLE_NAME = \'' + DB + '\'', engine)) == 0:
-        print('Create Table :' + str(DB))
+        logger.info('Create Table :' + str(DB))
         Barras = sql.Table(str(DB), metadata,
                            sql.Column('Nome_ID', sql.Integer, primary_key=True),
                            sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
@@ -191,7 +194,7 @@ def Refresh_Or_Create_Tables(Rede):
             'SELECT TABLE_NAME '
             'FROM INFORMATION_SCHEMA.TABLES '
             'WHERE TABLE_NAME = \'' + DB + '\'', engine)) == 0:
-        print('Create Table :' + str(DB))
+        logger.info('Create Table :' + str(DB))
         Barras = sql.Table(str(DB), metadata,
                            sql.Column('Nome_ID', sql.Integer, primary_key=True),
                            sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
@@ -209,7 +212,7 @@ def Refresh_Or_Create_Tables(Rede):
             'SELECT TABLE_NAME '
             'FROM INFORMATION_SCHEMA.TABLES '
             'WHERE TABLE_NAME = \'' + DB + '\'', engine)) == 0:
-        print('Create Table :' + str(DB))
+        logger.info('Create Table :' + str(DB))
         Barras = sql.Table(str(DB), metadata,
                            sql.Column('Nome_ID', sql.Integer, primary_key=True),
                            sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
@@ -227,7 +230,7 @@ def Refresh_Or_Create_Tables(Rede):
             'SELECT TABLE_NAME '
             'FROM INFORMATION_SCHEMA.TABLES '
             'WHERE TABLE_NAME = \'' + DB + '\'', engine)) == 0:
-        print('Create Table :' + str(DB))
+        logger.info('Create Table :' + str(DB))
         Barras = sql.Table(str(DB), metadata,
                            sql.Column('Nome_ID', sql.Integer, primary_key=True),
                            sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
@@ -246,7 +249,7 @@ def Refresh_Or_Create_Tables(Rede):
             'SELECT TABLE_NAME '
             'FROM INFORMATION_SCHEMA.TABLES '
             'WHERE TABLE_NAME = \'' + DB + '\'', engine)) == 0:
-        print('Create Table :' + str(DB))
+        logger.info('Create Table :' + str(DB))
         Barras = sql.Table(str(DB), metadata,
                            sql.Column('Nome_ID', sql.Integer, primary_key=True),
                            sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
@@ -270,7 +273,7 @@ def Refresh_Or_Create_Tables(Rede):
             'SELECT TABLE_NAME '
             'FROM INFORMATION_SCHEMA.TABLES '
             'WHERE TABLE_NAME = \'' + DB + '\'', engine)) == 0:
-        print('Create Table :' + str(DB))
+        logger.info('Create Table :' + str(DB))
         Barras = sql.Table(str(DB), metadata,
                            sql.Column('Nome_ID', sql.Integer, primary_key=True),
                            sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
@@ -292,7 +295,7 @@ def Refresh_Or_Create_Tables(Rede):
             'SELECT TABLE_NAME '
             'FROM INFORMATION_SCHEMA.TABLES '
             'WHERE TABLE_NAME = \'' + DB + '\'', engine)) == 0:
-        print('Create Table :' + str(DB))
+        logger.info('Create Table :' + str(DB))
         Barras = sql.Table(str(DB), metadata,
                            sql.Column('Nome_ID', sql.Integer, primary_key=True),
                            sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
@@ -317,7 +320,7 @@ def Refresh_Or_Create_Tables(Rede):
             'SELECT TABLE_NAME '
             'FROM INFORMATION_SCHEMA.TABLES '
             'WHERE TABLE_NAME = \'' + DB + '\'', engine)) == 0:
-        print('Create Table :' + str(DB))
+        logger.info('Create Table :' + str(DB))
         GD = sql.Table(str(DB), metadata,
                        sql.Column('Nome_ID', sql.Integer, primary_key=True),
                        sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
@@ -338,7 +341,7 @@ def Refresh_Or_Create_Tables(Rede):
             'SELECT TABLE_NAME '
             'FROM INFORMATION_SCHEMA.TABLES '
             'WHERE TABLE_NAME = \'' + DB + '\'', engine)) == 0:
-        print('Create Table :' + str(DB))
+        logger.info('Create Table :' + str(DB))
         General = sql.Table(str(DB), metadata,
                             sql.Column('Simulation', sql.Integer, primary_key=True),
                             sql.Column('Voltage_Max', sql.Float),
@@ -354,6 +357,9 @@ def Refresh_Or_Create_Tables(Rede):
     Adjust_tables_to_timestemp(engine, Rede)
 
 def Refresh_Or_Create_Views(Rede):
+
+    # 1- Colocar isso para criar somente quando precisar....
+    # 2- Condição de log para quando já estiver criado
 
     metadata = sql.MetaData()
     engine = sqlalchemy()
@@ -381,6 +387,40 @@ def Refresh_Or_Create_Views(Rede):
 
     DropView(engine, view)
     engine.execute(Definition)
+    logger.info('Create View :' + str(view))
+
+def Refresh_Or_Create_StoreProcedures(Rede):
+
+    from FunctionsSecond import Return_Time_String_Colum
+
+    engine = sqlalchemy()
+
+    storeProcedure = 'Update_Voltage_Data_Table_Max_Min'
+    Ary = Return_Time_String_Colum(Rede)
+
+    if len(pd.read_sql(
+        'SELECT * '
+        'FROM sys.objects '
+        'where [type] = \'P\' and [name]  = \'' + storeProcedure + '\'', engine)) == 0:
+
+        Definition = 'CREATE PROCEDURE ' + storeProcedure + \
+                     ' AS ' \
+                     '  UPDATE VD ' \
+                     '  SET ' \
+                     '      VD.ValueMaxPU = (SELECT (select MAX(Barra) from (VALUES ' + str(Ary) + ') as Maior(Barra))'\
+                     '                          as Maior' \
+                     '                          FROM Voltage_Data VD2 WHERE VD.Nome_ID = VD2.Nome_ID),' \
+                     '      VD.ValueMinPU = (SELECT (select ISNULL(MIN(Barra), 0) from (VALUES ' + str(Ary) + ')' \
+                     '                               as Menor(Barra)' \
+                     '                               where Barra > 0.5) as Menor' \
+                     '                          FROM Voltage_Data VD3 WHERE VD.Nome_ID = VD3.Nome_ID) ' \
+                     '  FROM Voltage_Data AS VD'
+
+        t1 = time.perf_counter()
+        engine.execute(Definition)
+        logger.info('Create StoreProcedure :' + str(storeProcedure))
+    else:
+        logger.info('StoreProcedure already exists :' + str(storeProcedure))
 
 def DropView(engine, view):
 
@@ -443,6 +483,14 @@ def Save_General_Data(Simulation):
     DF_General.loc[0, 'Voltage_Max'] = Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[0]
     DF_General.loc[0, 'Voltage_Min'] = Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[1]
     DF_General.loc[0, 'GD_Config'] = str(DF_Geradores.set_index('Name').values)
+
+def Run_Store_Procedures():
+
+    # Run all store procedures frim the list by the end of the Simulation
+
+    SPs = ['Update_Voltage_Data_Table_Max_Min']
+
+    [sqlalchemy().execute(SP) for SP in SPs]
 
 def Process_Data(Rede, Simulation):
 
@@ -594,8 +642,6 @@ def Process_Data(Rede, Simulation):
 
     DF_Current_Elemt_Data_Ang.insert(loc=0, column='Simulation', value=Simulation)
 
-    #return DF_Voltage_Data, DF_Tensao_Data_Ang, DF_Corrente_Data, DF_Current_Elemt_Data_Ang, DF_Unbalance_Data
-    Save_General_Data(Simulation)
     Save_Data(Simulation, DF_Voltage_Data, DF_Tensao_Data_Ang, DF_Corrente_Data, DF_Current_Elemt_Data_Ang,
               DF_Unbalance_Data)
 
