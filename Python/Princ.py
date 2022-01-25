@@ -16,8 +16,11 @@ if __name__ == "__main__":
     if Salva_Dados:
         Salvar_Dados_Rede(Rede)
 
+    # Depois desse ponto já pode criar o loop pq não vai deletar os dados das tabelas, só precisa salvar
+    # os dados da rede uma vez ( seriam os dados padrôes
+
     if Calc_HC:
-        HC(Rede)  # Chamada da função
+        Case_by_Case(Rede)  # Chamada da função
 
     # Definições de store procedures que ajustam dados nas tabelas depois de tudo rodar
     Run_Store_Procedures()

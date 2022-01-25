@@ -94,6 +94,12 @@ DF_Corrente_Limite = pd.DataFrame()
 # Valores e Arrays auxiliares
 Barras_GDs = []
 
+
+###############################################################################################
+# Achar forma melhor de definir uma variável global que pode ser alterada durante o loop interno
+Casos = [] # Usado para obter o último caso e salvar o valor no banco de dados,
+###############################################################################################
+
 DF_kW_PV = pd.DataFrame()
 DF_kvar_PV = pd.DataFrame()
 DF_irradNow_PV = pd.DataFrame()
@@ -103,7 +109,8 @@ DF_Lista_Monitors = pd.DataFrame()
 DF_Monitors_Power_Values = pd.DataFrame()
 DF_Monitors_Voltage_Values = pd.DataFrame()
 
-DF_Geradores = pd.DataFrame({'Simulation': [],
+DF_Geradores = pd.DataFrame({'Case'      : [],
+                             'Simulation': [],
                              'Name'      : [],
                              'Bus'       : [],
                              'kW'        : [],
@@ -111,12 +118,14 @@ DF_Geradores = pd.DataFrame({'Simulation': [],
                              'Phases'    : '',
                              'LoadShape' : ''})
 
-DF_PVPowerData = pd.DataFrame({'Simulation' : [],
+DF_PVPowerData = pd.DataFrame({'Case'       : [],
+                               'Simulation' : [],
                                'Name'       : [],
                                'Bus'        : [],
                                'Measurement': ''})
 
-DF_PV = pd.DataFrame({'Simulation': [],
+DF_PV = pd.DataFrame({'Case'      : [],
+                      'Simulation': [],
                       'Name'      : [],
                       'Bus'       : [],
                       'Pmp'       : [],
@@ -127,11 +136,13 @@ DF_PV = pd.DataFrame({'Simulation': [],
                       'Irrad'     : '',
                       'Temp'      : ''})
 
-DF_General = pd.DataFrame({'Voltage_Max': [],
+DF_General = pd.DataFrame({'Case'       : [],
+                           'Voltage_Max': [],
                            'Voltage_Min': [],
                            'GD_Config'  : ''})
 
-DF_Barras = pd.DataFrame({'Simulation'     : [],
+DF_Barras = pd.DataFrame({'Case'           : [],
+                          'Simulation'     : [],
                           'Name'           : [],
                           'V_pu_max_a'     : [],
                           'V_pu_max_b'     : [],
@@ -143,7 +154,8 @@ DF_Barras = pd.DataFrame({'Simulation'     : [],
                           'Deseq_IEEE'     : [],
                           'Deseq_NEMA'     : []})
 
-DF_Elements = pd.DataFrame({'Simulation'     : [],
+DF_Elements = pd.DataFrame({'Case'           : [],
+                            'Simulation'     : [],
                             'Elemento'       : [],
                             'I_pu_max_a'     : [],
                             'I_pu_max_b'     : [],
@@ -154,45 +166,54 @@ DF_Elements = pd.DataFrame({'Simulation'     : [],
 
 # Lembrar de alterar essa tabela sempre que tiver alteração no número de monitores
 # Adicionar os novos campos
-DF_Monitors_Data = pd.DataFrame({'Simulation'     : [],
+DF_Monitors_Data = pd.DataFrame({'Case'           : [],
+                                 'Simulation'     : [],
                                  'Elemento'       : [],
                                  'Measurement'    : []})
 
-DF_Voltage_Data = pd.DataFrame({'Simulation'     : [],
-                                 'Barras'        : [],
-                                 'Fase'          : [],
-                                 'TimeMaxPU'     : [],
-                                 'ValueMaxPU'    : [],
-                                 'TimeMinPU'     : [],
-                                 'ValueMinPU'    : []})
+DF_Voltage_Data = pd.DataFrame({'Case'          : [],
+                                'Simulation'    : [],
+                                'Barras'        : [],
+                                'Fase'          : [],
+                                'TimeMaxPU'     : [],
+                                'ValueMaxPU'    : [],
+                                'TimeMinPU'     : [],
+                                'ValueMinPU'    : []})
 
-DF_Current_Data = pd.DataFrame({'Simulation'     : [],
+DF_Current_Data = pd.DataFrame({'Case'           : [],
+                                'Simulation'     : [],
                                 'Elementos'      : [],
                                 'Fase'           : []})
 
-DF_Check_Report = pd.DataFrame({'Simulation'     : [],
+DF_Check_Report = pd.DataFrame({'Case'           : [],
+                                'Simulation'     : [],
                                 'overvoltage'    : [],
                                 'undervoltage'   : [],
                                 'overcurrent'    : [],
                                 'unbalance'      : []})
 
-DF_Current_Elemt_Data_Ang = pd.DataFrame({'Simulation'     : [],
+DF_Current_Elemt_Data_Ang = pd.DataFrame({'Case'           : [],
+                                          'Simulation'     : [],
                                           'Elementos'      : [],
                                           'Fase'           : []})
 
-DF_Power_P_Elemt_Data = pd.DataFrame({'Simulation'     : [],
+DF_Power_P_Elemt_Data = pd.DataFrame({'Case'           : [],
+                                      'Simulation'     : [],
                                       'Elementos'      : [],
                                       'Fase'           : []})
 
-DF_Power_Q_Elemt_Data = pd.DataFrame({'Simulation'     : [],
+DF_Power_Q_Elemt_Data = pd.DataFrame({'Case'           : [],
+                                      'Simulation'     : [],
                                       'Elementos'      : [],
                                       'Fase'           : []})
 
-DF_Voltage_Elemt_Data = pd.DataFrame({'Simulation'     : [],
+DF_Voltage_Elemt_Data = pd.DataFrame({'Case'           : [],
+                                      'Simulation'     : [],
                                       'Elementos'      : [],
                                       'Fase'           : []})
 
-DF_Voltage_Elemt_Data_Ang = pd.DataFrame({'Simulation'     : [],
+DF_Voltage_Elemt_Data_Ang = pd.DataFrame({'Case'           : [],
+                                          'Simulation'     : [],
                                           'Elementos'      : [],
                                           'Fase'           : []})
 
@@ -205,24 +226,27 @@ DF_TESTE = pd.DataFrame({
 
 ##Switches
 
-Salva_Dados = 0      # Aciona o script que faz o levantamento dos dados da rede
-Savar_Dados_Elem = 1 # Habilita que os dados de pot e tensão dos elementos sejam salvos
-Criar_GD = 1         # Aciona a inserção de GDs na rede
-Num_GDs = 5         # Definição do número de GDs que serão adicionadas
-Calc_HC = 1          # Aciona o cálculo do HC
+Salva_Dados = 0         # Aciona o script que faz o levantamento dos dados da rede
+Savar_Dados_Elem = 1    # Habilita que os dados de pot e tensão dos elementos sejam salvos
+Criar_GD = 1            # Aciona a inserção de GDs na rede
+Num_GDs = 3             # Definição do número de GDs que serão adicionadas
+Calc_HC = 1             # Aciona o cálculo do HC
 All_GDs = 1
-Use_PV = 1           # 1- Usa o PVSystem  0 - Usa geradore
-Norma = 1            #  # 0 - PRODIST # 1 - IEEE
-Num_Simulations = 1  # Deifnie o número de simulações que serão realizadas
 
-Debug_VV = 1         # Modo Debug para mensurar e comparar o comportamento do VV no sistema ( 1 - liga 0 - desliga)
+Use_PV = 1              # 1- Usa o PVSystem  0 - Usa geradore
+Norma = 1               #  # 0 - PRODIST # 1 - IEEE
+Num_Simulations = 2     # Deifnie o número de simulações que serão realizadas
+
+Num_Estudos_de_Caso = 2 # Define o estudo de caso em questão (configuração das GDs)
+
+Debug_VV = 1            # Modo Debug para mensurar e comparar o comportamento do VV no sistema ( 1 - liga 0 - desliga)
 
 # PVSystem
 FP_1 = 1
 Const_Irrad = .705
 Const_Temp = 25
 FP = 1
-Incremento_gd = 0.5  # Valores em porcentagem (%) da pot do trafo de entrada
+Incremento_gd = 1  # Valores em porcentagem (%) da pot do trafo de entrada
 
 Steps_wtout_unbalance = 10
 

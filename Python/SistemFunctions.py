@@ -103,7 +103,7 @@ def Solve_Hora_por_Hora(Rede, Simulation, Pot_GD):
     # OBS: Se definir um DF, lembrar de limpar o mesmo na seção anterior
 
     Adicionar_GDs(Rede, Pot_GD, Simulation)
-    Adicionar_EnergyMeter(Rede)
+    #Adicionar_EnergyMeter(Rede) #needs to be implemented
     Adicionar_Monitores(Rede)
 
     # ----------------------------------------------------------------------------------------------------------
@@ -122,12 +122,15 @@ def Solve_Hora_por_Hora(Rede, Simulation, Pot_GD):
 
             Tensao_Barras(Rede, itera)
             Correntes_elementos(Rede, itera)
-            Dados_Elements(Rede, itera) if Savar_Dados_Elem == 1 else 0
+            ###############################################################################################
+            Dados_Elements(Rede, itera) if Savar_Dados_Elem == 1 else 0 # Pode ter um erro aqui, export antes do solve
+            # Solução seria verificar convergÊncia
+            ###############################################################################################
             Data_PV(Rede, itera)
 
         Rede.dssSolution.FinishTimeStep()
-        if Simulation > 2:
-            Export_Random_Monitor_Test(Rede, "InvControl", "PVSystem.pv_0")
+        #if Simulation > 2:
+        #    Export_Random_Monitor_Test(Rede, "InvControl", "PVSystem.pv_0")
 
     #Rede.dssText.Command = "Export EventLog file=" + Debug_Path + "/Debug_" + str(Simulation)
 
@@ -135,13 +138,12 @@ def Solve_Hora_por_Hora(Rede, Simulation, Pot_GD):
 
 def HC(Rede):
 
-    # Adicionar uma simulação padrão apra salvar os valores sem interferência das GDs
 
     # Essa função é o pulmão do código, aqui que é feito o cálculo do HC
     from FunctionsSecond import Limpar_DF, Check, Identify_Overcurrent_Limits, \
         Max_and_Min_Voltage_DF
     from Definitions import Num_GDs, DF_Geradores, DF_Barras, DF_General, DF_Elements, DF_PV,\
-        DF_PVPowerData, DF_Lista_Monitors, DF_Tensao_A, DF_Tensao_B, DF_Tensao_C, Incremento_gd
+        DF_PVPowerData, DF_Lista_Monitors, DF_Tensao_A, DF_Tensao_B, DF_Tensao_C, Incremento_gd, Casos
     from Geradores import FindBusGD
 
     # Define o primeiro transformador como o ponto de PCC e o incremento de pot em cada verificação do HC é
@@ -163,8 +165,6 @@ def HC(Rede):
 
         [Limpar_DF(DF) for DF in [DF_Geradores, DF_Barras, DF_General, DF_Elements, DF_PV, DF_PVPowerData,
                                   DF_Lista_Monitors, DF_PVPowerData]]
-
-        FindBusGD(Num_GDs) # Define em quais barras as GDs vão ser inseridas para obtenção do HC nessa simulação
 
         while Nummero_Simulacoes == 0 or Check(Rede, Simulation) is True:
 
@@ -205,7 +205,7 @@ def HC(Rede):
 
         Save_General_Data(Simulation)
         Process_Data(Rede, Simulation)
-        #Save_General_Data(Simulation)
+
 
         # Olhar isso aqui direito... parece que n está computando o valor limite certinho
         # Apresenta o valor de pot já com a violação
@@ -215,3 +215,22 @@ def HC(Rede):
 
         # Feature:
         # -> Colocar o cálculo da pertinência triangular aqui, para acontecer logo depois que tiver a violação
+
+def Case_by_Case(Rede):
+
+    # Essa função é responsável por definir cada estudo de caso que será feito. A variável "Num_Estudos_de_Caso"
+    # controla a quantidade de estudos de caso que serão performados ( configurações de GDs ). Para cada caso, podem
+    # ser configuradas 4 tipos de simulações ( controladas pela variável Num_Simulações ), sendo:
+    # 1 - Sem PV
+    # 2 - Com PV FP=1
+    # 3 - Com PV + VV
+    # 4 - Com PV + VV + VW
+    #
+
+    from Definitions import Num_GDs, Casos
+    from Geradores import FindBusGD
+
+    for Caso in range(Num_Estudos_de_Caso):
+        Casos.append(Caso + 1)
+        FindBusGD(Num_GDs)
+        HC(Rede)

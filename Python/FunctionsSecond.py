@@ -53,6 +53,12 @@ def Dados_Elements(Rede, itera):
     from Definitions import DF_Pot_itera, DF_Voltage_itera
 
     # Exportar os dados e prapara o dataframe
+    try:
+        Rede.dssText.Command = "Export ElemPowers file = " + Debug_Path + "\EXP_ELEMPOWERS.CSV"
+    except:
+        #Adicionar um log aqui
+        print('deu ruim')
+
     Rede.dssText.Command = "Export ElemPowers file = " + Debug_Path + "\EXP_ELEMPOWERS.CSV"
     Rede.dssText.Command = "Export ElemVoltages file = " + Debug_Path + "\EXP_ELEMVOLTAGES.CSV"
 
@@ -482,6 +488,7 @@ def Salva_Check_Report(Simulation_Data, overvoltage, undervoltage, overcurrent, 
 
     index = len(DF_Check_Report.index)
 
+    DF_Check_Report.loc[index, 'Case'] = len(Casos) if Casos != [] else 0
     DF_Check_Report.loc[index, 'Simulation'] = Simulation_Data
     DF_Check_Report.loc[index, 'overvoltage'] = overvoltage
     DF_Check_Report.loc[index, 'undervoltage'] = undervoltage
@@ -551,6 +558,7 @@ def Power_measurement_PV(Rede, Simulation):
     for PV in range(len(Rede.dssPVSystems.AllNames)):
         for Meas in range(len(Measur)):
             index = len(DF_PVPowerData)
+            DF_PVPowerData.loc[index, 'Case'] = len(Casos) if Casos != [] else 0
             DF_PVPowerData.loc[index, 'Simulation'] = Simulation
             DF_PVPowerData.loc[index, 'Name'] = PVs[PV]
             DF_PVPowerData.loc[index, 'Bus'] = \

@@ -29,6 +29,7 @@ def Refresh_Or_Create_Tables(Rede):
         logger.info('Create Table :' + str(DB))
         Barras = sql.Table(str(DB), metadata,
                            sql.Column('Nome_ID', sql.Integer, primary_key=True),
+                           sql.Column('Case', sql.Integer),
                            sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
                            sql.Column('Barras', sql.String),
                            sql.Column('Descr', sql.String)
@@ -47,6 +48,7 @@ def Refresh_Or_Create_Tables(Rede):
         logger.info('Create Table :' + str(DB))
         Barras = sql.Table(str(DB), metadata,
                            sql.Column('Nome_ID', sql.Integer, primary_key=True),
+                           sql.Column('Case', sql.Integer),
                            sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
                            sql.Column('Elementos', sql.String),
                            sql.Column('Fase', sql.String)
@@ -65,6 +67,7 @@ def Refresh_Or_Create_Tables(Rede):
         logger.info('Create Table :' + str(DB))
         Barras = sql.Table(str(DB), metadata,
                            sql.Column('Nome_ID', sql.Integer, primary_key=True),
+                           sql.Column('Case', sql.Integer),
                            sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
                            sql.Column('Elementos', sql.String),
                            sql.Column('Fase', sql.String)
@@ -83,6 +86,7 @@ def Refresh_Or_Create_Tables(Rede):
         logger.info('Create Table :' + str(DB))
         Barras = sql.Table(str(DB), metadata,
                            sql.Column('Nome_ID', sql.Integer, primary_key=True),
+                           sql.Column('Case', sql.Integer),
                            sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
                            sql.Column('Elementos', sql.String),
                            sql.Column('Fase', sql.String)
@@ -101,6 +105,7 @@ def Refresh_Or_Create_Tables(Rede):
         logger.info('Create Table :' + str(DB))
         Barras = sql.Table(str(DB), metadata,
                            sql.Column('Nome_ID', sql.Integer, primary_key=True),
+                           sql.Column('Case', sql.Integer),
                            sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
                            sql.Column('Elementos', sql.String),
                            sql.Column('Fase', sql.String)
@@ -119,6 +124,7 @@ def Refresh_Or_Create_Tables(Rede):
         logger.info('Create Table :' + str(DB))
         Barras = sql.Table(str(DB), metadata,
                            sql.Column('Nome_ID', sql.Integer, primary_key=True),
+                           sql.Column('Case', sql.Integer),
                            sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
                            sql.Column('overvoltage', sql.Integer),
                            sql.Column('undervoltage', sql.Integer),
@@ -139,6 +145,7 @@ def Refresh_Or_Create_Tables(Rede):
         logger.info('Create Table :' + str(DB))
         Barras = sql.Table(str(DB), metadata,
                            sql.Column('Nome_ID', sql.Integer, primary_key=True),
+                           sql.Column('Case', sql.Integer),
                            sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
                            sql.Column('Barras', sql.String),
                            sql.Column('Fase', sql.String),
@@ -161,6 +168,7 @@ def Refresh_Or_Create_Tables(Rede):
         logger.info('Create Table :' + str(DB))
         Barras = sql.Table(str(DB), metadata,
                            sql.Column('Nome_ID', sql.Integer, primary_key=True),
+                           sql.Column('Case', sql.Integer),
                            sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
                            sql.Column('Barras', sql.String),
                            sql.Column('Fase', sql.String)
@@ -179,6 +187,7 @@ def Refresh_Or_Create_Tables(Rede):
         logger.info('Create Table :' + str(DB))
         Barras = sql.Table(str(DB), metadata,
                            sql.Column('Nome_ID', sql.Integer, primary_key=True),
+                           sql.Column('Case', sql.Integer),
                            sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
                            sql.Column('Elementos', sql.String),
                            sql.Column('Fase', sql.String)
@@ -197,6 +206,7 @@ def Refresh_Or_Create_Tables(Rede):
         logger.info('Create Table :' + str(DB))
         Barras = sql.Table(str(DB), metadata,
                            sql.Column('Nome_ID', sql.Integer, primary_key=True),
+                           sql.Column('Case', sql.Integer),
                            sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
                            sql.Column('Elementos', sql.String),
                            sql.Column('Fase', sql.String)
@@ -215,6 +225,7 @@ def Refresh_Or_Create_Tables(Rede):
         logger.info('Create Table :' + str(DB))
         Barras = sql.Table(str(DB), metadata,
                            sql.Column('Nome_ID', sql.Integer, primary_key=True),
+                           sql.Column('Case', sql.Integer),
                            sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
                            sql.Column('Elemento', sql.String),
                            sql.Column('Measurement', sql.String)
@@ -233,6 +244,7 @@ def Refresh_Or_Create_Tables(Rede):
         logger.info('Create Table :' + str(DB))
         Barras = sql.Table(str(DB), metadata,
                            sql.Column('Nome_ID', sql.Integer, primary_key=True),
+                           sql.Column('Case', sql.Integer),
                            sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
                            sql.Column('Name', sql.String),
                            sql.Column('Bus', sql.String),
@@ -252,6 +264,7 @@ def Refresh_Or_Create_Tables(Rede):
         logger.info('Create Table :' + str(DB))
         Barras = sql.Table(str(DB), metadata,
                            sql.Column('Nome_ID', sql.Integer, primary_key=True),
+                           sql.Column('Case', sql.Integer),
                            sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
                            sql.Column('Name', sql.String),
                            sql.Column('Bus', sql.String),
@@ -276,6 +289,7 @@ def Refresh_Or_Create_Tables(Rede):
         logger.info('Create Table :' + str(DB))
         Barras = sql.Table(str(DB), metadata,
                            sql.Column('Nome_ID', sql.Integer, primary_key=True),
+                           sql.Column('Case', sql.Integer),
                            sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
                            sql.Column('Elemento', sql.String),
                            sql.Column('I_pu_max_a', sql.Float),
@@ -298,6 +312,7 @@ def Refresh_Or_Create_Tables(Rede):
         logger.info('Create Table :' + str(DB))
         Barras = sql.Table(str(DB), metadata,
                            sql.Column('Nome_ID', sql.Integer, primary_key=True),
+                           sql.Column('Case', sql.Integer),
                            sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
                            sql.Column('Name', sql.String),
                            sql.Column('V_pu_max_a', sql.Float),
@@ -323,6 +338,7 @@ def Refresh_Or_Create_Tables(Rede):
         logger.info('Create Table :' + str(DB))
         GD = sql.Table(str(DB), metadata,
                        sql.Column('Nome_ID', sql.Integer, primary_key=True),
+                       sql.Column('Case', sql.Integer),
                        sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
                        sql.Column('Name', sql.String),
                        sql.Column('Bus', sql.String),
@@ -343,6 +359,7 @@ def Refresh_Or_Create_Tables(Rede):
             'WHERE TABLE_NAME = \'' + DB + '\'', engine)) == 0:
         logger.info('Create Table :' + str(DB))
         General = sql.Table(str(DB), metadata,
+                            sql.Column('Case', sql.Integer),
                             sql.Column('Simulation', sql.Integer, primary_key=True),
                             sql.Column('Voltage_Max', sql.Float),
                             sql.Column('Voltage_Min', sql.Float),
@@ -497,13 +514,14 @@ def Process_Data(Rede, Simulation):
     from Definitions import DF_Tensao_A, DF_Tensao_B, DF_Tensao_C, DF_Barras, DF_Desq_IEC, DF_Desq_IEEE,\
         DF_Desq_NEMA, DF_Corrente_A, DF_Corrente_B, DF_Corrente_C, DF_Elements, DF_Voltage_Data, DF_Current_Data,\
         DF_Tensao_Ang_A, DF_Tensao_Ang_B, DF_Tensao_Ang_C, DF_Corrente_Ang_A, DF_Corrente_Ang_B, DF_Corrente_Ang_C,\
-        Savar_Dados_Elem
+        Savar_Dados_Elem, Casos
     from FunctionsSecond import Adjust_Colum_Name
 
     # Process Bus
     index = len(DF_Barras.index)
 
     for Barra in DF_Tensao_A.Barras.values:
+        DF_Barras.loc[index, 'Case'] = len(Casos) if Casos != [] else 0
         DF_Barras.loc[index, 'Simulation'] = Simulation
         DF_Barras.loc[index, 'Name'] = Barra
         DF_Barras.loc[index, 'V_pu_max_a'] = max(DF_Tensao_A.set_index('Barras').loc[[str(Barra)]].max())
@@ -522,6 +540,7 @@ def Process_Data(Rede, Simulation):
     index = len(DF_Elements.index)
 
     for Elem in DF_Corrente_A.Elementos.values:
+        DF_Elements.loc[index, 'Case'] = len(Casos) if Casos != [] else 0
         DF_Elements.loc[index, 'Simulation'] = Simulation
         DF_Elements.loc[index, 'Elemento'] = Elem
         DF_Elements.loc[index, 'I_pu_max_a'] = max(DF_Corrente_A.set_index('Elementos').loc[[str(Elem)]].max())
@@ -552,12 +571,13 @@ def Process_Data(Rede, Simulation):
 
     DF_Voltage_Data = pd.concat([DF_Tensao_A_Temp, DF_Tensao_B_Temp, DF_Tensao_C_Temp])
 
-    DF_Voltage_Data.insert(loc=0, column='Simulation', value=Simulation)
+    DF_Voltage_Data.insert(loc=0, column='Case', value=len(Casos) if Casos != [] else 0)
+    DF_Voltage_Data.insert(loc=1, column='Simulation', value=Simulation)
     # Exemplo de como adicionar elementos nulos em uma coluna nula
-    DF_Voltage_Data.insert(loc=3, column='TimeMaxPU', value='')
-    DF_Voltage_Data.insert(loc=4, column='ValueMaxPU', value=0)
-    DF_Voltage_Data.insert(loc=5, column='TimeMinPU', value='')
-    DF_Voltage_Data.insert(loc=6, column='ValueMinPU', value=0)
+    DF_Voltage_Data.insert(loc=4, column='TimeMaxPU', value='')
+    DF_Voltage_Data.insert(loc=5, column='ValueMaxPU', value=0)
+    DF_Voltage_Data.insert(loc=6, column='TimeMinPU', value='')
+    DF_Voltage_Data.insert(loc=7, column='ValueMinPU', value=0)
 
     # Process Element Currents Angle in each simulation
     global DF_Voltage_Data_Ang
@@ -578,7 +598,8 @@ def Process_Data(Rede, Simulation):
 
     DF_Tensao_Data_Ang = pd.concat([DF_Tensao_Ang_A_Temp, DF_Tensao_Ang_B_Temp, DF_Tensao_Ang_C_Temp])
 
-    DF_Tensao_Data_Ang.insert(loc=0, column='Simulation', value=Simulation)
+    DF_Tensao_Data_Ang.insert(loc=0, column='Case', value=len(Casos) if Casos != [] else 0)
+    DF_Tensao_Data_Ang.insert(loc=1, column='Simulation', value=Simulation)
 
     # Process Bus Unbalance in each simulation
     global DF_Unbalance_Data
@@ -598,7 +619,8 @@ def Process_Data(Rede, Simulation):
         if 'Descr' not in DF_Desq_NEMA_Temp else 0
 
     DF_Unbalance_Data = pd.concat([DF_Desq_IEC_Temp, DF_Desq_IEEE_Temp, DF_Desq_NEMA_Temp])
-    DF_Unbalance_Data.insert(loc=0, column='Simulation', value=Simulation)
+    DF_Unbalance_Data.insert(loc=0, column='Case', value=len(Casos) if Casos != [] else 0)
+    DF_Unbalance_Data.insert(loc=1, column='Simulation', value=Simulation)
 
     # Process Element Currents in each simulation
     global DF_Current_Data
@@ -619,7 +641,8 @@ def Process_Data(Rede, Simulation):
 
     DF_Corrente_Data = pd.concat([DF_Corrente_A_Temp, DF_Corrente_B_Temp, DF_Corrente_C_Temp])
 
-    DF_Corrente_Data.insert(loc=0, column='Simulation', value=Simulation)
+    DF_Corrente_Data.insert(loc=0, column='Case', value=len(Casos) if Casos != [] else 0)
+    DF_Corrente_Data.insert(loc=1, column='Simulation', value=Simulation)
 
     # Process Element Currents Angle in each simulation
     global DF_Current_Elemt_Data_Ang
@@ -640,7 +663,8 @@ def Process_Data(Rede, Simulation):
 
     DF_Current_Elemt_Data_Ang = pd.concat([DF_Corrente_Ang_A_Temp, DF_Corrente_Ang_B_Temp, DF_Corrente_Ang_C_Temp])
 
-    DF_Current_Elemt_Data_Ang.insert(loc=0, column='Simulation', value=Simulation)
+    DF_Current_Elemt_Data_Ang.insert(loc=0, column='Case', value=len(Casos) if Casos != [] else 0)
+    DF_Current_Elemt_Data_Ang.insert(loc=1, column='Simulation', value=Simulation)
 
     Save_Data(Simulation, DF_Voltage_Data, DF_Tensao_Data_Ang, DF_Corrente_Data, DF_Current_Elemt_Data_Ang,
               DF_Unbalance_Data)
@@ -651,7 +675,7 @@ def Process_Data(Rede, Simulation):
 def Process_Data_Secondary(Rede, Simulation):
 
 
-    from FunctionsSecond import Adjust_Colum_Name
+    from FunctionsSecond import Adjust_Colum_Name, DF_Voltage_A, DF_Voltage_B, DF_Voltage_C, Casos
 
     # Process Element Voltage in each simulation
     global DF_Voltage_Elemt_Data
@@ -672,7 +696,8 @@ def Process_Data_Secondary(Rede, Simulation):
 
     DF_Voltage_Elemt_Data = pd.concat([DF_Voltage_A_Temp, DF_Voltage_B_Temp, DF_Voltage_C_Temp])
 
-    DF_Voltage_Elemt_Data.insert(loc=0, column='Simulation', value=Simulation)
+    DF_Voltage_Elemt_Data.insert(loc=0, column='Case', value=len(Casos) if Casos != [] else 0)
+    DF_Voltage_Elemt_Data.insert(loc=1, column='Simulation', value=Simulation)
 
     # Process Element Voltage Angle in each simulation
     global DF_Voltage_Elemt_Data_Ang
@@ -693,7 +718,8 @@ def Process_Data_Secondary(Rede, Simulation):
 
     DF_Voltage_Elemt_Data_Ang = pd.concat([DF_Voltage_Ang_A_Temp, DF_Voltage_Ang_B_Temp, DF_Voltage_Ang_C_Temp])
 
-    DF_Voltage_Elemt_Data_Ang.insert(loc=0, column='Simulation', value=Simulation)
+    DF_Voltage_Elemt_Data_Ang.insert(loc=0, column='Case', value=len(Casos) if Casos != [] else 0)
+    DF_Voltage_Elemt_Data_Ang.insert(loc=1, column='Simulation', value=Simulation)
 
     # Process Element Active Power in each simulation
     global DF_Power_P_Elemt_Data
@@ -714,7 +740,8 @@ def Process_Data_Secondary(Rede, Simulation):
 
     DF_Power_P_Elemt_Data = pd.concat([DF_Pot_P_A_Temp, DF_Pot_P_B_Temp, DF_Pot_P_C_Temp])
 
-    DF_Power_P_Elemt_Data.insert(loc=0, column='Simulation', value=Simulation)
+    DF_Power_P_Elemt_Data.insert(loc=0, column='Case', value=len(Casos) if Casos != [] else 0)
+    DF_Power_P_Elemt_Data.insert(loc=1, column='Simulation', value=Simulation)
 
     # Process Element Reactive Power in each simulation
     global DF_Power_Q_Elemt_Data
@@ -735,7 +762,8 @@ def Process_Data_Secondary(Rede, Simulation):
 
     DF_Power_Q_Elemt_Data = pd.concat([DF_Pot_Q_A_Temp, DF_Pot_Q_B_Temp, DF_Pot_Q_C_Temp])
 
-    DF_Power_Q_Elemt_Data.insert(loc=0, column='Simulation', value=Simulation)
+    DF_Power_Q_Elemt_Data.insert(loc=0, column='Case', value=len(Casos) if Casos != [] else 0)
+    DF_Power_Q_Elemt_Data.insert(loc=1, column='Simulation', value=Simulation)
 
     #return DF_Voltage_Elemt_Data, DF_Voltage_Elemt_Data_Ang, DF_Power_P_Elemt_Data, DF_Power_Q_Elemt_Data
     Save_Data_Secondary(DF_Power_P_Elemt_Data, DF_Power_Q_Elemt_Data, DF_Voltage_Elemt_Data,
