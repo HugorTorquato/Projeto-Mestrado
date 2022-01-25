@@ -47,13 +47,14 @@ def Adicionar_GDs(Rede, Pot_GD, Simulation):
 
 def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
 
-    from Definitions import DF_PV, Barras_GDs
+    from Definitions import DF_PV, Barras_GDs, Casos
     from FunctionsSecond import ativa_barra, Identify_Phases
     from Monitores import Define_Random_Monior_Test
 
     index = len(DF_PV)
     STRING = ['A', 'B', 'C', 'N']
 
+    DF_PV.loc[index, 'Case'] = len(Casos) if Casos != [] else 0
     DF_PV.loc[index, 'Simulation'] = Simulation
     DF_PV.loc[index, 'Name'] = Nome
     DF_PV.loc[index, 'Bus'] = Barras_GDs[(len(Barras_GDs) - 1) - index]
@@ -140,6 +141,7 @@ def Create_GD(Rede, Nome, kW, kvar, LoadShape, Simulation):
     from FunctionsSecond import ativa_barra, Identify_Phases  # Importa a função para ativação da barra
 
     # Armazenar e salvar dados
+    DF_Geradores.loc[index, 'Case'] = len(Casos) if Casos != [] else 0
     DF_Geradores.loc[index, 'Simulation'] = Simulation
     DF_Geradores.loc[index, 'Name'] = Nome
     DF_Geradores.loc[index, 'Bus'] = Barras_GDs[(len(Barras_GDs) - 1) - index]
@@ -167,9 +169,9 @@ def Fase2String(STRING):
     return a
 
 def FindBusGD(Num_GDs):
-    from Definitions import DF_Tensao_A, Barras_GDs, Debug_VV, Random_GD
+    from Definitions import DF_Tensao_A, Barras_GDs, Debug_VV
 
-    if Debug_VV == 3:
+    if Debug_VV == 3000000000000000:
         #Barras_GDs_list = ['bus_33998182_039']#, 'bus_33998182_011',
             # 'bus_33998182_013', 'bus_33998182_027', 'bus_33998182_022']
         Barras_GDs_list = ['bus_33998182_039', 'bus_33998182_011', 'bus_33998182_013',
@@ -205,8 +207,5 @@ def FindBusGD(Num_GDs):
         vet_choice.remove(choice) if choice in vet_choice else 0
         Barras_GDs.append(choice)
 
-
-    # [Barras_GDs.append(list(combinations(DF_Tensao_A.Barras.values, 2))) for i in range(Num_GDs)]
-    # print(Barras_GDs)
     # Colocar um debug level aqui
     return
