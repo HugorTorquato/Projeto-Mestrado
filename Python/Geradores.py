@@ -38,6 +38,7 @@ def Adicionar_GDs(Rede, Pot_GD, Simulation):
     Rede.dssText.Command = "New XYcurve.vw_curve npts=3 yarray=[1 0.95 0.9] xarray=[1 1.02 1.05]"
 
     if Use_PV:
+        # adicionar compilaçãoem paralelo aqui
         [Create_PV(Rede, 'PV_' + str(i), Pot_GD, FP, 'Irrad', 'Temp', Simulation) for i in range(Num_GDs)]
         print(DF_PV.head(10)) # Printa os dados gerais das GDs ( resumo )
     else:
@@ -166,9 +167,9 @@ def Fase2String(STRING):
     return a
 
 def FindBusGD(Num_GDs):
-    from Definitions import DF_Tensao_A, Barras_GDs, Debug_VV
+    from Definitions import DF_Tensao_A, Barras_GDs, Debug_VV, Random_GD
 
-    if Debug_VV == 1:
+    if Debug_VV == 3:
         #Barras_GDs_list = ['bus_33998182_039']#, 'bus_33998182_011',
             # 'bus_33998182_013', 'bus_33998182_027', 'bus_33998182_022']
         Barras_GDs_list = ['bus_33998182_039', 'bus_33998182_011', 'bus_33998182_013',
@@ -191,6 +192,14 @@ def FindBusGD(Num_GDs):
         return
 
     vet_choice = list(DF_Tensao_A.Barras.values)
+
+    ###############################################################################################
+    # Remover manualmente mas tem de mudar para identificar de forma automatica a barra do trafo
+    vet_choice.remove('bus_xfmr_pri_33998182')
+    vet_choice.remove('bus_xfmr_sec_33998182')
+    ###############################################################################################
+
+    #vet_choice = list(DF_Tensao_A.Barras.values)
     for i in range(Num_GDs):
         choice = random2.choice(vet_choice)
         vet_choice.remove(choice) if choice in vet_choice else 0

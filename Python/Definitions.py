@@ -164,24 +164,27 @@ DF_TESTE = pd.DataFrame({
 
 ##Switches
 
-Salva_Dados = 0      # Aciona o script que faz o levantamento dos dados da rede
-Savar_Dados_Elem = 1 # Habilita que os dados de pot e tensão dos elementos sejam salvos
-Criar_GD = 1         # Aciona a inserção de GDs na rede
-Num_GDs = 5         # Definição do número de GDs que serão adicionadas
-Calc_HC = 1          # Aciona o cálculo do HC
+Salva_Dados = 0         # Aciona o script que faz o levantamento dos dados da rede
+Savar_Dados_Elem = 1    # Habilita que os dados de pot e tensão dos elementos sejam salvos
+Criar_GD = 1            # Aciona a inserção de GDs na rede
+Num_GDs = 5             # Definição do número de GDs que serão adicionadas
+Calc_HC = 1             # Aciona o cálculo do HC
 All_GDs = 1
-Use_PV = 1           # 1- Usa o PVSystem  0 - Usa geradore
-Norma = 1            #  # 0 - PRODIST # 1 - IEEE
-Num_Simulations = 4  # Deifnie o número de simulações que serão realizadas
+Use_PV = 1              # 1- Usa o PVSystem  0 - Usa geradore
+Norma = 1               #  # 0 - PRODIST # 1 - IEEE
+Num_Simulations = 2     # Deifnie o número de simulações que serão realizadas
 
-Debug_VV = 1         # Modo Debug para mensurar e comparar o comportamento do VV no sistema ( 1 - liga 0 - desliga)
+Num_Estudos_de_Caso = 2 # Define o estudo de caso em questão (configuração das GDs)
+Random_GD = 0           # Altera o número de GDs de forma aleatória durante cada Simulação
+
+Debug_VV = 1            # Modo Debug para mensurar e comparar o comportamento do VV no sistema ( 1 - liga 0 - desliga)
 
 # PVSystem
 FP_1 = 1
 Const_Irrad = .705
 Const_Temp = 25
 FP = 1
-Incremento_gd = 0.5  # Valores em porcentagem (%) da pot do trafo de entrada
+Incremento_gd = 10  # Valores em porcentagem (%) da pot do trafo de entrada
 
 Steps_wtout_unbalance = 10
 
