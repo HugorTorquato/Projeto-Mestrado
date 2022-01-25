@@ -179,8 +179,8 @@ def HC(Rede):
 
             Nummero_Simulacoes += 1
             if Nummero_Simulacoes < 3:
-                Pot_GD += 2*Incremento_Pot_gd if Criar_GD and Nummero_Simulacoes > 0 else 0
             else :
+                Pot_GD += 3*Incremento_Pot_gd if Criar_GD and Nummero_Simulacoes > 0 else 0
                 Pot_GD += Incremento_Pot_gd if Criar_GD and Nummero_Simulacoes > 0 else 0
 
             print('-----------------------------------------------------')

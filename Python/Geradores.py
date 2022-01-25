@@ -80,7 +80,7 @@ def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
                            str(Identify_Phases(DF_PV.loc[index, 'Phases'])[0]) + \
                            " Pmpp=" + str(Pmp) + \
                            " kv=" + str(Rede.dssBus.kVBase) + \
-                           " kVA=" + str(Pmp * 1.15) + \
+                           " kVA=" + str(Pmp * 1.05) + \
                            " con=wye" \
                            " %Cutin=0.1 %cutout=0.1 EffCurve=Eff P-TCurve=FactorPVsT" \
                            " pf=1 VarFollowInverter=true " \
