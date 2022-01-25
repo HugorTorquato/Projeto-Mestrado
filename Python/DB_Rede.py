@@ -433,7 +433,6 @@ def Refresh_Or_Create_StoreProcedures(Rede):
                      '                          FROM Voltage_Data VD3 WHERE VD.Nome_ID = VD3.Nome_ID) ' \
                      '  FROM Voltage_Data AS VD'
 
-        t1 = time.perf_counter()
         engine.execute(Definition)
         logger.info('Create StoreProcedure :' + str(storeProcedure))
     else:
