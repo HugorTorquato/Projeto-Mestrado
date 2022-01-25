@@ -3,10 +3,47 @@ import win32com.client
 import pandas as pd
 from Princ import *
 import numpy as np
+import logging
+logging.basicConfig(
+    level=logging.DEBUG,
+    #format='%(asctime)s:%(levelname)s:%(funcname)s:%(message)s', # funcname não funcionava
+    format='%(asctime)s:%(levelname)s:%(message)s',
+    filename='LOG.log'#filename='/Debug/LOG.log'
+)
+
 
 #Rede_Path = "C:\\Users\hugo1\Desktop\Projeto_Rede_Fornecida\Python\TCC\Rede" # IEEE13
 Rede_Path = "C:\\Users\hugo1\Desktop\Rede_03\_trafo3"                       #Rede_03
 Debug_Path = "C:\\Users\hugo1\Desktop\Projeto_Rede_Fornecida\Python\Debug"
+
+#############################################################################
+###################### Logging Configuration ################################
+#############################################################################
+
+# DEBUG: Detailed information, intresting onçy for investigations
+
+# INFO: Just confirmations that things are working
+
+# WARNING: Something unexpected happened and may cause problems in he feature
+
+# ERROR: Relate problems, software not able to peform funcitons
+    #.exception inclui dados do traceback no log
+
+# CRITICAL: Serious error, program cannot continue
+
+import logging
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+formatter = logging.Formatter('%(asctime)s:%(name)s:%(levelname)s:%(message)s')
+file_Handler = logging.FileHandler(Debug_Path + '\Log' + '\Overal.log')
+file_Handler.setFormatter(formatter)
+logger.addHandler(file_Handler)
+logger.debug("Log Initialized")
+
+#############################################################################
+#############################################################################
+
 
 unbalance_chk = []
 
@@ -195,6 +232,7 @@ Criar_GD = 1            # Aciona a inserção de GDs na rede
 Num_GDs = 3             # Definição do número de GDs que serão adicionadas
 Calc_HC = 1             # Aciona o cálculo do HC
 All_GDs = 1
+
 Use_PV = 1              # 1- Usa o PVSystem  0 - Usa geradore
 Norma = 1               #  # 0 - PRODIST # 1 - IEEE
 Num_Simulations = 2     # Deifnie o número de simulações que serão realizadas

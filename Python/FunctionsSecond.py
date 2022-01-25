@@ -628,3 +628,15 @@ def Min_2(Vet):
         if Vet[value] < 0.2:
             Vet[value] = 1
     return Vet
+
+def Return_Time_String_Colum(Rede):
+    # Essa função retorna uma string com o número correto de colunas para ser usada nas buscas
+    # pelas tabelas do SQL
+
+    Ary = ''
+    MaxLen = originalSteps(Rede)
+
+    for i in range(MaxLen):
+        Ary += '(Time_' + str(i) + ')' if i == MaxLen-1 else '(Time_' + str(i) + '),'
+
+    return Ary
