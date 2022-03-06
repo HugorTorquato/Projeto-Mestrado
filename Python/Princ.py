@@ -9,9 +9,10 @@ if __name__ == "__main__":
     from DB_Rede import *
 
     Rede = DSS(Rede_Path + "\Master.dss")
+    engine = sqlalchemy()
 
-    Version(Rede), Compila_DSS(Rede), Inicializa(Rede), Refresh_Or_Create_Tables(Rede), Refresh_Or_Create_Views(Rede),
-    Refresh_Or_Create_StoreProcedures(Rede)
+    Version(Rede), Compila_DSS(Rede), Inicializa(Rede), Refresh_Or_Create_Tables(Rede, engine), \
+    Refresh_Or_Create_Views(Rede, engine), Refresh_Or_Create_StoreProcedures(Rede, engine)
 
     if Salva_Dados:
         Salvar_Dados_Rede(Rede)

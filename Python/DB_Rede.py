@@ -9,13 +9,11 @@ def sqlalchemy():
     engine = sql.create_engine(
         'mssql+pyodbc://LAPTOP-5R3FI4O0\SQLEXPRESS/DB_Rede_3?driver=ODBC Driver 17 for SQL Server').connect()
 
-    logger.debug("Engine created")
     return engine
 
-def Refresh_Or_Create_Tables(Rede):
+def Refresh_Or_Create_Tables(Rede, engine):
 
     metadata = sql.MetaData()
-    engine = sqlalchemy()
 
     # To do:
     #   1-
@@ -373,44 +371,49 @@ def Refresh_Or_Create_Tables(Rede):
     metadata.create_all(engine)
     Adjust_tables_to_timestemp(engine, Rede)
 
-def Refresh_Or_Create_Views(Rede):
+def Refresh_Or_Create_Views(Rede, engine):
 
     # 1- Colocar isso para criar somente quando precisar....
     # 2- Condição de log para quando já estiver criado
 
     metadata = sql.MetaData()
-    engine = sqlalchemy()
 
     # Definição da view : vw_HC_VIOLATION_REPORT
 
     view = 'vw_HC_VIOLATION_REPORT'
 
-    Definition = 'CREATE VIEW [dbo].[' + view + '] ' \
-                 'AS ' \
-                 '	SELECT ' \
-                 '		overvoltage_count' \
-                 '		,undervoltage_count' \
-                 '		,overcurrent_count' \
-                 '		,unbalance_count' \
-                 '		,(SELECT overvoltage_count + undervoltage_count + overcurrent_count + unbalance_count) as total_count' \
-                 '	FROM ' \
-                 '(' \
-                 '	SELECT TOP(1) ' \
-                 '		(select ISNULL(sum(CR.overvoltage), 0) from Check_Report CR where CR.overvoltage = 1) as overvoltage_count' \
-                 '		,(select ISNULL(sum(CR.undervoltage), 0) from Check_Report CR where CR.undervoltage = 1) as undervoltage_count' \
-                 '		,(select ISNULL(sum(CR.overcurrent), 0) from Check_Report CR where CR.overcurrent = 1) as overcurrent_count' \
-                 '		,(select ISNULL(sum(CR.unbalance), 0) from Check_Report CR where CR.unbalance = 1) as unbalance_count' \
-                 '	) AS counts '
+    if len(pd.read_sql(
+            'SELECT * '
+            'FROM sys.objects '
+            'where [type_desc] = \'view\' and [name]  = \'' + view + '\'', engine)) == 0:
 
-    DropView(engine, view)
-    engine.execute(Definition)
-    logger.info('Create View :' + str(view))
 
-def Refresh_Or_Create_StoreProcedures(Rede):
+        Definition = 'CREATE VIEW [dbo].[' + view + '] ' \
+                     'AS ' \
+                     '	SELECT ' \
+                     '		overvoltage_count' \
+                     '		,undervoltage_count' \
+                     '		,overcurrent_count' \
+                     '		,unbalance_count' \
+                     '		,(SELECT overvoltage_count + undervoltage_count + overcurrent_count + unbalance_count) as total_count' \
+                     '	FROM ' \
+                     '(' \
+                     '	SELECT TOP(1) ' \
+                     '		(select ISNULL(sum(CR.overvoltage), 0) from Check_Report CR where CR.overvoltage = 1) as overvoltage_count' \
+                     '		,(select ISNULL(sum(CR.undervoltage), 0) from Check_Report CR where CR.undervoltage = 1) as undervoltage_count' \
+                     '		,(select ISNULL(sum(CR.overcurrent), 0) from Check_Report CR where CR.overcurrent = 1) as overcurrent_count' \
+                     '		,(select ISNULL(sum(CR.unbalance), 0) from Check_Report CR where CR.unbalance = 1) as unbalance_count' \
+                     '	) AS counts '
+
+        #DropView(engine, view)
+        engine.execute(Definition)
+        logger.info('Create View :' + str(view))
+    else:
+        logger.info('View already exists :' + str(view))
+
+def Refresh_Or_Create_StoreProcedures(Rede, engine):
 
     from FunctionsSecond import Return_Time_String_Colum, Return_Time_String_Colum_Case_Options
-
-    engine = sqlalchemy()
 
     storeProcedure = 'Update_Voltage_Data_Table_Max_Min'
     Ary = Return_Time_String_Colum(Rede)
@@ -695,7 +698,6 @@ def Process_Data(Rede, Simulation):
         Process_Data_Secondary(Rede, Simulation)
 
 def Process_Data_Secondary(Rede, Simulation):
-
 
     from FunctionsSecond import Adjust_Colum_Name, DF_Voltage_A, DF_Voltage_B, DF_Voltage_C, Casos
 
