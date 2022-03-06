@@ -5,29 +5,9 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Python/DB_Rede.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/DB_Rede.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Python/Definitions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/Definitions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python/Geradores.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/Geradores.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python/FunctionsSecond.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/FunctionsSecond.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Python/LOG.log" beforeDir="false" afterPath="$PROJECT_DIR$/Python/LOG.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Python/SistemFunctions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/SistemFunctions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data.7z" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data.zip" beforeDir="false" afterPath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data.zip" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Barras.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Barras.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Check_Report.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Check_Report.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Current_Elemt_Data.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Current_Elemt_Data.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Current_Elemt_Data_Ang.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Current_Elemt_Data_Ang.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/GD.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/GD.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/General.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/General.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Grid_Elements.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Grid_Elements.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/MonitoresData.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/MonitoresData.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/PVPowerData.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/PVPowerData.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/PVSystems.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/PVSystems.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Power_P_Elemt_Data.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Power_P_Elemt_Data.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Power_Q_Elemt_Data.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Power_Q_Elemt_Data.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Unbalance_Data.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Unbalance_Data.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Voltage_Data.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Voltage_Data.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Voltage_Data_Ang.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Voltage_Data_Ang.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Voltage_Elemt_Data.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Voltage_Elemt_Data.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Voltage_Elemt_Data_Ang.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/Voltage_Elemt_Data_Ang.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/vw_HC_VIOLATION_REPORT.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Tools/export_SQL_2_CSV/Data/vw_HC_VIOLATION_REPORT.csv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -230,25 +210,6 @@
     <option name="LAST_COMMIT_MESSAGE" value="Adicionado verificação apra overcurrent" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Python/FunctionsSecond.py</url>
-          <line>222</line>
-          <option name="timeStamp" value="37" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Python/FunctionsSecond.py</url>
-          <line>59</line>
-          <option name="timeStamp" value="63" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Python/SistemFunctions.py</url>
-          <line>182</line>
-          <option name="timeStamp" value="67" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
         <watch expression="DF_Tensao_A" />

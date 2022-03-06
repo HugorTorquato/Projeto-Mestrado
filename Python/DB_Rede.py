@@ -408,7 +408,7 @@ def Refresh_Or_Create_Views(Rede):
 
 def Refresh_Or_Create_StoreProcedures(Rede):
 
-    from FunctionsSecond import Return_Time_String_Colum
+    from FunctionsSecond import Return_Time_String_Colum, Return_Time_String_Colum_Case_Options
 
     engine = sqlalchemy()
 
@@ -432,6 +432,29 @@ def Refresh_Or_Create_StoreProcedures(Rede):
                      '                               where Barra > 0.5) as Menor' \
                      '                          FROM Voltage_Data VD3 WHERE VD.Nome_ID = VD3.Nome_ID) ' \
                      '  FROM Voltage_Data AS VD'
+
+        engine.execute(Definition)
+        logger.info('Create StoreProcedure :' + str(storeProcedure))
+    else:
+        logger.info('StoreProcedure already exists :' + str(storeProcedure))
+
+    storeProcedure = 'Update_Voltage_Data_Table_Max_Min_Time_Value'
+    AryMax = Return_Time_String_Colum_Case_Options(Rede)[0]
+    AryMin = Return_Time_String_Colum_Case_Options(Rede)[1]
+
+    if len(pd.read_sql(
+            'SELECT * '
+            'FROM sys.objects '
+            'where [type] = \'P\' and [name]  = \'' + storeProcedure + '\'', engine)) == 0:
+
+        Definition = 'CREATE PROCEDURE ' + storeProcedure + \
+                     ' AS ' \
+                     '  UPDATE VD ' \
+                     '  SET ' \
+                     '  VD.TimeMaxPU = CASE ' + AryMax + ' ELSE \'TBD\' END,' \
+                     '  VD.TimeMinPU = CASE ' + AryMin + ' ELSE \'TBD\' END' \
+                     ' FROM Voltage_Data VD'
+
 
         engine.execute(Definition)
         logger.info('Create StoreProcedure :' + str(storeProcedure))
@@ -504,7 +527,7 @@ def Run_Store_Procedures():
 
     # Run all store procedures frim the list by the end of the Simulation
 
-    SPs = ['Update_Voltage_Data_Table_Max_Min']
+    SPs = ['Update_Voltage_Data_Table_Max_Min', 'Update_Voltage_Data_Table_Max_Min_Time_Value']
 
     [sqlalchemy().execute(SP) for SP in SPs]
 

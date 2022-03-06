@@ -640,3 +640,18 @@ def Return_Time_String_Colum(Rede):
         Ary += '(Time_' + str(i) + ')' if i == MaxLen-1 else '(Time_' + str(i) + '),'
 
     return Ary
+
+def Return_Time_String_Colum_Case_Options(Rede):
+    # Essa função retorna uma string com os casos para o store procedure 'Update_Voltage_Data_Table_Max_Min_Time_Value'
+    # Vai variar de acordo com o tamanho da amostragem desejada para o dia
+
+    commandMax = ''
+    commandMin = ''
+
+    for i in range(originalSteps(Rede)):
+        commandMax += ' WHEN ValueMaxPU = Time_' + str(i) + ' AND Time_' + str(i) + ' <> 0 THEN \'Time_' + str(i) + '\''
+
+    for i in range(originalSteps(Rede)):
+        commandMin += ' WHEN ValueMinPU = Time_' + str(i) + ' AND Time_' + str(i) + ' <> 0 THEN \'Time_' + str(i) + '\''
+
+    return commandMax, commandMin

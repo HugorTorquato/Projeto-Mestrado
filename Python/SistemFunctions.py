@@ -6,7 +6,8 @@ from Geradores import *
 def Inicializa(Rede):
 
     from Definitions import DF_Tensao_A, DF_Tensao_B, DF_Tensao_C, DF_Desq_IEC, DF_Desq_IEEE, DF_Desq_NEMA,\
-        DF_PVPowerData, DF_kW_PV, DF_kvar_PV, DF_irradNow_PV, Num_GDs
+        DF_PVPowerData, DF_kW_PV, DF_kvar_PV, DF_irradNow_PV, Num_GDs, DF_Tensao_Ang_A, DF_Tensao_Ang_B, \
+        DF_Tensao_Ang_C
     from FunctionsSecond import originalSteps
 
     # Essa função é responsável por inicializar alguns os dataframes utilizados ( Acho quenão preciso )
@@ -84,7 +85,7 @@ def Solve_Hora_por_Hora(Rede, Simulation, Pot_GD):
     # Essa função é o coração do código, aqui que são feitos todos os comandos e designações para os calculos durante
     # a simulação diária
 
-    from Definitions import DF_Tensao_A
+    from Definitions import DF_Tensao_A, Savar_Dados_Elem
     from Monitores import Adicionar_Monitores, Export_Random_Monitor_Test, Debug_Loads
     from FunctionsSecond import Adicionar_EnergyMeter, Converter_Intervalo_de_Simulacao
 
@@ -179,8 +180,8 @@ def HC(Rede):
 
             Nummero_Simulacoes += 1
             if Nummero_Simulacoes < 3:
-            else :
                 Pot_GD += 3*Incremento_Pot_gd if Criar_GD and Nummero_Simulacoes > 0 else 0
+            else :
                 Pot_GD += Incremento_Pot_gd if Criar_GD and Nummero_Simulacoes > 0 else 0
 
             print('-----------------------------------------------------')
