@@ -1,8 +1,11 @@
-import concurrent.futures
 
 import pandas as pd
 import sqlalchemy as sql
 from Definitions import *
+import time
+
+from Definitions import logger
+
 
 def sqlalchemy():
 
@@ -493,6 +496,8 @@ def Save_Data(Simulation, DF_Voltage_Data, DF_Tensao_Data_Ang, DF_Corrente_Data,
     from Definitions import DF_Geradores, DF_General, DF_Barras, DF_Elements, DF_PV, DF_PVPowerData,\
         DF_Monitors_Data, DF_Check_Report
 
+    t1 = time.time()
+    
     DF_General.to_sql('General', sqlalchemy(), if_exists='append', index=False)
     DF_Geradores.to_sql('GD', sqlalchemy(), if_exists='append', index=False)
     DF_PV.to_sql('PVSystems', sqlalchemy(), if_exists='append', index=False)
@@ -509,30 +514,46 @@ def Save_Data(Simulation, DF_Voltage_Data, DF_Tensao_Data_Ang, DF_Corrente_Data,
     DF_Current_Elemt_Data_Ang.to_sql('Current_Elemt_Data_Ang', sqlalchemy(), if_exists='append', index=False)
     DF_Unbalance_Data.to_sql('Unbalance_Data', sqlalchemy(), if_exists='append', index=False)
 
+    logger.debug("Save_Data took {" + str(time.time() - t1) + " sec} to execulte")
+
 def Save_Data_Secondary(DF_Power_P_Elemt_Data, DF_Power_Q_Elemt_Data, DF_Voltage_Elemt_Data,
                         DF_Voltage_Elemt_Data_Ang):
+
+    t1 = time.time()
 
     DF_Power_P_Elemt_Data.to_sql('Power_P_Elemt_Data', sqlalchemy(), if_exists='append', index=False)
     DF_Power_Q_Elemt_Data.to_sql('Power_Q_Elemt_Data', sqlalchemy(), if_exists='append', index=False)
     DF_Voltage_Elemt_Data.to_sql('Voltage_Elemt_Data', sqlalchemy(), if_exists='append', index=False)
     DF_Voltage_Elemt_Data_Ang.to_sql('Voltage_Elemt_Data_Ang', sqlalchemy(), if_exists='append', index=False)
 
+    logger.debug("Save_Data_Secondary took {" + str(time.time() - t1) + " sec} to execulte")
+
 def Save_General_Data(Simulation):
 
     from FunctionsSecond import Max_and_Min_Voltage_DF
     from Definitions import DF_Tensao_A, DF_Tensao_B, DF_Tensao_C, DF_Geradores, DF_General
 
+    t1 = time.time()
+
     DF_General.loc[0, 'Voltage_Max'] = Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[0]
     DF_General.loc[0, 'Voltage_Min'] = Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[1]
     DF_General.loc[0, 'GD_Config'] = str(DF_Geradores.set_index('Name').values)
+
+    logger.debug("Save_General_Data took {" + str(time.time() - t1) + " sec} to execulte")
 
 def Run_Store_Procedures():
 
     # Run all store procedures frim the list by the end of the Simulation
 
+    t1 = time.time()
     SPs = ['Update_Voltage_Data_Table_Max_Min', 'Update_Voltage_Data_Table_Max_Min_Time_Value']
 
-    [sqlalchemy().execute(SP) for SP in SPs]
+    for SP in SPs:
+        t2 = time.time()
+        sqlalchemy().execute(SP)
+        logger.debug("Store Procedure " + SP + " took {" + str(time.time() - t1) + " sec} to execulte")
+
+    logger.debug("Save_General_Data took {" + str(time.time() - t1) + " sec} to execulte")
 
 def Process_Data(Rede, Simulation):
 
@@ -541,6 +562,8 @@ def Process_Data(Rede, Simulation):
         DF_Tensao_Ang_A, DF_Tensao_Ang_B, DF_Tensao_Ang_C, DF_Corrente_Ang_A, DF_Corrente_Ang_B, DF_Corrente_Ang_C,\
         Savar_Dados_Elem, Casos
     from FunctionsSecond import Adjust_Colum_Name
+
+    t1 = time.time()
 
     # Process Bus
     index = len(DF_Barras.index)
@@ -697,9 +720,14 @@ def Process_Data(Rede, Simulation):
     if Savar_Dados_Elem == 1:
         Process_Data_Secondary(Rede, Simulation)
 
+    logger.debug("Process_Data took {" + str(time.time() - t1) + " sec} to execulte")
+
 def Process_Data_Secondary(Rede, Simulation):
 
-    from FunctionsSecond import Adjust_Colum_Name, DF_Voltage_A, DF_Voltage_B, DF_Voltage_C, Casos
+    from FunctionsSecond import Adjust_Colum_Name, DF_Voltage_A, DF_Voltage_B, DF_Voltage_C, Casos, \
+        DF_Voltage_Ang_A, DF_Voltage_Ang_B, DF_Voltage_Ang_C, DF_Pot_Q_A, DF_Pot_Q_B, DF_Pot_Q_C, \
+        DF_Pot_P_A, DF_Pot_P_B, DF_Pot_P_C
+    t1 = time.time()
 
     # Process Element Voltage in each simulation
     global DF_Voltage_Elemt_Data
@@ -792,3 +820,5 @@ def Process_Data_Secondary(Rede, Simulation):
     #return DF_Voltage_Elemt_Data, DF_Voltage_Elemt_Data_Ang, DF_Power_P_Elemt_Data, DF_Power_Q_Elemt_Data
     Save_Data_Secondary(DF_Power_P_Elemt_Data, DF_Power_Q_Elemt_Data, DF_Voltage_Elemt_Data,
                         DF_Voltage_Elemt_Data_Ang)
+
+    logger.debug("Process_Data_Secondary took {" + str(time.time() - t1) + " sec} to execulte")

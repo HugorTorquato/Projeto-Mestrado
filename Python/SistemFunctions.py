@@ -11,6 +11,8 @@ def Inicializa(Rede):
         DF_Tensao_Ang_C, logger
     from FunctionsSecond import originalSteps
 
+    t1 = time.time()
+
     # Essa função é responsável por inicializar alguns os dataframes utilizados ( Acho quenão preciso )
 
     # Dataframe de tensão
@@ -58,7 +60,7 @@ def Inicializa(Rede):
     # Defnição das barras em que os geradores vão estar inseridos no sistema
     # FindBusGD(Num_GDs)
 
-    logger.debug('Inicializa function is ok')
+    logger.debug("Inicializa took {" + str(time.time() - t1) + " sec} to execulte")
 
 def Version(Rede):
     print(Rede.dssObj.Version)
@@ -131,6 +133,10 @@ def Solve_Hora_por_Hora(Rede, Simulation, Pot_GD):
 
             Tensao_Barras(Rede, itera)
             Correntes_elementos(Rede, itera)
+
+            # acaho que chega até aqui sem problemas, mas e depois?
+            
+
             ###############################################################################################
             Dados_Elements(Rede, itera) if Savar_Dados_Elem == 1 else 0 # Pode ter um erro aqui, export antes do solve
             # Solução seria verificar convergÊncia
@@ -146,7 +152,6 @@ def Solve_Hora_por_Hora(Rede, Simulation, Pot_GD):
     #print(DF_Tensao_A.head())
 
 def HC(Rede):
-
 
     # Essa função é o pulmão do código, aqui que é feito o cálculo do HC
     from FunctionsSecond import Limpar_DF, Check, Identify_Overcurrent_Limits, \

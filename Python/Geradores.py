@@ -5,10 +5,12 @@ import random2
 
 def Adicionar_GDs(Rede, Pot_GD, Simulation):
 
-    from Definitions import DF_PV, Num_GDs
+    from Definitions import DF_PV, Num_GDs, logger
     from FunctionsSecond import originalSteps
 
     STEPS = originalSteps(Rede)
+    Shapes = []
+    logger.debug("Adicionar_GDs - Num. Steps = " + str(STEPS))
 
     # A ideia é carregar os loadshapes e criar os geradores de acordo com a demanda de geradores a serem inseridos.
     # No momento existem 6 possíveis geradores, limitação pelo número de curvas de cargas adicionadas na pasta
@@ -18,24 +20,28 @@ def Adicionar_GDs(Rede, Pot_GD, Simulation):
     # Pot_GD é atualizado
 
     for i in range(Num_GDs):
-        Rede.dssText.Command = "New LoadShape._GD_" + str(i + 1) + " npts=" + str(STEPS) + " minterval=15 " \
+        Shapes.append("New LoadShape._GD_" + str(i + 1) + " npts=" + str(STEPS) + " minterval=15 " \
                                "pmult=(file=C:\\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\P_GD_" \
                                + str(i + 1) + ".txt) " \
                                "qmult=(file=C:\\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\Q_GD_" \
-                               + str(i + 1) + ".txt)"
+                               + str(i + 1) + ".txt)")
 
     # Criação das curvas do pv
-    Rede.dssText.Command = "New XYCurve.FatorPvsT npts=4 xarray=[0 25 75 100] yarray=[1.2 1.0 .8 .6]"
-    Rede.dssText.Command = "New XYCurve.Eff npts=4 xarray=[.1 .2 .4 1.0] yarray=[.86 .9 .93 .97]"
-    Rede.dssText.Command = "New TShape.Temp npts=96 minterval=15 " \
-                           "temp=(File=C:\\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\Temp.txt)"
-    Rede.dssText.Command = "New LoadShape.irrad npts=96 minterval=15 " \
-                           "mult=(file=C:\\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\Irrad.txt)"
-    Rede.dssText.Command = "New XYcurve.generic npts=4 Xarray=(0.5,0.89,0.92,1,1.05,1.1,1.5) " \
-                           "Yarray=(1.0,1.0,0.8,0,-0.5,-1.0,-1.0)"
-    Rede.dssText.Command = "New XYCurve.vv_curve npts=7 Yarray=[1 1 0 0 0 -1 -1] " \
-                           "XArray = [0.5 0.87 0.92 1 1.05 1.01 1.5]"
-    Rede.dssText.Command = "New XYcurve.vw_curve npts=3 yarray=[1 0.95 0.9] xarray=[1 1.02 1.05]"
+    Shapes.append("New XYCurve.FatorPvsT npts=4 xarray=[0 25 75 100] yarray=[1.2 1.0 .8 .6]")
+    Shapes.append("New XYCurve.Eff npts=4 xarray=[.1 .2 .4 1.0] yarray=[.86 .9 .93 .97]")
+    Shapes.append("New TShape.Temp npts=96 minterval=15 " \
+                           "temp=(File=C:\\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\Temp.txt)")
+    Shapes.append("New LoadShape.irrad npts=96 minterval=15 " \
+                           "mult=(file=C:\\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\Irrad.txt)")
+    Shapes.append("New XYcurve.generic npts=4 Xarray=(0.5,0.89,0.92,1,1.05,1.1,1.5) " \
+                           "Yarray=(1.0,1.0,0.8,0,-0.5,-1.0,-1.0)")
+    Shapes.append("New XYCurve.vv_curve npts=7 Yarray=[1 1 0 0 0 -1 -1] " \
+                           "XArray = [0.5 0.87 0.92 1 1.05 1.01 1.5]")
+    Shapes.append("New XYcurve.vw_curve npts=3 yarray=[1 0.95 0.9] xarray=[1 1.02 1.05]")
+
+    for shape in Shapes:
+        Rede.dssText.Command = shape
+        logger.info("Adicionar_GDs - Shape was created : " + str(shape))
 
     if Use_PV:
         # adicionar compilaçãoem paralelo aqui
@@ -47,7 +53,7 @@ def Adicionar_GDs(Rede, Pot_GD, Simulation):
 
 def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
 
-    from Definitions import DF_PV, Barras_GDs, Casos
+    from Definitions import DF_PV, Barras_GDs, Casos, logger
     from FunctionsSecond import ativa_barra, Identify_Phases
     from Monitores import Define_Random_Monior_Test
 
@@ -74,7 +80,7 @@ def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
     # pot dc = ppmppx x irrad x (1-irrad_tempo) x temp_por_pot
     # pot ac = pot dc x eff
 
-    Rede.dssText.Command = "New PVSystem." + Nome + " phases=" + \
+    Command = "New PVSystem." + Nome + " phases=" + \
                            str(Identify_Phases(DF_PV.loc[index, 'Phases'])[1]) + \
                            " bus1=" + str(DF_PV.loc[index, 'Bus']) + \
                            str(Identify_Phases(DF_PV.loc[index, 'Phases'])[0]) + \
@@ -86,23 +92,33 @@ def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
                            " pf=1 VarFollowInverter=true " \
                            " irradiance=" + str(Const_Irrad) + " temperature=" + str(Const_Temp) + \
                            " daily=irrad Tdaily=Temp wattpriority=yes debugtrace=yes"
+
+    logger.info("Create_PV - " + Command)
+    Rede.dssText.Command = Command
+
+
     if Simulation == 3 and Debug_VV == 1:
         Rede.dssText.Command = "set maxcontroliter=2000"
 
-        Rede.dssText.Command ="New InvControl.InvPVCtrl_" + Nome + " DERList=PVSystem." + Nome + \
+        Command ="New InvControl.InvPVCtrl_" + Nome + " DERList=PVSystem." + Nome + \
                               " mode=VOLTVAR voltage_curvex_ref=rated " \
                            "vvc_curve1=generic monVoltageCalc=MIN" +\
                            " deltaQ_factor=0.2 RefReactivePower=VARAVAL varchangetolerance=0.025"# EventLog=yes "
+        logger.info("Create_PV - Define InvControl VV " + Command)
+        Rede.dssText.Command = Command
 
     if Simulation > 3 and Debug_VV == 1:
         Rede.dssText.Command = "set maxcontroliter=2000"
 
-        Rede.dssText.Command ="New InvControl.InvPVCtrl_" + Nome + " DERList=PVSystem." + Nome + \
+        Command ="New InvControl.InvPVCtrl_" + Nome + " DERList=PVSystem." + Nome + \
                               " Combimode=VV_VW voltage_curvex_ref=rated" \
                               " vvc_curve1=generic monVoltageCalc=MIN" + \
                               " deltaQ_factor=0.2 RefReactivePower=VARAVAL varchangetolerance=0.025" \
                               " voltwatt_curve=vw_curve DeltaP_factor=0.45 activePchangetolerance=0.025" \
                               " VoltwattYAxis=PMPPPU"# EventLog=yes "
+
+        logger.info("Create_PV - Define InvControl VV + VW " + Command)
+        Rede.dssText.Command = Command
 
     ## deltaQ_factor -> Mudança máxima da pot reativa da solução anterior para a desejada durante
     #                   cada iteração de controle
@@ -116,21 +132,6 @@ def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
 
     # Define um monitor para observar as configurações do PV durante o InvControl
     Define_Random_Monior_Test(Rede, "InvControl", "PVSystem." + Nome, 1, 3)
-
-    print("New PVSystem." + Nome + " phases=" + \
-          str(Identify_Phases(DF_PV.loc[index, 'Phases'])[1]) + \
-          " bus1=" + \
-          str(DF_PV.loc[index, 'Bus']) + \
-          str(Identify_Phases(DF_PV.loc[index, 'Phases'])[0]) + \
-          " Pmpp=" + str(Pmp) + \
-          " kv=" + str(Rede.dssBus.kVBase) + \
-          " kVA=" + str(Pmp * 1.15) + \
-          " kvarMax=" + str(Pmp * 1.2) + \
-          " con=wye" \
-          " %Cutin=0.1 %cutout=0.1 EffCurve=Eff P-TCurve=FactorPVsT" \
-          " pf=1 VarFollowInverter=true " \
-          " irradiance=" + str(Const_Irrad) + " temperature=" + str(Const_Temp) + \
-          " daily=irrad Tdaily=Temp wattpriority=yes" ) # debugtrace=yes")
 
 def Create_GD(Rede, Nome, kW, kvar, LoadShape, Simulation):
     from Definitions import DF_Geradores, Barras_GDs

@@ -3,11 +3,16 @@
   <component name="ChangeListManager">
     <list default="true" id="c0a353b0-9d94-497b-99cd-a779928dfe5d" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DM 15_2018 Tiago Machado Wanzeler.pdf" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Python/DB_Rede.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/DB_Rede.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Python/Definitions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/Definitions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python/LOG.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python/FunctionsSecond.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/FunctionsSecond.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python/Geradores.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/Geradores.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python/Monitores.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/Monitores.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Python/Princ.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/Princ.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Python/SistemFunctions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/SistemFunctions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Texto/24090_900922..pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Texto/24090_900958..pdf" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
