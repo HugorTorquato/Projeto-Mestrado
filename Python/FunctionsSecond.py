@@ -2,8 +2,10 @@
 import numpy as np
 
 from Definitions import *
+from Definitions import logger
 import pandas as pd
 import cmath
+import time
 
 def Correntes_elementos(Rede, itera):
     # A função poderia ser melhor em termos de performance. No momento ela está salvando um arquivo .csv
@@ -13,6 +15,7 @@ def Correntes_elementos(Rede, itera):
 
     from Definitions import DF_Corrente_itera, DF_Corrente_A, DF_Corrente_B, DF_Corrente_C
 
+    t1 = time.time()
     Rede.dssText.Command = "Export Currents file = " + Debug_Path + "\EXP_PVMETERS.CSV"
 
     Limpar_DF(DF_Corrente_itera)
@@ -47,10 +50,15 @@ def Correntes_elementos(Rede, itera):
 
         count += 1
 
+    logger.debug("Correntes_elementos took {" + str(time.time() - t1) + " sec} to execulte "
+                                                                        "in iteration: " + str(itera))
+
 def Dados_Elements(Rede, itera):
     # Essa função é separada da coleta das correntes pq pode ser ou não habilitada, depende do "Savar_Dados_Elem"
 
     from Definitions import DF_Pot_itera, DF_Voltage_itera
+
+    t1 = time.time()
 
     # Exportar os dados e prapara o dataframe
     try:
@@ -130,7 +138,8 @@ def Dados_Elements(Rede, itera):
 
         count += 1
 
-    return
+    logger.debug("Dados_Elements took {" + str(time.time() - t1) + " sec} to execulte "
+                                                                   "in iteration: " + str(itera))
 
 def get_resultados_potencia(self):
     # self.dssText.Command = "Show power kva elements"
@@ -173,6 +182,9 @@ def Identify_Position(Fase, Nodes):
         return Voltage, Angle
 
 def Tensao_Barras(Rede, itera):
+
+    t1 = time.time()
+
     puVmag_Buses = []
     angle_Buses = []
     Bus_Names = DF_Tensao_A.Barras.values
@@ -307,6 +319,8 @@ def Tensao_Barras(Rede, itera):
         # puVmag_Buses.append(puVmag)
         #angle_Buses.append(angle)
     # print(DF_Tensao_A.head())
+    logger.debug("Tensao_Barras took {" + str(time.time() - t1) + " sec} to execulte "
+                                                                  "in iteration: " + str(itera))
 
 def Max_Min(Tensao1, Tensao2, Tensao3):
     Vet_Max_Min = [Tensao1, Tensao2, Tensao3]
@@ -428,6 +442,8 @@ def Check(Rede, Simulation):
 
     # --------------------------------------------------------------------------------------------------------
 
+    t1 = time.time()
+
     overvoltage = 0
     undervoltage = 0
     overcurrent = 0
@@ -446,12 +462,19 @@ def Check(Rede, Simulation):
         else 1
     #  Verificar o desequilibrio
     # return True if overvoltage == 0 and undervoltage == 0 and overcurrent == 0 and unbalance == 0 \
+
+    logger.debug("Check took {" + str(time.time() - t1) + " sec} to execulte "
+                                                          "in simulation: " + str(Simulation))
+
     return True if overvoltage == 0 and undervoltage == 0 and overcurrent == 0 \
         else Salva_Check_Report(Simulation, overvoltage, undervoltage, overcurrent, unbalance)
 
 
 def Check_overcurrent():
+
+    t1 = time.time()
     Violacao = 0
+
     for DF_Cur in [DF_Corrente_A, DF_Corrente_B, DF_Corrente_C]:
 
         df_temp_curr = DF_Corrente_Limite.copy(deep=True)
@@ -464,10 +487,15 @@ def Check_overcurrent():
 
         # Implementar maneira de armazenar os dados de quais linhas tiveram violação
 
+    logger.debug("Check_overcurrent took {" + str(time.time() - t1) + " sec} to execulte")
+
     return Violacao
 
 
 def Check_Desq(Rede, IEC, IEEE, NEMA):
+
+    t1 = time.time()
+
     # Só o IEEE está funcionando por hora
 
     DF = IEC if Norma == 0 else IEEE if Norma == 1 else NEMA
@@ -480,10 +508,14 @@ def Check_Desq(Rede, IEC, IEEE, NEMA):
     for barra in DF.set_index('Barras').where(DF.set_index('Barras') > limite_Deseq).count(axis=1).values:
         count += 1 if barra >= np.floor(originalSteps(Rede) * float(Steps_wtout_unbalance / 100)) else 0
 
+    logger.debug("Check_Desq took {" + str(time.time() - t1) + " sec} to execulte")
+
     return False if count == 0 else True
 
 
 def Salva_Check_Report(Simulation_Data, overvoltage, undervoltage, overcurrent, unbalance):
+
+    t1 = time.time()
     Limpar_DF(DF_Check_Report)
 
     index = len(DF_Check_Report.index)
@@ -495,10 +527,13 @@ def Salva_Check_Report(Simulation_Data, overvoltage, undervoltage, overcurrent, 
     DF_Check_Report.loc[index, 'overcurrent'] = overcurrent
     DF_Check_Report.loc[index, 'unbalance'] = unbalance
 
+    logger.debug("Salva_Check_Report took {" + str(time.time() - t1) + " sec} to execulte")
     return False
 
 
 def Salvar_Dados_Tensao():
+
+    t1 = time.time()
     Escrever = pd.ExcelWriter(Debug_Path + "\Debug.xlsx")
 
     DF_Tensao_A.to_excel(Escrever, 'DF_Tensao_A', index=False)
@@ -506,12 +541,14 @@ def Salvar_Dados_Tensao():
     DF_Tensao_C.to_excel(Escrever, 'DF_Tensao_C', index=False)
 
     Escrever.save()
-
+    logger.debug("Salvar_Dados_Tensao took {" + str(time.time() - t1) + " sec} to execulte")
 
 def Identify_Phases(Phases):
+
     Num_Phases = ""
     count = 0
     Aa = Phases
+
     for Phase in Phases:
         if Phase == "A":
             Num_Phases = Num_Phases + ".1"
@@ -539,6 +576,8 @@ def Max_and_Min_Voltage_DF(A, B, C):
 
 
 def Data_PV(Rede, itera):
+
+    t1 = time.time()
     PVs = Rede.dssPVSystems.AllNames
 
     for PV in range(len(Rede.dssPVSystems.AllNames)):
@@ -548,10 +587,14 @@ def Data_PV(Rede, itera):
         DF_kvar_PV.loc[DF_kvar_PV.index == PV, str(itera)] = Rede.dssPVSystems.kvar
         DF_irradNow_PV.loc[DF_irradNow_PV.index == PV, str(itera)] = Rede.dssPVSystems.IrradianceNow
 
+    logger.debug("Data_PV took {" + str(time.time() - t1) + " sec} to execulte "
+                                                            "in iteration: " + str(itera))
+
 
 def Power_measurement_PV(Rede, Simulation):
     from Definitions import DF_PVPowerData, DF_PV
 
+    t1 = time.time()
     Measur = ['kW', 'kvar', 'irradNow']
     PVs = Rede.dssPVSystems.AllNames
 
@@ -575,6 +618,8 @@ def Power_measurement_PV(Rede, Simulation):
                 for i in range(originalSteps(Rede)):
                     DF_PVPowerData.loc[index, 'Time_' + str(i)] = DF_irradNow_PV.loc[PV, str(i)]
 
+    logger.debug("Power_measurement_PV took {" + str(time.time() - t1) + " sec} to execulte "
+                                                                         "in simulation: " + str(Simulation))
 
 def Adicionar_EnergyMeter(Rede):
     # Definir o elemento correto ( barra sourcebus ou a primeira linha? fazer de forma iterativa )
@@ -640,3 +685,18 @@ def Return_Time_String_Colum(Rede):
         Ary += '(Time_' + str(i) + ')' if i == MaxLen-1 else '(Time_' + str(i) + '),'
 
     return Ary
+
+def Return_Time_String_Colum_Case_Options(Rede):
+    # Essa função retorna uma string com os casos para o store procedure 'Update_Voltage_Data_Table_Max_Min_Time_Value'
+    # Vai variar de acordo com o tamanho da amostragem desejada para o dia
+
+    commandMax = ''
+    commandMin = ''
+
+    for i in range(originalSteps(Rede)):
+        commandMax += ' WHEN ValueMaxPU = Time_' + str(i) + ' AND Time_' + str(i) + ' <> 0 THEN \'Time_' + str(i) + '\''
+
+    for i in range(originalSteps(Rede)):
+        commandMin += ' WHEN ValueMinPU = Time_' + str(i) + ' AND Time_' + str(i) + ' <> 0 THEN \'Time_' + str(i) + '\''
+
+    return commandMax, commandMin

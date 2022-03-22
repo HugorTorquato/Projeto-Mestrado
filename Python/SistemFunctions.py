@@ -2,12 +2,16 @@
 import time
 
 from Geradores import *
+from Definitions import *
 
 def Inicializa(Rede):
 
     from Definitions import DF_Tensao_A, DF_Tensao_B, DF_Tensao_C, DF_Desq_IEC, DF_Desq_IEEE, DF_Desq_NEMA,\
-        DF_PVPowerData, DF_kW_PV, DF_kvar_PV, DF_irradNow_PV, Num_GDs
+        DF_PVPowerData, DF_kW_PV, DF_kvar_PV, DF_irradNow_PV, Num_GDs, DF_Tensao_Ang_A, DF_Tensao_Ang_B, \
+        DF_Tensao_Ang_C, logger
     from FunctionsSecond import originalSteps
+
+    t1 = time.time()
 
     # Essa função é responsável por inicializar alguns os dataframes utilizados ( Acho quenão preciso )
 
@@ -56,10 +60,15 @@ def Inicializa(Rede):
     # Defnição das barras em que os geradores vão estar inseridos no sistema
     # FindBusGD(Num_GDs)
 
+    logger.debug("Inicializa took {" + str(time.time() - t1) + " sec} to execulte")
+
 def Version(Rede):
     print(Rede.dssObj.Version)
 
 def Compila_DSS(Rede):
+
+    from Definitions import logger
+
     Rede.dssObj.ClearALL()
     Rede.dssText.Command = "compile " + Rede.Modelo_Barras
     Rede.dssText.Command = "set mode=daily"
@@ -67,6 +76,8 @@ def Compila_DSS(Rede):
     Rede.dssText.Command = "set number = 96"
 
     Rede.dssSolution.Solve()
+
+    logger.debug('Solve Informations :  Mode=Daily Stepsize=15m Number=96')
 
 def Nome_Barras(Rede):
     return Rede.dssCircuit.AllBusNames
@@ -84,7 +95,7 @@ def Solve_Hora_por_Hora(Rede, Simulation, Pot_GD):
     # Essa função é o coração do código, aqui que são feitos todos os comandos e designações para os calculos durante
     # a simulação diária
 
-    from Definitions import DF_Tensao_A
+    from Definitions import DF_Tensao_A, Savar_Dados_Elem
     from Monitores import Adicionar_Monitores, Export_Random_Monitor_Test, Debug_Loads
     from FunctionsSecond import Adicionar_EnergyMeter, Converter_Intervalo_de_Simulacao
 
@@ -122,6 +133,10 @@ def Solve_Hora_por_Hora(Rede, Simulation, Pot_GD):
 
             Tensao_Barras(Rede, itera)
             Correntes_elementos(Rede, itera)
+
+            # acaho que chega até aqui sem problemas, mas e depois?
+            
+
             ###############################################################################################
             Dados_Elements(Rede, itera) if Savar_Dados_Elem == 1 else 0 # Pode ter um erro aqui, export antes do solve
             # Solução seria verificar convergÊncia
@@ -137,7 +152,6 @@ def Solve_Hora_por_Hora(Rede, Simulation, Pot_GD):
     #print(DF_Tensao_A.head())
 
 def HC(Rede):
-
 
     # Essa função é o pulmão do código, aqui que é feito o cálculo do HC
     from FunctionsSecond import Limpar_DF, Check, Identify_Overcurrent_Limits, \
@@ -179,8 +193,8 @@ def HC(Rede):
 
             Nummero_Simulacoes += 1
             if Nummero_Simulacoes < 3:
-            else :
                 Pot_GD += 3*Incremento_Pot_gd if Criar_GD and Nummero_Simulacoes > 0 else 0
+            else :
                 Pot_GD += Incremento_Pot_gd if Criar_GD and Nummero_Simulacoes > 0 else 0
 
             print('-----------------------------------------------------')

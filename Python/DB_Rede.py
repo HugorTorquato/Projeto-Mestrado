@@ -1,21 +1,22 @@
-import concurrent.futures
 
 import pandas as pd
 import sqlalchemy as sql
 from Definitions import *
+import time
+
+from Definitions import logger
+
 
 def sqlalchemy():
 
     engine = sql.create_engine(
         'mssql+pyodbc://LAPTOP-5R3FI4O0\SQLEXPRESS/DB_Rede_3?driver=ODBC Driver 17 for SQL Server').connect()
 
-    logger.debug("Engine created")
     return engine
 
-def Refresh_Or_Create_Tables(Rede):
+def Refresh_Or_Create_Tables(Rede, engine):
 
     metadata = sql.MetaData()
-    engine = sqlalchemy()
 
     # To do:
     #   1-
@@ -373,44 +374,49 @@ def Refresh_Or_Create_Tables(Rede):
     metadata.create_all(engine)
     Adjust_tables_to_timestemp(engine, Rede)
 
-def Refresh_Or_Create_Views(Rede):
+def Refresh_Or_Create_Views(Rede, engine):
 
     # 1- Colocar isso para criar somente quando precisar....
     # 2- Condição de log para quando já estiver criado
 
     metadata = sql.MetaData()
-    engine = sqlalchemy()
 
     # Definição da view : vw_HC_VIOLATION_REPORT
 
     view = 'vw_HC_VIOLATION_REPORT'
 
-    Definition = 'CREATE VIEW [dbo].[' + view + '] ' \
-                 'AS ' \
-                 '	SELECT ' \
-                 '		overvoltage_count' \
-                 '		,undervoltage_count' \
-                 '		,overcurrent_count' \
-                 '		,unbalance_count' \
-                 '		,(SELECT overvoltage_count + undervoltage_count + overcurrent_count + unbalance_count) as total_count' \
-                 '	FROM ' \
-                 '(' \
-                 '	SELECT TOP(1) ' \
-                 '		(select ISNULL(sum(CR.overvoltage), 0) from Check_Report CR where CR.overvoltage = 1) as overvoltage_count' \
-                 '		,(select ISNULL(sum(CR.undervoltage), 0) from Check_Report CR where CR.undervoltage = 1) as undervoltage_count' \
-                 '		,(select ISNULL(sum(CR.overcurrent), 0) from Check_Report CR where CR.overcurrent = 1) as overcurrent_count' \
-                 '		,(select ISNULL(sum(CR.unbalance), 0) from Check_Report CR where CR.unbalance = 1) as unbalance_count' \
-                 '	) AS counts '
+    if len(pd.read_sql(
+            'SELECT * '
+            'FROM sys.objects '
+            'where [type_desc] = \'view\' and [name]  = \'' + view + '\'', engine)) == 0:
 
-    DropView(engine, view)
-    engine.execute(Definition)
-    logger.info('Create View :' + str(view))
 
-def Refresh_Or_Create_StoreProcedures(Rede):
+        Definition = 'CREATE VIEW [dbo].[' + view + '] ' \
+                     'AS ' \
+                     '	SELECT ' \
+                     '		overvoltage_count' \
+                     '		,undervoltage_count' \
+                     '		,overcurrent_count' \
+                     '		,unbalance_count' \
+                     '		,(SELECT overvoltage_count + undervoltage_count + overcurrent_count + unbalance_count) as total_count' \
+                     '	FROM ' \
+                     '(' \
+                     '	SELECT TOP(1) ' \
+                     '		(select ISNULL(sum(CR.overvoltage), 0) from Check_Report CR where CR.overvoltage = 1) as overvoltage_count' \
+                     '		,(select ISNULL(sum(CR.undervoltage), 0) from Check_Report CR where CR.undervoltage = 1) as undervoltage_count' \
+                     '		,(select ISNULL(sum(CR.overcurrent), 0) from Check_Report CR where CR.overcurrent = 1) as overcurrent_count' \
+                     '		,(select ISNULL(sum(CR.unbalance), 0) from Check_Report CR where CR.unbalance = 1) as unbalance_count' \
+                     '	) AS counts '
 
-    from FunctionsSecond import Return_Time_String_Colum
+        #DropView(engine, view)
+        engine.execute(Definition)
+        logger.info('Create View :' + str(view))
+    else:
+        logger.info('View already exists :' + str(view))
 
-    engine = sqlalchemy()
+def Refresh_Or_Create_StoreProcedures(Rede, engine):
+
+    from FunctionsSecond import Return_Time_String_Colum, Return_Time_String_Colum_Case_Options
 
     storeProcedure = 'Update_Voltage_Data_Table_Max_Min'
     Ary = Return_Time_String_Colum(Rede)
@@ -432,6 +438,29 @@ def Refresh_Or_Create_StoreProcedures(Rede):
                      '                               where Barra > 0.5) as Menor' \
                      '                          FROM Voltage_Data VD3 WHERE VD.Nome_ID = VD3.Nome_ID) ' \
                      '  FROM Voltage_Data AS VD'
+
+        engine.execute(Definition)
+        logger.info('Create StoreProcedure :' + str(storeProcedure))
+    else:
+        logger.info('StoreProcedure already exists :' + str(storeProcedure))
+
+    storeProcedure = 'Update_Voltage_Data_Table_Max_Min_Time_Value'
+    AryMax = Return_Time_String_Colum_Case_Options(Rede)[0]
+    AryMin = Return_Time_String_Colum_Case_Options(Rede)[1]
+
+    if len(pd.read_sql(
+            'SELECT * '
+            'FROM sys.objects '
+            'where [type] = \'P\' and [name]  = \'' + storeProcedure + '\'', engine)) == 0:
+
+        Definition = 'CREATE PROCEDURE ' + storeProcedure + \
+                     ' AS ' \
+                     '  UPDATE VD ' \
+                     '  SET ' \
+                     '  VD.TimeMaxPU = CASE ' + AryMax + ' ELSE \'TBD\' END,' \
+                     '  VD.TimeMinPU = CASE ' + AryMin + ' ELSE \'TBD\' END' \
+                     ' FROM Voltage_Data VD'
+
 
         engine.execute(Definition)
         logger.info('Create StoreProcedure :' + str(storeProcedure))
@@ -467,6 +496,8 @@ def Save_Data(Simulation, DF_Voltage_Data, DF_Tensao_Data_Ang, DF_Corrente_Data,
     from Definitions import DF_Geradores, DF_General, DF_Barras, DF_Elements, DF_PV, DF_PVPowerData,\
         DF_Monitors_Data, DF_Check_Report
 
+    t1 = time.time()
+    
     DF_General.to_sql('General', sqlalchemy(), if_exists='append', index=False)
     DF_Geradores.to_sql('GD', sqlalchemy(), if_exists='append', index=False)
     DF_PV.to_sql('PVSystems', sqlalchemy(), if_exists='append', index=False)
@@ -483,30 +514,46 @@ def Save_Data(Simulation, DF_Voltage_Data, DF_Tensao_Data_Ang, DF_Corrente_Data,
     DF_Current_Elemt_Data_Ang.to_sql('Current_Elemt_Data_Ang', sqlalchemy(), if_exists='append', index=False)
     DF_Unbalance_Data.to_sql('Unbalance_Data', sqlalchemy(), if_exists='append', index=False)
 
+    logger.debug("Save_Data took {" + str(time.time() - t1) + " sec} to execulte")
+
 def Save_Data_Secondary(DF_Power_P_Elemt_Data, DF_Power_Q_Elemt_Data, DF_Voltage_Elemt_Data,
                         DF_Voltage_Elemt_Data_Ang):
+
+    t1 = time.time()
 
     DF_Power_P_Elemt_Data.to_sql('Power_P_Elemt_Data', sqlalchemy(), if_exists='append', index=False)
     DF_Power_Q_Elemt_Data.to_sql('Power_Q_Elemt_Data', sqlalchemy(), if_exists='append', index=False)
     DF_Voltage_Elemt_Data.to_sql('Voltage_Elemt_Data', sqlalchemy(), if_exists='append', index=False)
     DF_Voltage_Elemt_Data_Ang.to_sql('Voltage_Elemt_Data_Ang', sqlalchemy(), if_exists='append', index=False)
 
+    logger.debug("Save_Data_Secondary took {" + str(time.time() - t1) + " sec} to execulte")
+
 def Save_General_Data(Simulation):
 
     from FunctionsSecond import Max_and_Min_Voltage_DF
     from Definitions import DF_Tensao_A, DF_Tensao_B, DF_Tensao_C, DF_Geradores, DF_General
 
+    t1 = time.time()
+
     DF_General.loc[0, 'Voltage_Max'] = Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[0]
     DF_General.loc[0, 'Voltage_Min'] = Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[1]
     DF_General.loc[0, 'GD_Config'] = str(DF_Geradores.set_index('Name').values)
+
+    logger.debug("Save_General_Data took {" + str(time.time() - t1) + " sec} to execulte")
 
 def Run_Store_Procedures():
 
     # Run all store procedures frim the list by the end of the Simulation
 
-    SPs = ['Update_Voltage_Data_Table_Max_Min']
+    t1 = time.time()
+    SPs = ['Update_Voltage_Data_Table_Max_Min', 'Update_Voltage_Data_Table_Max_Min_Time_Value']
 
-    [sqlalchemy().execute(SP) for SP in SPs]
+    for SP in SPs:
+        t2 = time.time()
+        sqlalchemy().execute(SP)
+        logger.debug("Store Procedure " + SP + " took {" + str(time.time() - t1) + " sec} to execulte")
+
+    logger.debug("Save_General_Data took {" + str(time.time() - t1) + " sec} to execulte")
 
 def Process_Data(Rede, Simulation):
 
@@ -515,6 +562,8 @@ def Process_Data(Rede, Simulation):
         DF_Tensao_Ang_A, DF_Tensao_Ang_B, DF_Tensao_Ang_C, DF_Corrente_Ang_A, DF_Corrente_Ang_B, DF_Corrente_Ang_C,\
         Savar_Dados_Elem, Casos
     from FunctionsSecond import Adjust_Colum_Name
+
+    t1 = time.time()
 
     # Process Bus
     index = len(DF_Barras.index)
@@ -671,10 +720,14 @@ def Process_Data(Rede, Simulation):
     if Savar_Dados_Elem == 1:
         Process_Data_Secondary(Rede, Simulation)
 
+    logger.debug("Process_Data took {" + str(time.time() - t1) + " sec} to execulte")
+
 def Process_Data_Secondary(Rede, Simulation):
 
-
-    from FunctionsSecond import Adjust_Colum_Name, DF_Voltage_A, DF_Voltage_B, DF_Voltage_C, Casos
+    from FunctionsSecond import Adjust_Colum_Name, DF_Voltage_A, DF_Voltage_B, DF_Voltage_C, Casos, \
+        DF_Voltage_Ang_A, DF_Voltage_Ang_B, DF_Voltage_Ang_C, DF_Pot_Q_A, DF_Pot_Q_B, DF_Pot_Q_C, \
+        DF_Pot_P_A, DF_Pot_P_B, DF_Pot_P_C
+    t1 = time.time()
 
     # Process Element Voltage in each simulation
     global DF_Voltage_Elemt_Data
@@ -767,3 +820,5 @@ def Process_Data_Secondary(Rede, Simulation):
     #return DF_Voltage_Elemt_Data, DF_Voltage_Elemt_Data_Ang, DF_Power_P_Elemt_Data, DF_Power_Q_Elemt_Data
     Save_Data_Secondary(DF_Power_P_Elemt_Data, DF_Power_Q_Elemt_Data, DF_Voltage_Elemt_Data,
                         DF_Voltage_Elemt_Data_Ang)
+
+    logger.debug("Process_Data_Secondary took {" + str(time.time() - t1) + " sec} to execulte")

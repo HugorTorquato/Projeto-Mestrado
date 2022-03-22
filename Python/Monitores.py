@@ -26,19 +26,37 @@ def Define_Monitor(Rede, Lista_Monitores):
     # ler os arquivos depois de cada simulação, e a implementação é baseada nem dois modelos de medidores. Se Adicionar
     # maisum, tem de adicionar lá também.
 
+    logger.debug("Starting Monitors")
     for element in Lista_Monitores:
-        Rede.dssText.Command = "New monitor." + str(element.split('.')[1]) + "_power element=" + str(element) + \
-                               " terminal=1 mode=1 ppolar=no"
-        Rede.dssText.Command = "New monitor." + str(element.split('.')[1]) + "_voltage element=" + str(element) \
-                               + " terminal=1 mode=0"
+
+        Command1 = "New monitor." + str(element.split('.')[1]) + "_power element=" + str(element) + \
+                   " terminal=1 mode=1 ppolar=no"
+        Command2 = "New monitor." + str(element.split('.')[1]) + "_voltage element=" + str(element) \
+                   + " terminal=1 mode=0"
+
+        logger.debug("Starting Monitor 1  - " + Command1)
+        logger.debug("Starting Monitor 2  - " + Command2)
+        Rede.dssText.Command = Command1
+        Rede.dssText.Command = Command2
+        logger.debug("Started Monitor -> monitor." + element)
 
 def Define_Random_Monior_Test(Rede, description, element, terminal, mode):
-    Rede.dssText.Command = "New monitor." + str(description) + "_" + str(element.split('.')[1]) + " element=" \
-                           + str(element) + " terminal=" + str(terminal) + " mode=" + str(mode)
+
+    Command = "New monitor." + str(description) + "_" + str(element.split('.')[1]) + " element=" \
+              + str(element) + " terminal=" + str(terminal) + " mode=" + str(mode)
+
+    logger.debug("Define_Random_Monior_Test - " + Command)
+    Rede.dssText.Command = Command
+    logger.debug("Define_Random_Monior_Test - Started Random Monitor -> monitor." + description)
 
 def Export_Random_Monitor_Test(Rede, description, element):
-    Rede.dssText.Command = "Export monitors " + str(description) + "_" + str(element.split('.')[1]) + " " \
-                          "file = " + Debug_Path + "\\" + str(description) + "_" + str(element.split('.')[1])
+
+    Command = "Export monitors " + str(description) + "_" + str(element.split('.')[1]) + " " \
+                "file = " + Debug_Path + "\\" + str(description) + "_" + str(element.split('.')[1])
+
+    logger.debug("Export_Random_Monitor_Test - " + Command)
+    Rede.dssText.Command = Command
+    logger.debug("Export_Random_Monitor_Test - Exported Random Monitor -> monitor." + description)
 
 def Move_Files():
 
@@ -62,8 +80,15 @@ def Export_And_Read_Monitors_Data(Rede, Lista_Monitores, Simulation):
     Lista_Monitores = Lista_Monitores["Elemento_com_monitor"].values
 
     for element in Lista_Monitores:
+
+        logger.debug("Export_And_Read_Monitors_Data - "
+                     "Exporting Monitor -> monitor." + str(element.split('.')[1]))
+
         Rede.dssText.Command = "Export monitors " + str(element.split('.')[1]) + "_power"
         Rede.dssText.Command = "Export monitors " + str(element.split('.')[1]) + "_voltage"
+
+        logger.debug("Export_And_Read_Monitors_Data - "
+                     "Exported Monitor -> monitor." + str(element.split('.')[1]))
 
         Move_Files()
 
@@ -118,6 +143,11 @@ def Export_And_Read_Monitors_Data(Rede, Lista_Monitores, Simulation):
 
             else:
                 print("Medição não presente nos arquivos - Export_And_Read_Monitors_Data()")
+                logger.info("Export_And_Read_Monitors_Data - Medição não presente nos arquivos"
+                            " - Export_And_Read_Monitors_Data()")
+
+        logger.debug("Export_And_Read_Monitors_Data - completed")
+
 
 def Debug_Loads(Rede, Simulation):
 
