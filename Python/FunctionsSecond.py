@@ -52,8 +52,10 @@ def Correntes_elementos(Rede, itera):
 
     logger.debug("Correntes_elementos took {" + str(time.time() - t1) + " sec} to execulte "
                                                                         "in iteration: " + str(itera))
-
 def Dados_Elements(Rede, itera):
+    return
+
+def Dados_Elements2(Rede, itera):
     # Essa função é separada da coleta das correntes pq pode ser ou não habilitada, depende do "Savar_Dados_Elem"
 
     from Definitions import DF_Pot_itera, DF_Voltage_itera
@@ -61,11 +63,6 @@ def Dados_Elements(Rede, itera):
     t1 = time.time()
 
     # Exportar os dados e prapara o dataframe
-    try:
-        Rede.dssText.Command = "Export ElemPowers file = " + Debug_Path + "\EXP_ELEMPOWERS.CSV"
-    except:
-        #Adicionar um log aqui
-        print('deu ruim')
 
     Rede.dssText.Command = "Export ElemPowers file = " + Debug_Path + "\EXP_ELEMPOWERS.CSV"
     Rede.dssText.Command = "Export ElemVoltages file = " + Debug_Path + "\EXP_ELEMVOLTAGES.CSV"

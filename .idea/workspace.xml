@@ -3,7 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="c0a353b0-9d94-497b-99cd-a779928dfe5d" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python/DB_Rede.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/DB_Rede.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Python/Definitions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/Definitions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python/FunctionsSecond.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/FunctionsSecond.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python/Monitores.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/Monitores.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python/SistemFunctions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/SistemFunctions.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -206,6 +210,15 @@
     <option name="LAST_COMMIT_MESSAGE" value="Adicionado verificação apra overcurrent" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Python/Monitores.py</url>
+          <line>22</line>
+          <option name="timeStamp" value="13" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
         <watch expression="DF_Tensao_A" />

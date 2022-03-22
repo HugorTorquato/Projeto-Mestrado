@@ -11,10 +11,18 @@ def Adicionar_Monitores(Rede):
     # "element" da declaração, mas o nome do monitor não precisa... Basta seguir o padrão :
     #                                                                       <TIPO>.<NOME_ELEMENTO>
 
-    DF_Lista_Monitors.loc[len(DF_Lista_Monitors), "Elemento_com_monitor"] = "line." + str(Rede.dssLines.AllNames[0])
+    from FunctionsSecond import Limpar_DF
+    Limpar_DF(DF_Lista_Monitors)
+
+    #DF_Lista_Monitors.loc[len(DF_Lista_Monitors), "Elemento_com_monitor"] = "line." + str(Rede.dssLines.AllNames[0])
+    for element in Rede.dssCircuit.AllElementNames:
+        if element.split('.')[0] != 'Monitor':
+            DF_Lista_Monitors.loc[len(DF_Lista_Monitors), "Elemento_com_monitor"] = element
     # ...
 
     Define_Monitor(Rede, DF_Lista_Monitors["Elemento_com_monitor"].values)
+
+    #Define_Monitor(Rede, Rede.dssCircuit.AllElementNames)
 
 def Define_Monitor(Rede, Lista_Monitores):
 
@@ -24,21 +32,24 @@ def Define_Monitor(Rede, Lista_Monitores):
     #
     # Se adicionar mais algum modelo, lembrar de modificar a função "Export_And_Read_Monitors_Data", ela vai salvar e
     # ler os arquivos depois de cada simulação, e a implementação é baseada nem dois modelos de medidores. Se Adicionar
-    # maisum, tem de adicionar lá também.
+    # mais um, tem de adicionar lá também.
 
     logger.debug("Starting Monitors")
     for element in Lista_Monitores:
+        if element.split('.')[0] != 'Monitor':
 
-        Command1 = "New monitor." + str(element.split('.')[1]) + "_power element=" + str(element) + \
-                   " terminal=1 mode=1 ppolar=no"
-        Command2 = "New monitor." + str(element.split('.')[1]) + "_voltage element=" + str(element) \
-                   + " terminal=1 mode=0"
+            # Medição de corrente?
 
-        logger.debug("Starting Monitor 1  - " + Command1)
-        logger.debug("Starting Monitor 2  - " + Command2)
-        Rede.dssText.Command = Command1
-        Rede.dssText.Command = Command2
-        logger.debug("Started Monitor -> monitor." + element)
+            Command1 = "New monitor." + str(element.replace('.', '_')) + "_power element=" + str(element) + \
+                       " terminal=1 mode=1 ppolar=no"
+            Command2 = "New monitor." + str(element.replace('.', '_')) + "_voltage element=" + str(element) \
+                       + " terminal=1 mode=0"
+
+            logger.debug("Starting Monitor 1  - " + Command1)
+            logger.debug("Starting Monitor 2  - " + Command2)
+            Rede.dssText.Command = Command1
+            Rede.dssText.Command = Command2
+            logger.debug("Started Monitor -> monitor." + element)
 
 def Define_Random_Monior_Test(Rede, description, element, terminal, mode):
 
@@ -71,34 +82,36 @@ def Move_Files():
 
             os.rename(file, Debug_Path + file.replace(file.split("_")[0], "\\"))
 
+
+
 def Export_And_Read_Monitors_Data(Rede, Lista_Monitores, Simulation):
 
     from Definitions import DF_Monitors_Power_Values, DF_Monitors_Voltage_Values
     from FunctionsSecond import Limpar_DF, originalSteps
 
 
-    Lista_Monitores = Lista_Monitores["Elemento_com_monitor"].values
+    Lista_Monitores = Lista_Monitores["Elemento_com_monitor"].values # erro aquu
+    # solução com pandas
 
-    for element in Lista_Monitores:
+    Lista = []
+    for elem in Lista_Monitores:
+        if elem.split('.')[0] != 'Monitor':
+            Lista.append(elem)
 
-        logger.debug("Export_And_Read_Monitors_Data - "
-                     "Exporting Monitor -> monitor." + str(element.split('.')[1]))
+    for element in Lista:
 
-        Rede.dssText.Command = "Export monitors " + str(element.split('.')[1]) + "_power"
-        Rede.dssText.Command = "Export monitors " + str(element.split('.')[1]) + "_voltage"
-
-        logger.debug("Export_And_Read_Monitors_Data - "
-                     "Exported Monitor -> monitor." + str(element.split('.')[1]))
-
+        Export(Rede, element)
         Move_Files()
 
         [Limpar_DF(DF) for DF in [DF_Monitors_Power_Values, DF_Monitors_Voltage_Values, DF_Monitors_Data]]
 
+        # Medição de corrente?
+
         DF_Monitors_Power_Values = pd.read_csv(
-            Debug_Path + "\_Mon_" + str(element.split('.')[1]) + "_power_1.csv")
+            Debug_Path + "\_Mon_" + str(element.replace('.', '_')) + "_power_1.csv")
 
         DF_Monitors_Voltage_Values = pd.read_csv(
-            Debug_Path + "\_Mon_" + str(element.split('.')[1]) + "_voltage_1.csv")
+            Debug_Path + "\_Mon_" + str(element.replace('.', '_')) + "_voltage_1.csv")
 
         Columns_Power_Names = DF_Monitors_Power_Values.columns.values[2:]
         Columns_Voltage_Names = DF_Monitors_Voltage_Values.columns.values[2:]
@@ -109,8 +122,9 @@ def Export_And_Read_Monitors_Data(Rede, Lista_Monitores, Simulation):
 
         for Meas in Columns:
             index = len(DF_Monitors_Data)
+            DF_Monitors_Data.loc[index, 'Case'] = len(Casos) if Casos != [] else 0
             DF_Monitors_Data.loc[index, 'Simulation'] = Simulation
-            DF_Monitors_Data.loc[index, 'Elemento'] = str(element.split('.')[1])
+            DF_Monitors_Data.loc[index, 'Elemento'] = str(element.replace('.', '_'))
             DF_Monitors_Data.loc[index, 'Measurement'] = Meas
 
             if Meas in Columns_Power_Names:
@@ -148,6 +162,17 @@ def Export_And_Read_Monitors_Data(Rede, Lista_Monitores, Simulation):
 
         logger.debug("Export_And_Read_Monitors_Data - completed")
 
+def Export(Rede, element):
+
+    logger.debug("Export_And_Read_Monitors_Data - "
+                 "Exporting Monitor -> monitor." + str(element.replace('.', '_')))
+
+    Rede.dssText.Command = "Export monitors " + str(element.replace('.', '_')) + "_power"
+    Rede.dssText.Command = "Export monitors " + str(element.replace('.', '_')) + "_voltage"
+
+
+    logger.debug("Export_And_Read_Monitors_Data - "
+                 "Exported Monitor -> monitor." + str(element.replace('.', '_')))
 
 def Debug_Loads(Rede, Simulation):
 

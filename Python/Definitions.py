@@ -234,6 +234,8 @@ DF_TESTE = pd.DataFrame({
 ##Switches
 
 Salva_Dados = 0         # Aciona o script que faz o levantamento dos dados da rede
+
+# Não da para tirar isso aqui, pq?
 Savar_Dados_Elem = 1    # Habilita que os dados de pot e tensão dos elementos sejam salvos
 Criar_GD = 1            # Aciona a inserção de GDs na rede
 Num_GDs = 3             # Definição do número de GDs que serão adicionadas

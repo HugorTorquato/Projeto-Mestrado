@@ -717,7 +717,7 @@ def Process_Data(Rede, Simulation):
     Save_Data(Simulation, DF_Voltage_Data, DF_Tensao_Data_Ang, DF_Corrente_Data, DF_Current_Elemt_Data_Ang,
               DF_Unbalance_Data)
 
-    if Savar_Dados_Elem == 1:
+    if Savar_Dados_Elem == 100:
         Process_Data_Secondary(Rede, Simulation)
 
     logger.debug("Process_Data took {" + str(time.time() - t1) + " sec} to execulte")
