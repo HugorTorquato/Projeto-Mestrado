@@ -1,5 +1,6 @@
 # coding: utf-8
 import win32com.client
+import os
 import pandas as pd
 from Princ import *
 import numpy as np
@@ -31,13 +32,18 @@ Debug_Path = "C:\\Users\hugo1\Desktop\Projeto_Rede_Fornecida\Python\Debug"
 
 # CRITICAL: Serious error, program cannot continue
 
+Log_path = str(Debug_Path + '\Log' + '\Overal.log')
+
+if os.path.isfile(Log_path):
+    os.remove(Log_path)
+
 import logging
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 #logger.setLevel(logging.INFO)
 formatter = logging.Formatter('%(asctime)s:%(name)s:%(levelname)s:%(message)s')
-file_Handler = logging.FileHandler(Debug_Path + '\Log' + '\Overal.log')
+file_Handler = logging.FileHandler(Log_path)
 file_Handler.setFormatter(formatter)
 logger.addHandler(file_Handler)
 logger.debug("Log Initialized")
