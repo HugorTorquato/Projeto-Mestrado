@@ -18,24 +18,28 @@ def Adicionar_GDs(Rede, Pot_GD, Simulation):
 
     # A definição do valor de potência é feita pela função HC. A cada tentativa as GDs são redefinidas e o valor de
     # Pot_GD é atualizado
-
+    limitation = 0
     for i in range(Num_GDs):
-        Shapes.append("New LoadShape._GD_" + str(i + 1) + " npts=" + str(STEPS) + " minterval=15 " \
-                               "pmult=(file=C:\\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\P_GD_" \
-                               + str(i + 1) + ".txt) " \
-                               "qmult=(file=C:\\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\Q_GD_" \
-                               + str(i + 1) + ".txt)")
+
+        # Para tirar esse limitador tem de adicionar mais curvas de cargas para PV
+        limitation = random2.choice([j for j in range(6)]) if i > 5 else i
+
+        Shapes.append("New LoadShape._GD_" + str(limitation+1) + " npts=" + str(STEPS) + " minterval=15 "
+                               "pmult=(file=C:\\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\P_GD_"
+                               + str(limitation+1) + ".txt) "
+                               "qmult=(file=C:\\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\Q_GD_"
+                               + str(limitation+1) + ".txt)")
 
     # Criação das curvas do pv
     Shapes.append("New XYCurve.FatorPvsT npts=4 xarray=[0 25 75 100] yarray=[1.2 1.0 .8 .6]")
     Shapes.append("New XYCurve.Eff npts=4 xarray=[.1 .2 .4 1.0] yarray=[.86 .9 .93 .97]")
-    Shapes.append("New TShape.Temp npts=96 minterval=15 " \
+    Shapes.append("New TShape.Temp npts=96 minterval=15 "
                            "temp=(File=C:\\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\Temp.txt)")
-    Shapes.append("New LoadShape.irrad npts=96 minterval=15 " \
+    Shapes.append("New LoadShape.irrad npts=96 minterval=15 "
                            "mult=(file=C:\\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\Irrad.txt)")
-    Shapes.append("New XYcurve.generic npts=4 Xarray=(0.5,0.89,0.92,1,1.05,1.1,1.5) " \
+    Shapes.append("New XYcurve.generic npts=4 Xarray=(0.5,0.89,0.92,1,1.05,1.1,1.5) "
                            "Yarray=(1.0,1.0,0.8,0,-0.5,-1.0,-1.0)")
-    Shapes.append("New XYCurve.vv_curve npts=7 Yarray=[1 1 0 0 0 -1 -1] " \
+    Shapes.append("New XYCurve.vv_curve npts=7 Yarray=[1 1 0 0 0 -1 -1] "
                            "XArray = [0.5 0.87 0.92 1 1.05 1.01 1.5]")
     Shapes.append("New XYcurve.vw_curve npts=3 yarray=[1 0.95 0.9] xarray=[1 1.02 1.05]")
 
@@ -134,7 +138,7 @@ def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
     Define_Random_Monior_Test(Rede, "InvControl", "PVSystem." + Nome, 1, 3)
 
 def Create_GD(Rede, Nome, kW, kvar, LoadShape, Simulation):
-    from Definitions import DF_Geradores, Barras_GDs
+    from Definitions import DF_Geradores, Barras_GDs,Casos
 
     # Preparação para armazenamento dos dados
     index = len(DF_Geradores)  # Define a linha para aplicar as alterações
@@ -192,6 +196,15 @@ def FindBusGD(Num_GDs):
         for i in range(Num_GDs):
             Barras_GDs.append(Barras_GDs_list[i])
 
+        return
+
+    if Thiago == 1:
+        Barras_GDs_list = ["bus_33998182_031", "bus_33998182_032", "bus_33998182_033",
+                           "bus_33998182_034", "bus_33998182_034", "bus_33998182_036",
+                           "bus_33998182_037", "bus_33998182_039", "bus_33998182_035"]
+
+        for i in range(Num_GDs):
+            Barras_GDs.append(Barras_GDs_list[i])
         return
 
     vet_choice = list(DF_Tensao_A.Barras.values)

@@ -95,7 +95,7 @@ def Solve_Hora_por_Hora(Rede, Simulation, Pot_GD):
     # Essa função é o coração do código, aqui que são feitos todos os comandos e designações para os calculos durante
     # a simulação diária
 
-    from Definitions import DF_Tensao_A, Savar_Dados_Elem
+    from Definitions import DF_Tensao_A, Savar_Dados_Elem, logger
     from Monitores import Adicionar_Monitores, Export_Random_Monitor_Test, Debug_Loads
     from FunctionsSecond import Adicionar_EnergyMeter, Converter_Intervalo_de_Simulacao
 
@@ -136,12 +136,14 @@ def Solve_Hora_por_Hora(Rede, Simulation, Pot_GD):
 
             # acaho que chega até aqui sem problemas, mas e depois?
             
-
+            logger.debug("Passou das correntes")
             ###############################################################################################
-            Dados_Elements(Rede, itera) if Savar_Dados_Elem == 1 else 0 # Pode ter um erro aqui, export antes do solve
-            # Solução seria verificar convergÊncia
+            #Dados_Elements(Rede, itera) if Savar_Dados_Elem == 1 else 0 # Pode ter um erro aqui, export antes do solve
+
+            logger.debug("Passou dos dados dos elementos")
             ###############################################################################################
             Data_PV(Rede, itera)
+            logger.debug("Passou dos data pv")
 
         Rede.dssSolution.FinishTimeStep()
         #if Simulation > 2:
@@ -194,7 +196,7 @@ def HC(Rede):
             Nummero_Simulacoes += 1
             if Nummero_Simulacoes < 3:
                 Pot_GD += 3*Incremento_Pot_gd if Criar_GD and Nummero_Simulacoes > 0 else 0
-            else :
+            else:
                 Pot_GD += Incremento_Pot_gd if Criar_GD and Nummero_Simulacoes > 0 else 0
 
             print('-----------------------------------------------------')
@@ -209,10 +211,12 @@ def HC(Rede):
                 Sem_GD = 1
                 break
 
+            if Nummero_Simulacoes > 20:
+                break
+
         from Monitores import Export_And_Read_Monitors_Data
         from FunctionsSecond import Power_measurement_PV
         from DB_Rede import Save_General_Data, Save_Data, Process_Data, Process_Data_Secondary, Save_Data_Secondary
-        from Definitions import DF_Lista_Monitors
 
         Export_And_Read_Monitors_Data(Rede, DF_Lista_Monitors, Simulation)
         Power_measurement_PV(Rede, Simulation)
