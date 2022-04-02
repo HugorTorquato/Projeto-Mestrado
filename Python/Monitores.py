@@ -86,6 +86,8 @@ def Move_Files():
 
 def Export_And_Read_Monitors_Data(Rede, Lista_Monitores, Simulation):
 
+    # Fazer isso sem exportar para arquivos
+
     from Definitions import DF_Monitors_Power_Values, DF_Monitors_Voltage_Values
     from FunctionsSecond import Limpar_DF, originalSteps
 
@@ -94,16 +96,20 @@ def Export_And_Read_Monitors_Data(Rede, Lista_Monitores, Simulation):
     # solução com pandas
 
     Lista = []
+    count = 0
+
     for elem in Lista_Monitores:
         if elem.split('.')[0] != 'Monitor':
             Lista.append(elem)
+
+    Limpar_DF(DF_Monitors_Data)
 
     for element in Lista:
 
         Export(Rede, element)
         Move_Files()
 
-        [Limpar_DF(DF) for DF in [DF_Monitors_Power_Values, DF_Monitors_Voltage_Values, DF_Monitors_Data]]
+        [Limpar_DF(DF) for DF in [DF_Monitors_Power_Values, DF_Monitors_Voltage_Values]]
 
         # Medição de corrente?
 
@@ -159,6 +165,8 @@ def Export_And_Read_Monitors_Data(Rede, Lista_Monitores, Simulation):
                 print("Medição não presente nos arquivos - Export_And_Read_Monitors_Data()")
                 logger.info("Export_And_Read_Monitors_Data - Medição não presente nos arquivos"
                             " - Export_And_Read_Monitors_Data()")
+
+        count += 1
 
         logger.debug("Export_And_Read_Monitors_Data - completed")
 

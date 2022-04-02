@@ -211,6 +211,9 @@ def HC(Rede):
                 Sem_GD = 1
                 break
 
+            if Nummero_Simulacoes > 20:
+                break
+
         from Monitores import Export_And_Read_Monitors_Data
         from FunctionsSecond import Power_measurement_PV
         from DB_Rede import Save_General_Data, Save_Data, Process_Data, Process_Data_Secondary, Save_Data_Secondary
