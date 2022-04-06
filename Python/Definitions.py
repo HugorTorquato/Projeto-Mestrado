@@ -246,7 +246,7 @@ Use_PV = 1              # 1- Usa o PVSystem  0 - Usa geradore
 Norma = 1               #  # 0 - PRODIST # 1 - IEEE
 Num_Simulations = 4     # Deifnie o número de simulações que serão realizadas
 
-Num_Estudos_de_Caso = 20 # Define o estudo de caso em questão (configuração das GDs)
+Num_Estudos_de_Caso = 10 # Define o estudo de caso em questão (configuração das GDs)
 
 Debug_VV = 1            # Modo Debug para mensurar e comparar o comportamento do VV no sistema ( 1 - liga 0 - desliga)
 Thiago = 0
@@ -258,7 +258,8 @@ Const_Temp = 25
 FP = 1
 Incremento_gd = 0.25  # Valores em porcentagem (%) da pot do trafo de entrada
 
-Steps_wtout_unbalance = 10
+Steps_wtout_unbalance = 4#10 # Creio que tem de ser 4
+Steps_wtout_overcurrent = 4
 
 #Constants
 sqrt3 = np.sqrt(3)
@@ -276,8 +277,8 @@ Inicio_Sim = 1000
 Fim_Sim = 1500
 
 # Simulação completa
-#Inicio_Sim = 0000
-#Fim_Sim = 2400
+Inicio_Sim = 0000
+Fim_Sim = 2400
 
 # Adicionar Log aqui
 

@@ -478,20 +478,40 @@ def Check(Rede, Simulation):
 
 
 def Check_overcurrent():
+
+    # Daria para observar violações consecultivas, mas isso aumenta a complexidade e tempo. Em tese... essa violações
+    # já ocorrem de forma concentrada
+
     t1 = time.time()
     Violacao = 0
 
     for DF_Cur in [DF_Corrente_A, DF_Corrente_B, DF_Corrente_C]:
 
         df_temp_curr = DF_Corrente_Limite.copy(deep=True)
-        df_temp_curr.insert(2, 'Max_Curr',
-                            DF_Cur[DF_Cur.Elementos.str.contains("Line", regex=False)].set_index('Elementos')
-                            .max(axis=1).values, allow_duplicates=True)
+        t_df = DF_Cur[DF_Cur.Elementos.str.contains("Line", regex=False)].set_index('Elementos')
 
-        if len(df_temp_curr.query('Max_Curr > Current_Limits')) != 0:
-            Violacao = 1
+        df_temp_curr.insert(df_temp_curr.ndim + 1, 'Max_Curr',
+                            t_df.max(axis=1).values, allow_duplicates=True)
 
-        # Implementar maneira de armazenar os dados de quais linhas tiveram violação
+        Violations = []
+        for ind in range(t_df.index.size):
+            try:
+                Violations.append(
+                t_df.iloc[ind].where(
+                t_df.iloc[ind] > df_temp_curr.set_index('Elementos')['Current_Limits'][ind]).count())
+            except:
+                logger.debug("Deu Ruim Check_overcurrent()")
+
+
+        df_temp_curr.insert(df_temp_curr.ndim + 2, 'Num_Violations', Violations, allow_duplicates=True)
+
+        for line in df_temp_curr['Num_Violations']:
+            if line > Steps_wtout_overcurrent:
+                Violacao = 1
+                break
+
+        if Violacao == 1:
+            break
 
     logger.debug("Check_overcurrent took {" + str(time.time() - t1) + " sec} to execulte")
 
@@ -647,19 +667,28 @@ def Adjust_Colum_Name(DF):
 
 
 def Identify_Overcurrent_Limits(Rede):
+
     NormAmps = []
     Line_Names = []
+    Wire_Geometry = []
 
     for Line in Rede.dssLines.AllNames:
         Rede.dssLines.Name = Line
         Line_Names.append("Line." + str(Line).upper())
-        NormAmps.append(Rede.dssLines.NormAmps)
+        NormAmps.append(float(Rede.dssLines.NormAmps))
+        Wire_Geometry.append(Rede.dssLines.Geometry)
+
+        # Acharo nome dos cabos pelo opendss
+        #Rede.dssCktElement.Name = Line
+        #a = Rede.dssCktElement.Name
+        #b = Rede.dssCktElement.Properties("geometry").val
+        #c = Rede.dssCktElement.Properties("wires").val
+        #d = Rede.dssCktElement.Properties("cncables").val
+        #d = Rede.dssCktElement.Properties("tscables").val
 
     DF_Corrente_Limite.insert(0, 'Elementos', Line_Names, allow_duplicates=True)
-    DF_Corrente_Limite.insert(1, 'Current_Limits', NormAmps, allow_duplicates=True)
-
-    print()
-
+    DF_Corrente_Limite.insert(1, 'Wire_Geometry', Wire_Geometry, allow_duplicates=True)
+    DF_Corrente_Limite.insert(2, 'Current_Limits', NormAmps, allow_duplicates=True)
 
 def Converter_Intervalo_de_Simulacao(Rede, Hora):
     # Converte a hora passada para o respectivo instante em steps da curva de carga
