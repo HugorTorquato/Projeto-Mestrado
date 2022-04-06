@@ -131,27 +131,15 @@ def Solve_Hora_por_Hora(Rede, Simulation, Pot_GD):
         if Converter_Intervalo_de_Simulacao(Rede, Inicio_Sim) <= itera\
                 <= Converter_Intervalo_de_Simulacao(Rede, Fim_Sim):
 
+            # All functions added her will generate a huge impact on performance. Limit this section just for those
+            # functions related to violation check. Everything else can be measured using monitors.
             Tensao_Barras(Rede, itera)
             Correntes_elementos(Rede, itera)
 
-            # acaho que chega até aqui sem problemas, mas e depois?
-            
-            logger.debug("Passou das correntes")
-            ###############################################################################################
-            #Dados_Elements(Rede, itera) if Savar_Dados_Elem == 1 else 0 # Pode ter um erro aqui, export antes do solve
-
-            logger.debug("Passou dos dados dos elementos")
-            ###############################################################################################
-            Data_PV(Rede, itera)
+            Data_PV(Rede, itera) # Creio que esses dados já estão sendo salvos pelos monitores, não precisa mais
             logger.debug("Passou dos data pv")
 
         Rede.dssSolution.FinishTimeStep()
-        #if Simulation > 2:
-        #    Export_Random_Monitor_Test(Rede, "InvControl", "PVSystem.pv_0")
-
-    #Rede.dssText.Command = "Export EventLog file=" + Debug_Path + "/Debug_" + str(Simulation)
-
-    #print(DF_Tensao_A.head())
 
 def HC(Rede):
 
@@ -167,8 +155,6 @@ def HC(Rede):
 
     Rede.dssTransformers.Name = Rede.dssTransformers.AllNames[0]
     Incremento_Pot_gd = float(Incremento_gd)/100 * Rede.dssTransformers.kva
-
-    Identify_Overcurrent_Limits(Rede)
 
     Sem_GD = 0
 
@@ -200,7 +186,6 @@ def HC(Rede):
                 Pot_GD += Incremento_Pot_gd if Criar_GD and Nummero_Simulacoes > 0 else 0
 
             print('-----------------------------------------------------')
-            #print(DF_Tensao_A.head())
             print(float(Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[0]))
             print(float(Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[1]))
             print('-----------------------------------------------------')
@@ -247,6 +232,9 @@ def Case_by_Case(Rede):
 
     from Definitions import Num_GDs, Casos
     from Geradores import FindBusGD
+    from FunctionsSecond import Identify_Overcurrent_Limits
+
+    Identify_Overcurrent_Limits(Rede)
 
     for Caso in range(Num_Estudos_de_Caso):
         Casos.append(Caso + 1)
