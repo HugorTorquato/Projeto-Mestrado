@@ -83,8 +83,17 @@ def Move_Files():
             os.rename(file, Debug_Path + file.replace(file.split("_")[0], "\\"))
 
 
-
 def Export_And_Read_Monitors_Data(Rede, Lista_Monitores, Simulation):
+
+
+    a = Rede.dssMonitors.AllNames
+    for mon in Rede.dssMonitors.AllNames:
+        Rede.dssMonitors.Name = mon
+        b = Rede.dssMonitors.Header
+        c = Rede.dssMonitors.Channel(1)
+        print(1)
+
+def Export_And_Read_Monitors_Data2(Rede, Lista_Monitores, Simulation):
 
     # Fazer isso sem exportar para arquivos
 
@@ -104,12 +113,16 @@ def Export_And_Read_Monitors_Data(Rede, Lista_Monitores, Simulation):
 
     Limpar_DF(DF_Monitors_Data)
 
+
+
     for element in Lista:
 
         Export(Rede, element)
         Move_Files()
 
         [Limpar_DF(DF) for DF in [DF_Monitors_Power_Values, DF_Monitors_Voltage_Values]]
+
+
 
         # Medição de corrente?
 
