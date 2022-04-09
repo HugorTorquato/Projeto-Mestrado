@@ -147,7 +147,7 @@ def HC(Rede):
     from FunctionsSecond import Limpar_DF, Check, Identify_Overcurrent_Limits, \
         Max_and_Min_Voltage_DF
     from Definitions import Num_GDs, DF_Geradores, DF_Barras, DF_General, DF_Elements, DF_PV,\
-        DF_PVPowerData, DF_Lista_Monitors, DF_Tensao_A, DF_Tensao_B, DF_Tensao_C, Incremento_gd, Casos
+        DF_PVPowerData, DF_Lista_Monitors, DF_Tensao_A, DF_Tensao_B, DF_Tensao_C, Incremento_gd, DF_Monitors_Data_2
     from Geradores import FindBusGD
 
     # Define o primeiro transformador como o ponto de PCC e o incremento de pot em cada verificação do HC é
@@ -199,15 +199,16 @@ def HC(Rede):
             if Nummero_Simulacoes > 20:
                 break
 
-        from Monitores import Export_And_Read_Monitors_Data
+        from Monitores import Export_And_Read_Monitors_Data, Export_And_Read_Monitors_Data_Old
         from FunctionsSecond import Power_measurement_PV
         from DB_Rede import Save_General_Data, Save_Data, Process_Data, Process_Data_Secondary, Save_Data_Secondary
 
-        Export_And_Read_Monitors_Data(Rede, DF_Lista_Monitors, Simulation)
+        DF_Monitors_Data_2 = Export_And_Read_Monitors_Data(Rede, Simulation)  #10s
+        Export_And_Read_Monitors_Data_Old(Rede, DF_Lista_Monitors, Simulation) #110s
         Power_measurement_PV(Rede, Simulation)
 
         Save_General_Data(Simulation)
-        Process_Data(Rede, Simulation)
+        Process_Data(Rede, Simulation, DF_Monitors_Data_2)
 
 
         # Olhar isso aqui direito... parece que n está computando o valor limite certinho

@@ -237,6 +237,27 @@ def Refresh_Or_Create_Tables(Rede, engine):
         engine.execute('DELETE FROM ' + str(DB))
 
     # Definição da tabela PVSystems
+    DB = 'MonitoresData_2'
+    if len(pd.read_sql(
+            'SELECT TABLE_NAME '
+            'FROM INFORMATION_SCHEMA.TABLES '
+            'WHERE TABLE_NAME = \'' + DB + '\'', engine)) == 0:
+        logger.info('Create Table :' + str(DB))
+        Barras = sql.Table(str(DB), metadata,
+                           sql.Column('Nome_ID', sql.Integer, primary_key=True),
+                           sql.Column('Case', sql.Integer),
+                           sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
+                           sql.Column('Elemento', sql.String),
+                           sql.Column('TimeStep', sql.Integer),
+                           sql.Column('Measurement', sql.String),
+                           sql.Column('Value', sql.Float)
+                           )
+
+    else:
+        engine.execute('DBCC CHECKIDENT(\'' + DB + '\', RESEED, 0)') # Redefine a PK para começar do zero novamente
+        engine.execute('DELETE FROM ' + str(DB))
+
+    # Definição da tabela PVSystems
     DB = 'PVPowerData'
     if len(pd.read_sql(
             'SELECT TABLE_NAME '
@@ -491,7 +512,7 @@ def Adjust_tables_to_timestemp(engine, Rede):
                 engine.execute("ALTER TABLE " + table + " ADD Time_" + str(i) + " float(53)")
 
 def Save_Data(Simulation, DF_Voltage_Data, DF_Tensao_Data_Ang, DF_Corrente_Data, DF_Current_Elemt_Data_Ang,
-              DF_Unbalance_Data):
+              DF_Unbalance_Data, DF_Monitors_Data_2):
 
     from Definitions import DF_Geradores, DF_General, DF_Barras, DF_Elements, DF_PV, DF_PVPowerData,\
         DF_Monitors_Data, DF_Check_Report
@@ -503,6 +524,7 @@ def Save_Data(Simulation, DF_Voltage_Data, DF_Tensao_Data_Ang, DF_Corrente_Data,
     DF_PV.to_sql('PVSystems', sqlalchemy(), if_exists='append', index=False)
     DF_PVPowerData.to_sql('PVPowerData', sqlalchemy(), if_exists='append', index=False)
     DF_Monitors_Data.to_sql('MonitoresData', sqlalchemy(), if_exists='append', index=False)
+    DF_Monitors_Data_2.to_sql('MonitoresData_2', sqlalchemy(), if_exists='append', index=False)
     DF_Barras.to_sql('Barras', sqlalchemy(), if_exists='append', index=False)
     DF_Elements.to_sql('Grid_Elements', sqlalchemy(), if_exists='append', index=False)
     DF_Check_Report.to_sql('Check_Report', sqlalchemy(), if_exists='append', index=False)
@@ -555,7 +577,7 @@ def Run_Store_Procedures():
 
     logger.debug("Save_General_Data took {" + str(time.time() - t1) + " sec} to execulte")
 
-def Process_Data(Rede, Simulation):
+def Process_Data(Rede, Simulation, DF_Monitors_Data_2):
 
     from Definitions import DF_Tensao_A, DF_Tensao_B, DF_Tensao_C, DF_Barras, DF_Desq_IEC, DF_Desq_IEEE,\
         DF_Desq_NEMA, DF_Corrente_A, DF_Corrente_B, DF_Corrente_C, DF_Elements, DF_Voltage_Data, DF_Current_Data,\
@@ -715,7 +737,7 @@ def Process_Data(Rede, Simulation):
     DF_Current_Elemt_Data_Ang.insert(loc=1, column='Simulation', value=Simulation)
 
     Save_Data(Simulation, DF_Voltage_Data, DF_Tensao_Data_Ang, DF_Corrente_Data, DF_Current_Elemt_Data_Ang,
-              DF_Unbalance_Data)
+              DF_Unbalance_Data, DF_Monitors_Data_2)
 
     if Savar_Dados_Elem == 100:
         Process_Data_Secondary(Rede, Simulation)

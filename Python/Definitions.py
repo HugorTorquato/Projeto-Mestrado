@@ -178,6 +178,13 @@ DF_Monitors_Data = pd.DataFrame({'Case'           : [],
                                  'Elemento'       : [],
                                  'Measurement'    : []})
 
+DF_Monitors_Data_2 = pd.DataFrame({'Case'           : [],
+                                   'Simulation'     : [],
+                                   'Elemento'       : [],
+                                   'TimeStep'       : [],
+                                   'Measurement'    : [],
+                                   'Value'          : []})
+
 DF_Voltage_Data = pd.DataFrame({'Case'          : [],
                                 'Simulation'    : [],
                                 'Barras'        : [],
