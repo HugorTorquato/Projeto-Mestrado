@@ -497,8 +497,8 @@ def Check_overcurrent():
         for ind in range(t_df.index.size):
             try:
                 Violations.append(
-                t_df.iloc[ind].where(
-                t_df.iloc[ind] > df_temp_curr.set_index('Elementos')['Current_Limits'][ind]).count())
+                    t_df.iloc[ind].where(
+                        t_df.iloc[ind] > df_temp_curr.set_index('Elementos')['Current_Limits'][ind]).count())
             except:
                 logger.debug("Deu Ruim Check_overcurrent()")
 

@@ -199,9 +199,9 @@ def FindBusGD(Num_GDs):
         return
 
     if Thiago == 1:
-        Barras_GDs_list = ["bus_33998182_031", "bus_33998182_032", "bus_33998182_033",
-                           "bus_33998182_034", "bus_33998182_034", "bus_33998182_036",
-                           "bus_33998182_037", "bus_33998182_039", "bus_33998182_035"]
+        Barras_GDs_list = ["bus_33998182_015", "bus_33998182_018", "bus_33998182_022",
+                           "bus_33998182_013", "bus_33998182_025", "bus_33998182_030",
+                           "bus_33998182_031", "bus_33998182_032", "bus_33998182_033"]
 
         for i in range(Num_GDs):
             Barras_GDs.append(Barras_GDs_list[i])

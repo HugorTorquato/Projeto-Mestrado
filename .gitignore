@@ -8,3 +8,5 @@ Python\TCC\Rede\IEEE13barras_EXP_CURRENTS.CSV"
 .idea/*
 Texto/Conceitos/
 *.log
+Python/Debug/
+Tools/export_SQL_2_CSV/

@@ -147,7 +147,8 @@ def HC(Rede):
     from FunctionsSecond import Limpar_DF, Check, Identify_Overcurrent_Limits, \
         Max_and_Min_Voltage_DF
     from Definitions import Num_GDs, DF_Geradores, DF_Barras, DF_General, DF_Elements, DF_PV,\
-        DF_PVPowerData, DF_Lista_Monitors, DF_Tensao_A, DF_Tensao_B, DF_Tensao_C, Incremento_gd, DF_Monitors_Data_2
+        DF_PVPowerData, DF_Lista_Monitors, DF_Tensao_A, DF_Tensao_B, DF_Tensao_C, Incremento_gd,\
+        DF_Monitors_Data_2, Casos, logger
     from Geradores import FindBusGD
 
     # Define o primeiro transformador como o ponto de PCC e o incremento de pot em cada verificação do HC é
@@ -161,6 +162,15 @@ def HC(Rede):
     for Simulation in range(1, Num_Simulations + 1):
 
         Nummero_Simulacoes = 0
+
+        # This will make sure the default condition, without PV, will be execulted only once.
+        # There is no need to run this condition for each case of study because the result is the same
+
+        if (len(Casos) if Casos != [] else 0) != 1 and Simulation == 1:
+            print("Default Case 1 - 1 already tested")
+            logger.info("Default Case already tested - First simulation")
+            break
+
         Pot_GD = 0 if Sem_GD == 0 else 1
 
         Compila_DSS(Rede)
@@ -203,8 +213,12 @@ def HC(Rede):
         from FunctionsSecond import Power_measurement_PV
         from DB_Rede import Save_General_Data, Save_Data, Process_Data, Process_Data_Secondary, Save_Data_Secondary
 
+        t1 = time.time()
         DF_Monitors_Data_2 = Export_And_Read_Monitors_Data(Rede, Simulation)  #10s
+        t2 = time.time()
         Export_And_Read_Monitors_Data_Old(Rede, DF_Lista_Monitors, Simulation) #110s
+        logger.debug(" New = " + str(t2-t1) + " Old = " + str( time.time() - t2))
+
         Power_measurement_PV(Rede, Simulation)
 
         Save_General_Data(Simulation)

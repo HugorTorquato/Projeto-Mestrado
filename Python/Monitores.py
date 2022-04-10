@@ -44,11 +44,11 @@ def Define_Monitor(Rede, Lista_Monitores):
             # Medição de corrente?
 
             Command1 = "New monitor." + str(element.replace('.', '_')) + "_power element=" + str(element) \
-                       + " terminal=1 mode=1 ppolar=no"
+                       + " terminal=1 mode=1 ppolar=no enabled=Yes"
             Command2 = "New monitor." + str(element.replace('.', '_')) + "_voltage element=" + str(element) \
-                       + " terminal=1 mode=0"
+                       + " terminal=1 mode=0 enabled=Yes"
             Command3 = "New monitor." + str(element.replace('.', '_')) + "_loss element=" + str(element) \
-                       + " terminal=1 mode=9"
+                       + " terminal=1 mode=9 enabled=Yes"
 
             logger.debug("Starting Monitor 1  - " + Command1)
             logger.debug("Starting Monitor 2  - " + Command2)
@@ -61,7 +61,7 @@ def Define_Monitor(Rede, Lista_Monitores):
 def Define_Random_Monior_Test(Rede, description, element, terminal, mode):
 
     Command = "New monitor." + str(description) + "_" + str(element.split('.')[1]) + " element=" \
-              + str(element) + " terminal=" + str(terminal) + " mode=" + str(mode)
+              + str(element) + " terminal=" + str(terminal) + " mode=" + str(mode) + " enabled=Yes"
 
     logger.debug("Define_Random_Monior_Test - " + Command)
     Rede.dssText.Command = Command
@@ -94,15 +94,29 @@ def Export_And_Read_Monitors_Data(Rede, Simulation):
 
     from Definitions import DF_Monitors_Data_2
     t1 = time.time()
+    from io import BytesIO
+
+    #dff = pd.dataframe()
+    #df = pd.read_csv(BytesIO(bytes_data))
+
 
     for mon in Rede.dssMonitors.AllNames:
 
+        Rede.dssText.Command = "Export monitors " + str(mon)
+
+        # o que está pegando é que o monitor passa mas ele ainda busca os valores do primeiro,
+        # Alterar somente o nome não basta para ativar o elemento
+
+        #Rede.dssMonitors.Name = mon
+
+        #AtivarMonitor(Rede, mon)
+        a = Rede.dssMonitors.AllNames[Rede.dssMonitors.First - 1]
         Rede.dssMonitors.Name = mon
         header = Rede.dssMonitors.Header
 
         for channel in range(len(header)):
 
-            a = Rede.dssMonitors.Name
+            a = Rede.dssMonitors.First
             b = header[channel]
             Data = Rede.dssMonitors.Channel(channel+1)
 
@@ -115,11 +129,17 @@ def Export_And_Read_Monitors_Data(Rede, Simulation):
 
             DF_Monitors_Data_2 = pd.concat([DF_Monitors_Data_2, temp_df], ignore_index=True)
 
+        #Rede.dssMonitors.First += 1
         logger.debug("Evaluating monitor : " + str(mon))
     logger.debug("Export_And_Read_Monitors_Data took {" + str(time.time() - t1) + " sec} to execulte")
 
     # REMOVER ESSE RETURN
     return DF_Monitors_Data_2
+
+def AtivarMonitor(Rede, mon):
+
+    Rede.dssCktElement.Name = str(mon)
+
 
 
 def Export_And_Read_Monitors_Data_Old(Rede, Lista_Monitores, Simulation):
