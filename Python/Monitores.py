@@ -56,7 +56,6 @@ def Define_Monitor(Rede, Lista_Monitores):
             Rede.dssText.Command = Command1
             Rede.dssText.Command = Command2
             Rede.dssText.Command = Command3
-            logger.debug("Started Monitor -> monitor." + element)
 
 def Define_Random_Monior_Test(Rede, description, element, terminal, mode):
 
@@ -65,7 +64,6 @@ def Define_Random_Monior_Test(Rede, description, element, terminal, mode):
 
     logger.debug("Define_Random_Monior_Test - " + Command)
     Rede.dssText.Command = Command
-    logger.debug("Define_Random_Monior_Test - Started Random Monitor -> monitor." + description)
 
 def Export_Random_Monitor_Test(Rede, description, element):
 
@@ -74,7 +72,6 @@ def Export_Random_Monitor_Test(Rede, description, element):
 
     logger.debug("Export_Random_Monitor_Test - " + Command)
     Rede.dssText.Command = Command
-    logger.debug("Export_Random_Monitor_Test - Exported Random Monitor -> monitor." + description)
 
 def Move_Files():
 
@@ -92,45 +89,37 @@ def Move_Files():
 
 def Export_And_Read_Monitors_Data(Rede, Simulation):
 
+    # 2022-04-10 16:11:52,858:Definitions:DEBUG: New = 11.477030754089355 Old = 80.24969696998596
+
     from Definitions import DF_Monitors_Data_2
+
     t1 = time.time()
-    from io import BytesIO
+    No_Monitor = Rede.dssMonitors.First
 
-    #dff = pd.dataframe()
-    #df = pd.read_csv(BytesIO(bytes_data))
+    while No_Monitor != 0:
 
-
-    for mon in Rede.dssMonitors.AllNames:
-
-        Rede.dssText.Command = "Export monitors " + str(mon)
-
-        # o que está pegando é que o monitor passa mas ele ainda busca os valores do primeiro,
-        # Alterar somente o nome não basta para ativar o elemento
-
-        #Rede.dssMonitors.Name = mon
-
-        #AtivarMonitor(Rede, mon)
-        a = Rede.dssMonitors.AllNames[Rede.dssMonitors.First - 1]
-        Rede.dssMonitors.Name = mon
+        Name = Rede.dssMonitors.Name
+        Element = Rede.dssMonitors.Element
+        Rede.dssText.Command = "Export monitors " + str(Name)
         header = Rede.dssMonitors.Header
 
         for channel in range(len(header)):
 
-            a = Rede.dssMonitors.First
-            b = header[channel]
             Data = Rede.dssMonitors.Channel(channel+1)
 
             temp_df = pd.DataFrame({'Case'           : len(Casos) if Casos != [] else 0,
                                     'Simulation'     : Simulation,
-                                    'Elemento'       : mon,
+                                    'Monitor'        : Name,
+                                    'Elemento'       : Element,
                                     'TimeStep'       : range(0, len(Data)),
                                     'Measurement'    : header[channel],
                                     'Value'          : Data})
 
             DF_Monitors_Data_2 = pd.concat([DF_Monitors_Data_2, temp_df], ignore_index=True)
 
-        #Rede.dssMonitors.First += 1
-        logger.debug("Evaluating monitor : " + str(mon))
+        logger.debug("Evaluating monitor : " + str(Name))
+        No_Monitor = Rede.dssMonitors.Next
+
     logger.debug("Export_And_Read_Monitors_Data took {" + str(time.time() - t1) + " sec} to execulte")
 
     # REMOVER ESSE RETURN

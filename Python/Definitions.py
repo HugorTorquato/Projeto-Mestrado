@@ -180,6 +180,7 @@ DF_Monitors_Data = pd.DataFrame({'Case'           : [],
 
 DF_Monitors_Data_2 = pd.DataFrame({'Case'           : [],
                                    'Simulation'     : [],
+                                   'Monitor'       : [],
                                    'Elemento'       : [],
                                    'TimeStep'       : [],
                                    'Measurement'    : [],
@@ -251,12 +252,12 @@ All_GDs = 1
 
 Use_PV = 1              # 1- Usa o PVSystem  0 - Usa geradore
 Norma = 1               #  # 0 - PRODIST # 1 - IEEE
-Num_Simulations = 1     # Deifnie o número de simulações que serão realizadas
+Num_Simulations = 4     # Deifnie o número de simulações que serão realizadas
 
-Num_Estudos_de_Caso = 2 # Define o estudo de caso em questão (configuração das GDs)
+Num_Estudos_de_Caso = 1 # Define o estudo de caso em questão (configuração das GDs)
 
 Debug_VV = 1            # Modo Debug para mensurar e comparar o comportamento do VV no sistema ( 1 - liga 0 - desliga)
-Thiago = 1
+Thiago = 0
 
 # PVSystem
 FP_1 = 1

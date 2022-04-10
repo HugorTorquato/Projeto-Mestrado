@@ -167,7 +167,6 @@ def HC(Rede):
         # There is no need to run this condition for each case of study because the result is the same
 
         if (len(Casos) if Casos != [] else 0) != 1 and Simulation == 1:
-            print("Default Case 1 - 1 already tested")
             logger.info("Default Case already tested - First simulation")
             break
 
@@ -176,7 +175,7 @@ def HC(Rede):
         Compila_DSS(Rede)
 
         [Limpar_DF(DF) for DF in [DF_Geradores, DF_Barras, DF_General, DF_Elements, DF_PV, DF_PVPowerData,
-                                  DF_Lista_Monitors, DF_PVPowerData]]
+                                  DF_Lista_Monitors, DF_PVPowerData, DF_Monitors_Data_2]]
 
         while Nummero_Simulacoes == 0 or Check(Rede, Simulation) is True:
 
@@ -213,11 +212,8 @@ def HC(Rede):
         from FunctionsSecond import Power_measurement_PV
         from DB_Rede import Save_General_Data, Save_Data, Process_Data, Process_Data_Secondary, Save_Data_Secondary
 
-        t1 = time.time()
         DF_Monitors_Data_2 = Export_And_Read_Monitors_Data(Rede, Simulation)  #10s
-        t2 = time.time()
-        Export_And_Read_Monitors_Data_Old(Rede, DF_Lista_Monitors, Simulation) #110s
-        logger.debug(" New = " + str(t2-t1) + " Old = " + str( time.time() - t2))
+        #Export_And_Read_Monitors_Data_Old(Rede, DF_Lista_Monitors, Simulation) #110s
 
         Power_measurement_PV(Rede, Simulation)
 

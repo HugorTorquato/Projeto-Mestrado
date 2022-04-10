@@ -247,6 +247,7 @@ def Refresh_Or_Create_Tables(Rede, engine):
                            sql.Column('Nome_ID', sql.Integer, primary_key=True),
                            sql.Column('Case', sql.Integer),
                            sql.Column('Simulation', None, sql.ForeignKey('General.Simulation')),
+                           sql.Column('Monitor', sql.String),
                            sql.Column('Elemento', sql.String),
                            sql.Column('TimeStep', sql.Integer),
                            sql.Column('Measurement', sql.String),
