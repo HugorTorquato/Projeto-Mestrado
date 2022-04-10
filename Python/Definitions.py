@@ -244,7 +244,7 @@ DF_TESTE = pd.DataFrame({
 Salva_Dados = 0         # Aciona o script que faz o levantamento dos dados da rede
 
 # Não da para tirar isso aqui, pq?
-Savar_Dados_Elem = 1    # Habilita que os dados de pot e tensão dos elementos sejam salvos
+Savar_Dados_Elem = 0    # Habilita que os dados de pot e tensão dos elementos sejam salvos
 Criar_GD = 1            # Aciona a inserção de GDs na rede
 Num_GDs = 9             # Definição do número de GDs que serão adicionadas
 Calc_HC = 1             # Aciona o cálculo do HC
@@ -254,10 +254,14 @@ Use_PV = 1              # 1- Usa o PVSystem  0 - Usa geradore
 Norma = 1               #  # 0 - PRODIST # 1 - IEEE
 Num_Simulations = 4     # Deifnie o número de simulações que serão realizadas
 
-Num_Estudos_de_Caso = 1 # Define o estudo de caso em questão (configuração das GDs)
+Num_Estudos_de_Caso = 20 # Define o estudo de caso em questão (configuração das GDs)
 
 Debug_VV = 1            # Modo Debug para mensurar e comparar o comportamento do VV no sistema ( 1 - liga 0 - desliga)
 Thiago = 0
+
+Remove = 1  # Com a refatoração dos monitores, não é preciso salvar dados em alguns DF
+# Essa chave faz com que o código ignore essa parte, lembrar de remover em um futuro
+# DF_Geradores, DF_PVPowerData, Monitors_Data (Monitors_data2 é o atual), Corrente_Data, Current_data_ang
 
 # PVSystem
 FP_1 = 1

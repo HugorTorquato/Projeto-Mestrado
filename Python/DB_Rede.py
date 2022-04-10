@@ -512,8 +512,14 @@ def Adjust_tables_to_timestemp(engine, Rede):
             for i in range(originalSteps(Rede)):
                 engine.execute("ALTER TABLE " + table + " ADD Time_" + str(i) + " float(53)")
 
-def Save_Data(Simulation, DF_Voltage_Data, DF_Tensao_Data_Ang, DF_Corrente_Data, DF_Current_Elemt_Data_Ang,
+#def Save_Data(Simulation, DF_Voltage_Data, DF_Tensao_Data_Ang, DF_Corrente_Data, DF_Current_Elemt_Data_Ang,
+def Save_Data(Simulation, DF_Voltage_Data, DF_Tensao_Data_Ang,
               DF_Unbalance_Data, DF_Monitors_Data_2):
+
+    # Before improvements
+    #2022-04-10 17:33:10,722:Definitions:DEBUG:Save_Data took {207.72897791862488 sec} to execulte
+    # After improvements
+    #
 
     from Definitions import DF_Geradores, DF_General, DF_Barras, DF_Elements, DF_PV, DF_PVPowerData,\
         DF_Monitors_Data, DF_Check_Report
@@ -521,10 +527,7 @@ def Save_Data(Simulation, DF_Voltage_Data, DF_Tensao_Data_Ang, DF_Corrente_Data,
     t1 = time.time()
     
     DF_General.to_sql('General', sqlalchemy(), if_exists='append', index=False)
-    DF_Geradores.to_sql('GD', sqlalchemy(), if_exists='append', index=False)
     DF_PV.to_sql('PVSystems', sqlalchemy(), if_exists='append', index=False)
-    DF_PVPowerData.to_sql('PVPowerData', sqlalchemy(), if_exists='append', index=False)
-    DF_Monitors_Data.to_sql('MonitoresData', sqlalchemy(), if_exists='append', index=False)
     DF_Monitors_Data_2.to_sql('MonitoresData_2', sqlalchemy(), if_exists='append', index=False)
     DF_Barras.to_sql('Barras', sqlalchemy(), if_exists='append', index=False)
     DF_Elements.to_sql('Grid_Elements', sqlalchemy(), if_exists='append', index=False)
@@ -533,9 +536,15 @@ def Save_Data(Simulation, DF_Voltage_Data, DF_Tensao_Data_Ang, DF_Corrente_Data,
     # Corrigir essa ref -> Por algum motivo não está sendo armazenada a global
     DF_Voltage_Data.to_sql('Voltage_Data', sqlalchemy(), if_exists='append', index=False)
     DF_Tensao_Data_Ang.to_sql('Voltage_Data_Ang', sqlalchemy(), if_exists='append', index=False)
-    DF_Corrente_Data.to_sql('Current_Elemt_Data', sqlalchemy(), if_exists='append', index=False)
-    DF_Current_Elemt_Data_Ang.to_sql('Current_Elemt_Data_Ang', sqlalchemy(), if_exists='append', index=False)
     DF_Unbalance_Data.to_sql('Unbalance_Data', sqlalchemy(), if_exists='append', index=False)
+
+    if Remove == 0:
+        DF_Corrente_Data.to_sql('Current_Elemt_Data', sqlalchemy(), if_exists='append', index=False)
+        DF_Current_Elemt_Data_Ang.to_sql('Current_Elemt_Data_Ang', sqlalchemy(), if_exists='append', index=False)
+        DF_PVPowerData.to_sql('PVPowerData', sqlalchemy(), if_exists='append', index=False)
+        DF_Monitors_Data.to_sql('MonitoresData', sqlalchemy(), if_exists='append', index=False)
+        DF_Geradores.to_sql('GD', sqlalchemy(), if_exists='append', index=False)
+        print("Esses dados já foram gerados no Monitor_Data_2, não precisasalvar mais uma vez")
 
     logger.debug("Save_Data took {" + str(time.time() - t1) + " sec} to execulte")
 
@@ -693,54 +702,58 @@ def Process_Data(Rede, Simulation, DF_Monitors_Data_2):
     DF_Unbalance_Data.insert(loc=0, column='Case', value=len(Casos) if Casos != [] else 0)
     DF_Unbalance_Data.insert(loc=1, column='Simulation', value=Simulation)
 
-    # Process Element Currents in each simulation
-    global DF_Current_Data
-    DF_Corrente_A_Temp = DF_Corrente_A.copy(deep=True)
-    DF_Corrente_B_Temp = DF_Corrente_B.copy(deep=True)
-    DF_Corrente_C_Temp = DF_Corrente_C.copy(deep=True)
+    if Remove == 0:
+        # Process Element Currents in each simulation
+        global DF_Current_Data
+        DF_Corrente_A_Temp = DF_Corrente_A.copy(deep=True)
+        DF_Corrente_B_Temp = DF_Corrente_B.copy(deep=True)
+        DF_Corrente_C_Temp = DF_Corrente_C.copy(deep=True)
 
-    DF_Corrente_A_Temp.columns = Adjust_Colum_Name(DF_Corrente_A_Temp)
-    DF_Corrente_B_Temp.columns = Adjust_Colum_Name(DF_Corrente_B_Temp)
-    DF_Corrente_C_Temp.columns = Adjust_Colum_Name(DF_Corrente_C_Temp)
+        DF_Corrente_A_Temp.columns = Adjust_Colum_Name(DF_Corrente_A_Temp)
+        DF_Corrente_B_Temp.columns = Adjust_Colum_Name(DF_Corrente_B_Temp)
+        DF_Corrente_C_Temp.columns = Adjust_Colum_Name(DF_Corrente_C_Temp)
 
-    DF_Corrente_A_Temp.insert(loc=1, column='Fase', value='A') \
-        if 'Fase' not in DF_Corrente_A_Temp else 0
-    DF_Corrente_B_Temp.insert(loc=1, column='Fase', value='B') \
-        if 'Fase' not in DF_Corrente_B_Temp else 0
-    DF_Corrente_C_Temp.insert(loc=1, column='Fase', value='C') \
-        if 'Fase' not in DF_Corrente_C_Temp else 0
+        DF_Corrente_A_Temp.insert(loc=1, column='Fase', value='A') \
+            if 'Fase' not in DF_Corrente_A_Temp else 0
+        DF_Corrente_B_Temp.insert(loc=1, column='Fase', value='B') \
+            if 'Fase' not in DF_Corrente_B_Temp else 0
+        DF_Corrente_C_Temp.insert(loc=1, column='Fase', value='C') \
+            if 'Fase' not in DF_Corrente_C_Temp else 0
 
-    DF_Corrente_Data = pd.concat([DF_Corrente_A_Temp, DF_Corrente_B_Temp, DF_Corrente_C_Temp])
+        DF_Corrente_Data = pd.concat([DF_Corrente_A_Temp, DF_Corrente_B_Temp, DF_Corrente_C_Temp])
 
-    DF_Corrente_Data.insert(loc=0, column='Case', value=len(Casos) if Casos != [] else 0)
-    DF_Corrente_Data.insert(loc=1, column='Simulation', value=Simulation)
+        DF_Corrente_Data.insert(loc=0, column='Case', value=len(Casos) if Casos != [] else 0)
+        DF_Corrente_Data.insert(loc=1, column='Simulation', value=Simulation)
 
-    # Process Element Currents Angle in each simulation
-    global DF_Current_Elemt_Data_Ang
-    DF_Corrente_Ang_A_Temp = DF_Corrente_Ang_A.copy(deep=True)
-    DF_Corrente_Ang_B_Temp = DF_Corrente_Ang_B.copy(deep=True)
-    DF_Corrente_Ang_C_Temp = DF_Corrente_Ang_C.copy(deep=True)
+    if Remove == 0:
+        # Process Element Currents Angle in each simulation
+        global DF_Current_Elemt_Data_Ang
+        DF_Corrente_Ang_A_Temp = DF_Corrente_Ang_A.copy(deep=True)
+        DF_Corrente_Ang_B_Temp = DF_Corrente_Ang_B.copy(deep=True)
+        DF_Corrente_Ang_C_Temp = DF_Corrente_Ang_C.copy(deep=True)
 
-    DF_Corrente_Ang_A_Temp.columns = Adjust_Colum_Name(DF_Corrente_Ang_A_Temp)
-    DF_Corrente_Ang_B_Temp.columns = Adjust_Colum_Name(DF_Corrente_Ang_B_Temp)
-    DF_Corrente_Ang_C_Temp.columns = Adjust_Colum_Name(DF_Corrente_Ang_C_Temp)
+        DF_Corrente_Ang_A_Temp.columns = Adjust_Colum_Name(DF_Corrente_Ang_A_Temp)
+        DF_Corrente_Ang_B_Temp.columns = Adjust_Colum_Name(DF_Corrente_Ang_B_Temp)
+        DF_Corrente_Ang_C_Temp.columns = Adjust_Colum_Name(DF_Corrente_Ang_C_Temp)
 
-    DF_Corrente_Ang_A_Temp.insert(loc=1, column='Fase', value='A') \
-        if 'Fase' not in DF_Corrente_Ang_A_Temp else 0
-    DF_Corrente_Ang_B_Temp.insert(loc=1, column='Fase', value='B') \
-        if 'Fase' not in DF_Corrente_Ang_B_Temp else 0
-    DF_Corrente_Ang_C_Temp.insert(loc=1, column='Fase', value='C') \
-        if 'Fase' not in DF_Corrente_Ang_C_Temp else 0
+        DF_Corrente_Ang_A_Temp.insert(loc=1, column='Fase', value='A') \
+            if 'Fase' not in DF_Corrente_Ang_A_Temp else 0
+        DF_Corrente_Ang_B_Temp.insert(loc=1, column='Fase', value='B') \
+            if 'Fase' not in DF_Corrente_Ang_B_Temp else 0
+        DF_Corrente_Ang_C_Temp.insert(loc=1, column='Fase', value='C') \
+            if 'Fase' not in DF_Corrente_Ang_C_Temp else 0
 
-    DF_Current_Elemt_Data_Ang = pd.concat([DF_Corrente_Ang_A_Temp, DF_Corrente_Ang_B_Temp, DF_Corrente_Ang_C_Temp])
+        DF_Current_Elemt_Data_Ang = pd.concat([DF_Corrente_Ang_A_Temp, DF_Corrente_Ang_B_Temp, DF_Corrente_Ang_C_Temp])
 
-    DF_Current_Elemt_Data_Ang.insert(loc=0, column='Case', value=len(Casos) if Casos != [] else 0)
-    DF_Current_Elemt_Data_Ang.insert(loc=1, column='Simulation', value=Simulation)
+        DF_Current_Elemt_Data_Ang.insert(loc=0, column='Case', value=len(Casos) if Casos != [] else 0)
+        DF_Current_Elemt_Data_Ang.insert(loc=1, column='Simulation', value=Simulation)
 
-    Save_Data(Simulation, DF_Voltage_Data, DF_Tensao_Data_Ang, DF_Corrente_Data, DF_Current_Elemt_Data_Ang,
+    #Save_Data(Simulation, DF_Voltage_Data, DF_Tensao_Data_Ang, DF_Corrente_Data, DF_Current_Elemt_Data_Ang,
+    Save_Data(Simulation, DF_Voltage_Data, DF_Tensao_Data_Ang,
               DF_Unbalance_Data, DF_Monitors_Data_2)
 
-    if Savar_Dados_Elem == 100:
+    if Savar_Dados_Elem == 1 and Remove == 0:
+        # Precisa disso mais não, tem tudo nos monitores2 agora
         Process_Data_Secondary(Rede, Simulation)
 
     logger.debug("Process_Data took {" + str(time.time() - t1) + " sec} to execulte")

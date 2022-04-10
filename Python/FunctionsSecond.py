@@ -53,10 +53,7 @@ def Correntes_elementos(Rede, itera):
     logger.debug("Correntes_elementos took {" + str(time.time() - t1) + " sec} to execulte "
                                                                         "in iteration: " + str(itera))
 
-
-def Dados_Elements(Rede, itera):
-    return
-
+# Não é usada, pode remover
 
 def Dados_Elements2(Rede, itera):
     # Essa função é separada da coleta das correntes pq pode ser ou não habilitada, depende do "Savar_Dados_Elem"

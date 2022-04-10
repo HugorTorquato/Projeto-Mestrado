@@ -119,8 +119,7 @@ def Solve_Hora_por_Hora(Rede, Simulation, Pot_GD):
 
     # ----------------------------------------------------------------------------------------------------------
 
-    from FunctionsSecond import Tensao_Barras, originalSteps, Correntes_elementos, Data_PV, \
-        Dados_Elements
+    from FunctionsSecond import Tensao_Barras, originalSteps, Correntes_elementos, Data_PV
 
     for itera in range(0, originalSteps(Rede)):
 
@@ -136,8 +135,8 @@ def Solve_Hora_por_Hora(Rede, Simulation, Pot_GD):
             Tensao_Barras(Rede, itera)
             Correntes_elementos(Rede, itera)
 
-            Data_PV(Rede, itera) # Creio que esses dados já estão sendo salvos pelos monitores, não precisa mais
-            logger.debug("Passou dos data pv")
+            # Medição já está sendo feita pelos monitores ( pode remover )
+            #Data_PV(Rede, itera) # Creio que esses dados já estão sendo salvos pelos monitores, não precisa mais
 
         Rede.dssSolution.FinishTimeStep()
 
@@ -215,7 +214,8 @@ def HC(Rede):
         DF_Monitors_Data_2 = Export_And_Read_Monitors_Data(Rede, Simulation)  #10s
         #Export_And_Read_Monitors_Data_Old(Rede, DF_Lista_Monitors, Simulation) #110s
 
-        Power_measurement_PV(Rede, Simulation)
+        # Monitores já faz essa medição
+        # Power_measurement_PV(Rede, Simulation)
 
         Save_General_Data(Simulation)
         Process_Data(Rede, Simulation, DF_Monitors_Data_2)
