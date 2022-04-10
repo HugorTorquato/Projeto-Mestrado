@@ -1,8 +1,11 @@
 # coding: utf-8
 import os
 
+import numpy as np
+
 from Definitions import *
 import pandas as pd
+import time
 
 def Adicionar_Monitores(Rede):
 
@@ -40,25 +43,27 @@ def Define_Monitor(Rede, Lista_Monitores):
 
             # Medição de corrente?
 
-            Command1 = "New monitor." + str(element.replace('.', '_')) + "_power element=" + str(element) + \
-                       " terminal=1 mode=1 ppolar=no"
+            Command1 = "New monitor." + str(element.replace('.', '_')) + "_power element=" + str(element) \
+                       + " terminal=1 mode=1 ppolar=no enabled=Yes"
             Command2 = "New monitor." + str(element.replace('.', '_')) + "_voltage element=" + str(element) \
-                       + " terminal=1 mode=0"
+                       + " terminal=1 mode=0 enabled=Yes"
+            Command3 = "New monitor." + str(element.replace('.', '_')) + "_loss element=" + str(element) \
+                       + " terminal=1 mode=9 enabled=Yes"
 
             logger.debug("Starting Monitor 1  - " + Command1)
             logger.debug("Starting Monitor 2  - " + Command2)
+            logger.debug("Starting Monitor 3  - " + Command3)
             Rede.dssText.Command = Command1
             Rede.dssText.Command = Command2
-            logger.debug("Started Monitor -> monitor." + element)
+            Rede.dssText.Command = Command3
 
 def Define_Random_Monior_Test(Rede, description, element, terminal, mode):
 
     Command = "New monitor." + str(description) + "_" + str(element.split('.')[1]) + " element=" \
-              + str(element) + " terminal=" + str(terminal) + " mode=" + str(mode)
+              + str(element) + " terminal=" + str(terminal) + " mode=" + str(mode) + " enabled=Yes"
 
     logger.debug("Define_Random_Monior_Test - " + Command)
     Rede.dssText.Command = Command
-    logger.debug("Define_Random_Monior_Test - Started Random Monitor -> monitor." + description)
 
 def Export_Random_Monitor_Test(Rede, description, element):
 
@@ -67,7 +72,6 @@ def Export_Random_Monitor_Test(Rede, description, element):
 
     logger.debug("Export_Random_Monitor_Test - " + Command)
     Rede.dssText.Command = Command
-    logger.debug("Export_Random_Monitor_Test - Exported Random Monitor -> monitor." + description)
 
 def Move_Files():
 
@@ -83,10 +87,54 @@ def Move_Files():
             os.rename(file, Debug_Path + file.replace(file.split("_")[0], "\\"))
 
 
+def Export_And_Read_Monitors_Data(Rede, Simulation):
 
-def Export_And_Read_Monitors_Data(Rede, Lista_Monitores, Simulation):
+    # 2022-04-10 16:11:52,858:Definitions:DEBUG: New = 11.477030754089355 Old = 80.24969696998596
+
+    from Definitions import DF_Monitors_Data_2
+
+    t1 = time.time()
+    No_Monitor = Rede.dssMonitors.First
+
+    while No_Monitor != 0:
+
+        Name = Rede.dssMonitors.Name
+        Element = Rede.dssMonitors.Element
+        Rede.dssText.Command = "Export monitors " + str(Name)
+        header = Rede.dssMonitors.Header
+
+        for channel in range(len(header)):
+
+            Data = Rede.dssMonitors.Channel(channel+1)
+
+            temp_df = pd.DataFrame({'Case'           : len(Casos) if Casos != [] else 0,
+                                    'Simulation'     : Simulation,
+                                    'Monitor'        : Name,
+                                    'Elemento'       : Element,
+                                    'TimeStep'       : range(0, len(Data)),
+                                    'Measurement'    : header[channel],
+                                    'Value'          : Data})
+
+            DF_Monitors_Data_2 = pd.concat([DF_Monitors_Data_2, temp_df], ignore_index=True)
+
+        logger.debug("Evaluating monitor : " + str(Name))
+        No_Monitor = Rede.dssMonitors.Next
+
+    logger.debug("Export_And_Read_Monitors_Data took {" + str(time.time() - t1) + " sec} to execulte")
+
+    # REMOVER ESSE RETURN
+    return DF_Monitors_Data_2
+
+def AtivarMonitor(Rede, mon):
+
+    Rede.dssCktElement.Name = str(mon)
+
+
+
+def Export_And_Read_Monitors_Data_Old(Rede, Lista_Monitores, Simulation):
 
     # Fazer isso sem exportar para arquivos
+    t1 = time.time()
 
     from Definitions import DF_Monitors_Power_Values, DF_Monitors_Voltage_Values
     from FunctionsSecond import Limpar_DF, originalSteps
@@ -104,12 +152,15 @@ def Export_And_Read_Monitors_Data(Rede, Lista_Monitores, Simulation):
 
     Limpar_DF(DF_Monitors_Data)
 
+
     for element in Lista:
 
         Export(Rede, element)
         Move_Files()
 
         [Limpar_DF(DF) for DF in [DF_Monitors_Power_Values, DF_Monitors_Voltage_Values]]
+
+
 
         # Medição de corrente?
 
@@ -119,12 +170,17 @@ def Export_And_Read_Monitors_Data(Rede, Lista_Monitores, Simulation):
         DF_Monitors_Voltage_Values = pd.read_csv(
             Debug_Path + "\_Mon_" + str(element.replace('.', '_')) + "_voltage_1.csv")
 
+        DF_Monitors_loss_Values = pd.read_csv(
+            Debug_Path + "\_Mon_" + str(element.replace('.', '_')) + "_loss_1.csv")
+
         Columns_Power_Names = DF_Monitors_Power_Values.columns.values[2:]
         Columns_Voltage_Names = DF_Monitors_Voltage_Values.columns.values[2:]
+        Columns_loss_Names = DF_Monitors_loss_Values.columns.values[2:]
 
         Columns = []
         [Columns.append(Col) for Col in Columns_Power_Names]
         [Columns.append(Col) for Col in Columns_Voltage_Names]
+        [Columns.append(Col) for Col in Columns_loss_Names]
 
         for Meas in Columns:
             index = len(DF_Monitors_Data)
@@ -161,6 +217,18 @@ def Export_And_Read_Monitors_Data(Rede, Lista_Monitores, Simulation):
                     else:
                         DF_Monitors_Data.loc[index, 'Time_' + str(i)] = val
 
+            elif Meas in Columns_loss_Names:
+
+                for i in range(originalSteps(Rede)):
+                    val = float(DF_Monitors_loss_Values.loc[i, Meas])
+                    if type(val) == str:
+                        print(val)
+                    if val < -1.51756E035:
+                        DF_Monitors_Data.loc[index, 'Time_' + str(i)] = -1.51756E035
+                    elif val > 1.51756E035:
+                        DF_Monitors_Data.loc[index, 'Time_' + str(i)] = 1.51756E035
+                    else:
+                        DF_Monitors_Data.loc[index, 'Time_' + str(i)] = val
             else:
                 print("Medição não presente nos arquivos - Export_And_Read_Monitors_Data()")
                 logger.info("Export_And_Read_Monitors_Data - Medição não presente nos arquivos"
@@ -168,7 +236,7 @@ def Export_And_Read_Monitors_Data(Rede, Lista_Monitores, Simulation):
 
         count += 1
 
-        logger.debug("Export_And_Read_Monitors_Data - completed")
+    logger.debug("Export_And_Read_Monitors_Data2 took {" + str(time.time() - t1) + " sec} to execulte")
 
 def Export(Rede, element):
 
@@ -177,6 +245,7 @@ def Export(Rede, element):
 
     Rede.dssText.Command = "Export monitors " + str(element.replace('.', '_')) + "_power"
     Rede.dssText.Command = "Export monitors " + str(element.replace('.', '_')) + "_voltage"
+    Rede.dssText.Command = "Export monitors " + str(element.replace('.', '_')) + "_loss"
 
 
     logger.debug("Export_And_Read_Monitors_Data - "

@@ -5,6 +5,8 @@ Python/TCC/_13_bus.rar
 Python/__pycache__/
 Python\TCC\Rede\IEEE13barras_EXP_CURRENTS.CSV"
 /Python/Debug
-.idea/*
+.idea/
 Texto/Conceitos/
 *.log
+Python/Debug/
+Tools/export_SQL_2_CSV/Data/*
