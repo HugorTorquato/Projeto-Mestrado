@@ -136,7 +136,7 @@ def Solve_Hora_por_Hora(Rede, Simulation, Pot_GD):
             Correntes_elementos(Rede, itera)
 
             # Medição já está sendo feita pelos monitores ( pode remover )
-            #Data_PV(Rede, itera) # Creio que esses dados já estão sendo salvos pelos monitores, não precisa mais
+            Data_PV(Rede, itera) # Creio que esses dados já estão sendo salvos pelos monitores, não precisa mais
 
         Rede.dssSolution.FinishTimeStep()
 
@@ -165,9 +165,11 @@ def HC(Rede):
         # This will make sure the default condition, without PV, will be execulted only once.
         # There is no need to run this condition for each case of study because the result is the same
 
-        if (len(Casos) if Casos != [] else 0) != 1 and Simulation == 1:
-            logger.info("Default Case already tested - First simulation")
-            break
+        # Por algum motivo deu erro de convergência nos inversores se plar o primeiro caso
+        # mas também mudei o delta da simulação.... mais um teste para ver
+        #if (len(Casos) if Casos != [] else 0) != 1 and Simulation == 1:
+        #    logger.info("Default Case already tested - First simulation")
+        #    continue
 
         Pot_GD = 0 if Sem_GD == 0 else 1
 
@@ -198,7 +200,7 @@ def HC(Rede):
             print(float(Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[1]))
             print('-----------------------------------------------------')
 
-            if Sem_GD == 0:
+            if Simulation == 1:
                 print('--------------------- C/ GD -------------------------')
                 print('-----------------------------------------------------')
                 Sem_GD = 1
@@ -207,9 +209,8 @@ def HC(Rede):
             if Nummero_Simulacoes > 20:
                 break
 
-        from Monitores import Export_And_Read_Monitors_Data, Export_And_Read_Monitors_Data_Old
-        from FunctionsSecond import Power_measurement_PV
-        from DB_Rede import Save_General_Data, Save_Data, Process_Data, Process_Data_Secondary, Save_Data_Secondary
+        from Monitores import Export_And_Read_Monitors_Data
+        from DB_Rede import Save_General_Data, Process_Data
 
         DF_Monitors_Data_2 = Export_And_Read_Monitors_Data(Rede, Simulation)  #10s
         #Export_And_Read_Monitors_Data_Old(Rede, DF_Lista_Monitors, Simulation) #110s
@@ -219,11 +220,6 @@ def HC(Rede):
 
         Save_General_Data(Simulation)
         Process_Data(Rede, Simulation, DF_Monitors_Data_2)
-
-
-        # Olhar isso aqui direito... parece que n está computando o valor limite certinho
-        # Apresenta o valor de pot já com a violação
-        #Pot_GD = Incremento_Pot_gd if Pot_GD == 0 else Pot_GD
 
         print('Número da Simulação : ' + str(Simulation) + ' Pot GDs : ' + str(Pot_GD - Incremento_Pot_gd))
 
@@ -238,7 +234,8 @@ def Case_by_Case(Rede):
     # 1 - Sem PV
     # 2 - Com PV FP=1
     # 3 - Com PV + VV
-    # 4 - Com PV + VV + VW
+    # 4 - Com PV + VW
+    # 5 - Com PV + VV + VW
     #
 
     from Definitions import Num_GDs, Casos
@@ -246,7 +243,7 @@ def Case_by_Case(Rede):
     from FunctionsSecond import Identify_Overcurrent_Limits
 
     Identify_Overcurrent_Limits(Rede)
-
+    a = range(Num_Estudos_de_Caso)
     for Caso in range(Num_Estudos_de_Caso):
         Casos.append(Caso + 1)
         FindBusGD(Num_GDs)

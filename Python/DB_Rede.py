@@ -294,6 +294,7 @@ def Refresh_Or_Create_Tables(Rede, engine):
                            sql.Column('Pmp', sql.Float),
                            sql.Column('kW', sql.Float),
                            sql.Column('kvar', sql.Float),
+                           sql.Column('kva', sql.Float),
                            sql.Column('FP', sql.Float),
                            sql.Column('Phases', sql.String),
                            sql.Column('Irrad', sql.String),
@@ -382,11 +383,13 @@ def Refresh_Or_Create_Tables(Rede, engine):
             'WHERE TABLE_NAME = \'' + DB + '\'', engine)) == 0:
         logger.info('Create Table :' + str(DB))
         General = sql.Table(str(DB), metadata,
-                            sql.Column('Case', sql.Integer),
                             sql.Column('Simulation', sql.Integer, primary_key=True),
+                            sql.Column('Case', sql.Integer),
+                            sql.Column('SimulationCount', sql.Integer),
                             sql.Column('Voltage_Max', sql.Float),
                             sql.Column('Voltage_Min', sql.Float),
                             sql.Column('GD_Config', sql.String),
+                            sql.Column('HC', sql.Float)
                             )
 
     else:
@@ -439,6 +442,8 @@ def Refresh_Or_Create_Views(Rede, engine):
 def Refresh_Or_Create_StoreProcedures(Rede, engine):
 
     from FunctionsSecond import Return_Time_String_Colum, Return_Time_String_Colum_Case_Options
+
+    # Lembrar de adicionar os SP da pasta ###############################################################
 
     storeProcedure = 'Update_Voltage_Data_Table_Max_Min'
     Ary = Return_Time_String_Colum(Rede)
@@ -563,10 +568,12 @@ def Save_Data_Secondary(DF_Power_P_Elemt_Data, DF_Power_Q_Elemt_Data, DF_Voltage
 def Save_General_Data(Simulation):
 
     from FunctionsSecond import Max_and_Min_Voltage_DF
-    from Definitions import DF_Tensao_A, DF_Tensao_B, DF_Tensao_C, DF_Geradores, DF_General
+    from Definitions import DF_Tensao_A, DF_Tensao_B, DF_Tensao_C, DF_Geradores, DF_General, Casos
 
     t1 = time.time()
 
+    DF_General.loc[0, 'Case'] = len(Casos) if Casos != [] else 0
+    DF_General.loc[0, 'SimulationCount'] = Simulation
     DF_General.loc[0, 'Voltage_Max'] = Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[0]
     DF_General.loc[0, 'Voltage_Min'] = Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[1]
     DF_General.loc[0, 'GD_Config'] = str(DF_Geradores.set_index('Name').values)
