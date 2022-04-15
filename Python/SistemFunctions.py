@@ -157,6 +157,7 @@ def HC(Rede):
     Incremento_Pot_gd = float(Incremento_gd)/100 * Rede.dssTransformers.kva
 
     Sem_GD = 0
+    rest = 0
 
     for Simulation in range(1, Num_Simulations + 1):
 
@@ -180,6 +181,16 @@ def HC(Rede):
 
         while Nummero_Simulacoes == 0 or Check(Rede, Simulation) is True:
 
+            logger.info("Starting Case " + str(len(Casos) if Casos != [] else 0) +
+                        " simulation " + str(Simulation) + " Iteração " + str(Nummero_Simulacoes))
+            print("Starting Case " + str(len(Casos) if Casos != [] else 0) +
+                  " simulation " + str(Simulation) + " Iteração " + str(Nummero_Simulacoes))
+
+            if rest == 5:
+                rest = 0
+                logger.debug("Rest 1s")
+                time.sleep(1)
+
             # Confere se a definição para adicionar GHD está ativa e se não for a primeira simulação, reseta os devidos
             # valores para fazer o código funcionar
             if Criar_GD and Nummero_Simulacoes > 0:
@@ -190,19 +201,13 @@ def HC(Rede):
             Solve_Hora_por_Hora(Rede, Simulation, Pot_GD)  # Chamada da função que levanta o perfil diário
 
             Nummero_Simulacoes += 1
+            rest += 1
             if Nummero_Simulacoes < 3:
                 Pot_GD += 3*Incremento_Pot_gd if Criar_GD and Nummero_Simulacoes > 0 else 0
             else:
                 Pot_GD += Incremento_Pot_gd if Criar_GD and Nummero_Simulacoes > 0 else 0
 
-            print('-----------------------------------------------------')
-            print(float(Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[0]))
-            print(float(Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[1]))
-            print('-----------------------------------------------------')
-
             if Simulation == 1:
-                print('--------------------- C/ GD -------------------------')
-                print('-----------------------------------------------------')
                 Sem_GD = 1
                 break
 
@@ -212,19 +217,12 @@ def HC(Rede):
         from Monitores import Export_And_Read_Monitors_Data
         from DB_Rede import Save_General_Data, Process_Data
 
-        DF_Monitors_Data_2 = Export_And_Read_Monitors_Data(Rede, Simulation)  #10s
-        #Export_And_Read_Monitors_Data_Old(Rede, DF_Lista_Monitors, Simulation) #110s
-
-        # Monitores já faz essa medição
-        # Power_measurement_PV(Rede, Simulation)
+        DF_Monitors_Data_2 = Export_And_Read_Monitors_Data(Rede, Simulation)
 
         Save_General_Data(Simulation)
         Process_Data(Rede, Simulation, DF_Monitors_Data_2)
 
         print('Número da Simulação : ' + str(Simulation) + ' Pot GDs : ' + str(Pot_GD - Incremento_Pot_gd))
-
-        # Feature:
-        # -> Colocar o cálculo da pertinência triangular aqui, para acontecer logo depois que tiver a violação
 
 def Case_by_Case(Rede):
 

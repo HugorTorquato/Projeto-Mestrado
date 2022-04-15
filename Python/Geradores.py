@@ -45,12 +45,12 @@ def Adicionar_GDs(Rede, Pot_GD, Simulation):
 
     for shape in Shapes:
         Rede.dssText.Command = shape
-        logger.info("Adicionar_GDs - Shape was created : " + str(shape))
+        logger.debug("Adicionar_GDs - Shape was created : " + str(shape))
 
     if Use_PV:
         # adicionar compilaçãoem paralelo aqui
         [Create_PV(Rede, 'PV_' + str(i), Pot_GD, FP, 'Irrad', 'Temp', Simulation) for i in range(Num_GDs)]
-        print(DF_PV.head(10)) # Printa os dados gerais das GDs ( resumo )
+        #print(DF_PV.head(10))# Printa os dados gerais das GDs ( resumo )
     else:
         [Create_GD(Rede, 'GD_' + str(i), Pot_GD, 0, '_GD_' + str(i + 1), Simulation) for i in range(Num_GDs)]
 
@@ -71,7 +71,7 @@ def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
 
     ativa_barra(Rede, str(DF_PV.loc[index, 'Bus']))
 
-    DF_PV.loc[index, 'Pmp'] = Pmp
+    DF_PV.loc[index, 'Pmp'] = Pmp * 1.05
     DF_PV.loc[index, 'kW'] = 0   #Definir função para coletar pot gerada
     DF_PV.loc[index, 'kvar'] = 0
     DF_PV.loc[index, 'kva'] = 0
@@ -89,7 +89,7 @@ def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
                            str(Identify_Phases(DF_PV.loc[index, 'Phases'])[1]) + \
                            " bus1=" + str(DF_PV.loc[index, 'Bus']) + \
                            str(Identify_Phases(DF_PV.loc[index, 'Phases'])[0]) + \
-                           " Pmpp=" + str(Pmp) + \
+                           " Pmpp=4" + \
                            " kv=" + str(Rede.dssBus.kVBase) + \
                            " kVA=" + str(Pmp * 1.05) + \
                            " con=wye" + \

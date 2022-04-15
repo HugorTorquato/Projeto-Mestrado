@@ -105,7 +105,12 @@ def Export_And_Read_Monitors_Data(Rede, Simulation):
 
         for channel in range(len(header)):
 
-            Data = Rede.dssMonitors.Channel(channel+1)
+            try:
+                Data = Rede.dssMonitors.Channel(channel+1)
+            except:
+                Data = 'TBD'
+                logger.info("Export_And_Read_Monitors_Data DEU RUIM - " + Name + " : " +
+                            Element + " " + str(header) + " ")
 
             temp_df = pd.DataFrame({'Case'           : len(Casos) if Casos != [] else 0,
                                     'Simulation'     : Simulation,

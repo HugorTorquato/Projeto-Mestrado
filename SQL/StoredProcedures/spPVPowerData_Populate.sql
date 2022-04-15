@@ -1,5 +1,3 @@
-USE [DB_Rede_3]
-GO
 
 CREATE OR ALTER   PROCEDURE [dbo].[spPVPowerData_Populate]
 
@@ -23,7 +21,6 @@ BEGIN
 						MD2.Simulation = PV.Simulation AND
 						MD2.Elemento =  PV.[Name] AND
 						MD2.Measurement like ' vars'),
-			kva = POWER(POWER(PV.kW, 2) + POWER(PV.kvar,2), 0.5)
 
 		FROM PVSystems PV
 

@@ -255,9 +255,9 @@ All_GDs = 1
 
 Use_PV = 1              # 1- Usa o PVSystem  0 - Usa geradore
 Norma = 1               #  # 0 - PRODIST # 1 - IEEE
-Num_Simulations = 3     # Deifnie o número de simulações que serão realizadas
+Num_Simulations = 4     # Deifnie o número de simulações que serão realizadas
 
-Num_Estudos_de_Caso = 200 # Define o estudo de caso em questão (configuração das GDs)
+Num_Estudos_de_Caso = 100 # Define o estudo de caso em questão (configuração das GDs)
 
 Debug_VV = 1            # Modo Debug para mensurar e comparar o comportamento do VV no sistema ( 1 - liga 0 - desliga)
 Thiago = 0
