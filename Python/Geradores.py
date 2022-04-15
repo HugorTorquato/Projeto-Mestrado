@@ -41,16 +41,16 @@ def Adicionar_GDs(Rede, Pot_GD, Simulation):
                            "Yarray=(1.0,1.0,0.8,0,-0.5,-1.0,-1.0)")
     Shapes.append("New XYCurve.vv_curve npts=7 Yarray=[1 1 0 0 0 -1 -1] "
                            "XArray = [0.5 0.87 0.92 1 1.05 1.01 1.5]")
-    Shapes.append("New XYcurve.vw_curve npts=3 yarray=[1 0.95 0.9] xarray=[1 1.02 1.05]")
+    Shapes.append("New XYcurve.vw_curve npts=3 yarray=[1 0.95 0.9 0.9] xarray=[1 1.02 1.05 2]")
 
     for shape in Shapes:
         Rede.dssText.Command = shape
-        logger.info("Adicionar_GDs - Shape was created : " + str(shape))
+        logger.debug("Adicionar_GDs - Shape was created : " + str(shape))
 
     if Use_PV:
         # adicionar compilaçãoem paralelo aqui
         [Create_PV(Rede, 'PV_' + str(i), Pot_GD, FP, 'Irrad', 'Temp', Simulation) for i in range(Num_GDs)]
-        print(DF_PV.head(10)) # Printa os dados gerais das GDs ( resumo )
+        #print(DF_PV.head(10))# Printa os dados gerais das GDs ( resumo )
     else:
         [Create_GD(Rede, 'GD_' + str(i), Pot_GD, 0, '_GD_' + str(i + 1), Simulation) for i in range(Num_GDs)]
 
@@ -66,14 +66,15 @@ def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
 
     DF_PV.loc[index, 'Case'] = len(Casos) if Casos != [] else 0
     DF_PV.loc[index, 'Simulation'] = Simulation
-    DF_PV.loc[index, 'Name'] = Nome
+    DF_PV.loc[index, 'Name'] = str("PVSystem." + Nome).lower()
     DF_PV.loc[index, 'Bus'] = Barras_GDs[(len(Barras_GDs) - 1) - index]
 
     ativa_barra(Rede, str(DF_PV.loc[index, 'Bus']))
 
-    DF_PV.loc[index, 'Pmp'] = Pmp
+    DF_PV.loc[index, 'Pmp'] = Pmp * 1.05
     DF_PV.loc[index, 'kW'] = 0   #Definir função para coletar pot gerada
     DF_PV.loc[index, 'kvar'] = 0
+    DF_PV.loc[index, 'kva'] = 0
     DF_PV.loc[index, 'FP'] = FP
     DF_PV.loc[index, 'Phases'] = Fase2String([STRING[i - 1] for i in Rede.dssBus.Nodes])
     DF_PV.loc[index, 'Irrad'] = Irrad
@@ -88,38 +89,48 @@ def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
                            str(Identify_Phases(DF_PV.loc[index, 'Phases'])[1]) + \
                            " bus1=" + str(DF_PV.loc[index, 'Bus']) + \
                            str(Identify_Phases(DF_PV.loc[index, 'Phases'])[0]) + \
-                           " Pmpp=" + str(Pmp) + \
+                           " Pmpp=4" + \
                            " kv=" + str(Rede.dssBus.kVBase) + \
                            " kVA=" + str(Pmp * 1.05) + \
-                           " con=wye" \
-                           " %Cutin=0.1 %cutout=0.1 EffCurve=Eff P-TCurve=FactorPVsT" \
-                           " pf=1 VarFollowInverter=true " \
+                           " con=wye" + \
+                           " %Cutin=0.1 %cutout=0.1 EffCurve=Eff P-TCurve=FactorPVsT" + \
+                           " pf=1 VarFollowInverter=true " + \
                            " irradiance=" + str(Const_Irrad) + " temperature=" + str(Const_Temp) + \
                            " daily=irrad Tdaily=Temp wattpriority=yes debugtrace=yes"
 
     logger.info("Create_PV - " + Command)
     Rede.dssText.Command = Command
 
-
+    Rede.dssText.Command = "set maxcontroliter=2000"
     if Simulation == 3 and Debug_VV == 1:
-        Rede.dssText.Command = "set maxcontroliter=2000"
 
         Command ="New InvControl.InvPVCtrl_" + Nome + " DERList=PVSystem." + Nome + \
-                              " mode=VOLTVAR voltage_curvex_ref=rated " \
-                           "vvc_curve1=generic monVoltageCalc=MIN" +\
-                           " deltaQ_factor=0.2 RefReactivePower=VARAVAL varchangetolerance=0.025"# EventLog=yes "
+                           " mode=VOLTVAR voltage_curvex_ref=rated" +\
+                           " vvc_curve1=generic monVoltageCalc=MIN" +\
+                           " deltaQ_factor=0.05 RefReactivePower=VARAVAL varchangetolerance=0.25 EventLog=yes"
         logger.info("Create_PV - Define InvControl VV " + Command)
         Rede.dssText.Command = Command
 
-    if Simulation > 3 and Debug_VV == 1:
-        Rede.dssText.Command = "set maxcontroliter=2000"
+    if Simulation == 4 and Debug_VV == 1:
 
         Command ="New InvControl.InvPVCtrl_" + Nome + " DERList=PVSystem." + Nome + \
-                              " Combimode=VV_VW voltage_curvex_ref=rated" \
+                              " mode=VOLTWATT voltage_curvex_ref=rated" \
                               " vvc_curve1=generic monVoltageCalc=MIN" + \
-                              " deltaQ_factor=0.2 RefReactivePower=VARAVAL varchangetolerance=0.025" \
-                              " voltwatt_curve=vw_curve DeltaP_factor=0.45 activePchangetolerance=0.025" \
-                              " VoltwattYAxis=PMPPPU"# EventLog=yes "
+                              " deltaQ_factor=0.05 RefReactivePower=VARAVAL varchangetolerance=0.25" \
+                              " voltwatt_curve=vw_curve DeltaP_factor=0.05 activePchangetolerance=0.25" \
+                              " VoltwattYAxis=PMPPPU EventLog=yes"
+
+        logger.info("Create_PV - Define InvControl VV + VW " + Command)
+        Rede.dssText.Command = Command
+
+    if Simulation > 4 and Debug_VV == 1:
+
+        Command ="New InvControl.InvPVCtrl_" + Nome + " DERList=PVSystem." + Nome + \
+                 " Combimode=VV_VW voltage_curvex_ref=rated" \
+                 " vvc_curve1=generic monVoltageCalc=MIN" + \
+                 " deltaQ_factor=0.05 RefReactivePower=VARAVAL varchangetolerance=0.25" \
+                 " voltwatt_curve=vw_curve DeltaP_factor=0.05 activePchangetolerance=0.25" \
+                 " VoltwattYAxis=PMPPPU EventLog=yes"
 
         logger.info("Create_PV - Define InvControl VV + VW " + Command)
         Rede.dssText.Command = Command

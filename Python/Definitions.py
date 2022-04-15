@@ -40,8 +40,8 @@ if os.path.isfile(Log_path):
 import logging
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-#logger.setLevel(logging.INFO)
+#logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 formatter = logging.Formatter('%(asctime)s:%(name)s:%(levelname)s:%(message)s')
 file_Handler = logging.FileHandler(Log_path)
 file_Handler.setFormatter(formatter)
@@ -138,15 +138,18 @@ DF_PV = pd.DataFrame({'Case'      : [],
                       'Pmp'       : [],
                       'kW'        : [],
                       'kvar'      : [],
+                      'kva'       : [],
                       'FP'        : [],
                       'Phases'    : '',
                       'Irrad'     : '',
                       'Temp'      : ''})
 
-DF_General = pd.DataFrame({'Case'       : [],
-                           'Voltage_Max': [],
-                           'Voltage_Min': [],
-                           'GD_Config'  : ''})
+DF_General = pd.DataFrame({'Case'            : [],
+                           'SimulationCount' : [],
+                           'Voltage_Max'     : [],
+                           'Voltage_Min'     : [],
+                           'GD_Config'       : '',
+                           'HC'              : []})
 
 DF_Barras = pd.DataFrame({'Case'           : [],
                           'Simulation'     : [],
@@ -254,7 +257,7 @@ Use_PV = 1              # 1- Usa o PVSystem  0 - Usa geradore
 Norma = 1               #  # 0 - PRODIST # 1 - IEEE
 Num_Simulations = 4     # Deifnie o número de simulações que serão realizadas
 
-Num_Estudos_de_Caso = 20 # Define o estudo de caso em questão (configuração das GDs)
+Num_Estudos_de_Caso = 100 # Define o estudo de caso em questão (configuração das GDs)
 
 Debug_VV = 1            # Modo Debug para mensurar e comparar o comportamento do VV no sistema ( 1 - liga 0 - desliga)
 Thiago = 0
