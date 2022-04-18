@@ -2,12 +2,49 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c0a353b0-9d94-497b-99cd-a779928dfe5d" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/Reffs/12_Increasing the Hosting Capacity of Distribution Networks by Curtailment of Renewable Energy Resources.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Reffs/Chance to use/DM 15_2018 Tiago Machado Wanzeler (1).pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Reffs/Chance to use/REM_aula4.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Reffs/IEEE_for_journals_template_with_bibtex_example_files_included.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Reffs/PVSystem_InvControl.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Reffs/Usadas/10_Technologies toIncrease PV Hosting Capacity in Distribution Feeders.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Reffs/Usadas/11Overload and overvoltage in low-voltage and medium-voltage networks due to renewable energy - some illustrative case studies.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Reffs/Usadas/1_Photovoltaic penetration issues and impacts in distribution.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Reffs/Usadas/2_Renewables in the European .pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Reffs/Usadas/3_A comprehensive Assessment of PV Hosting Capacity on Low Voltage Distribution Systems.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Reffs/Usadas/4_Challenges of PV Integration in Low-Volage.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Reffs/Usadas/5_An Approach to Quantify the Technical.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Reffs/Usadas/7_State of the art of hosting capacity in modern power systems with distributed generation.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Reffs/Usadas/8_Locational Sensitivity Investigation on PV.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Reffs/Usadas/9_Improving Distribution Network PV Hosting Capacity via Smart Inverter Reactive Power Support.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SQL/BI/FirstDraft.pbix" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SQL/StoredProcedures/RunAll.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SQL/StoredProcedures/spConvertVregMeasuraemnt.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SQL/Views/vwVV_VW_Data.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SQL/Views/vwVoltageMonitors.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python/DB_Rede.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/DB_Rede.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Python/Definitions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/Definitions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python/FunctionsSecond.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/FunctionsSecond.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Python/Geradores.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/Geradores.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python/Monitores.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/Monitores.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Python/SistemFunctions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/SistemFunctions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Redes/Teste_VV_VW/Daily_VVVW_varMax_PMPPPU_kVAlimitation_Ppriority_MONITOR-PV_POWERS-ch1-ch3-ch5-ch7.DSV" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Redes/Teste_VV_VW/Daily_VVVW_varMax_PMPPPU_kVAlimitation_Ppriority_MONITOR-PV_POWERS-ch1-ch3-ch5-ch7.dbl" beforeDir="false" afterPath="$PROJECT_DIR$/Python/RedeTeste/Novo Documento de Texto.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Redes/Teste_VV_VW/Daily_VVVW_varMax_PMPPPU_kVAlimitation_Ppriority_MONITOR-PV_POWERS-ch1-ch3-ch5.DSV" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Redes/Teste_VV_VW/Daily_VVVW_varMax_PMPPPU_kVAlimitation_Ppriority_MONITOR-PV_POWERS-ch1-ch3-ch5.dbl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Redes/Teste_VV_VW/Daily_VVVW_varMax_PMPPPU_kVAlimitation_Ppriority_MONITOR-PV_POWERS-ch2-ch4-ch6.DSV" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Redes/Teste_VV_VW/Daily_VVVW_varMax_PMPPPU_kVAlimitation_Ppriority_MONITOR-PV_POWERS-ch2-ch4-ch6.dbl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Redes/Teste_VV_VW/Daily_VVVW_varMax_PMPPPU_kVAlimitation_Ppriority_MONITOR-PV_V-ch6.DSV" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Redes/Teste_VV_VW/Daily_VVVW_varMax_PMPPPU_kVAlimitation_Ppriority_MONITOR-PV_V-ch6.dbl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Redes/Teste_VV_VW/Daily_VVVW_varMax_PMPPPU_kVAlimitation_Ppriority_MONITOR-PV_V-ch7-ch8.DSV" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Redes/Teste_VV_VW/Daily_VVVW_varMax_PMPPPU_kVAlimitation_Ppriority_MONITOR-PV_V-ch7-ch8.dbl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Redes/Teste_VV_VW/Daily_VVVW_varMax_PMPPPU_kVAlimitation_Ppriority_Mon_pv_currents_1 - Copia.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Redes/Teste_VV_VW/Daily_VVVW_varMax_PMPPPU_kVAlimitation_Ppriority_Mon_pv_currents_1.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Redes/Teste_VV_VW/Daily_VVVW_varMax_PMPPPU_kVAlimitation_Ppriority_Mon_pv_powers_1 - Copia.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Redes/Teste_VV_VW/Daily_VVVW_varMax_PMPPPU_kVAlimitation_Ppriority_Mon_pv_powers_1.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Redes/Teste_VV_VW/Daily_VVVW_varMax_PMPPPU_kVAlimitation_Ppriority_Mon_pv_v_1 - Copia.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Redes/Teste_VV_VW/Daily_VVVW_varMax_PMPPPU_kVAlimitation_Ppriority_Mon_pv_v_1.csv" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/SQL/StoredProcedures/spPVPowerData_Populate.sql" beforeDir="false" afterPath="$PROJECT_DIR$/SQL/StoredProcedures/spPVPowerData_Populate.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -29,6 +66,14 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
   </component>
   <component name="IgnoredFileRootStore">
     <option name="generatedRoots">
@@ -150,9 +195,9 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.Princ" />
       <item itemvalue="Python.Main" />
       <item itemvalue="Python.Princ2" />
+      <item itemvalue="Python.Princ" />
       <item itemvalue="Python tests.Unittests for test_FunctionsSecond.Test" />
       <item itemvalue="Python tests.Unittests for test_FunctionsSecond.Test.test_min_2" />
     </list>
@@ -214,9 +259,14 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Python/FunctionsSecond.py</url>
-          <line>550</line>
-          <option name="timeStamp" value="122" />
+          <url>file://$PROJECT_DIR$/Python/DB_Rede.py</url>
+          <line>545</line>
+          <option name="timeStamp" value="135" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Python/SistemFunctions.py</url>
+          <line>143</line>
+          <option name="timeStamp" value="157" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

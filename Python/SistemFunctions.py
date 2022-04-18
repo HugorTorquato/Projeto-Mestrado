@@ -74,6 +74,8 @@ def Compila_DSS(Rede):
     Rede.dssText.Command = "set mode=daily"
     Rede.dssText.Command = "set stepsize = 15m"
     Rede.dssText.Command = "set number = 96"
+    Rede.dssText.Command = "Set voltagebases=[0.22 11.9 0.3811 0.127]"
+    Rede.dssText.Command = "Calcvoltagebases"
 
     Rede.dssSolution.Solve()
 
@@ -134,6 +136,7 @@ def Solve_Hora_por_Hora(Rede, Simulation, Pot_GD):
             # functions related to violation check. Everything else can be measured using monitors.
             Tensao_Barras(Rede, itera)
             Correntes_elementos(Rede, itera)
+            Rede.dssText.Command = "Export EventLog"
 
             # Medição já está sendo feita pelos monitores ( pode remover )
             Data_PV(Rede, itera) # Creio que esses dados já estão sendo salvos pelos monitores, não precisa mais
@@ -143,18 +146,19 @@ def Solve_Hora_por_Hora(Rede, Simulation, Pot_GD):
 def HC(Rede):
 
     # Essa função é o pulmão do código, aqui que é feito o cálculo do HC
-    from FunctionsSecond import Limpar_DF, Check, Identify_Overcurrent_Limits, \
-        Max_and_Min_Voltage_DF
+    from FunctionsSecond import Limpar_DF, Check
     from Definitions import Num_GDs, DF_Geradores, DF_Barras, DF_General, DF_Elements, DF_PV,\
-        DF_PVPowerData, DF_Lista_Monitors, DF_Tensao_A, DF_Tensao_B, DF_Tensao_C, Incremento_gd,\
+        DF_PVPowerData, DF_Lista_Monitors, Incremento_gd,\
         DF_Monitors_Data_2, Casos, logger
-    from Geradores import FindBusGD
 
     # Define o primeiro transformador como o ponto de PCC e o incremento de pot em cada verificação do HC é
     # definido em termos de % frente a pot do trafo de entrada
 
     Rede.dssTransformers.Name = Rede.dssTransformers.AllNames[0]
-    Incremento_Pot_gd = float(Incremento_gd)/100 * Rede.dssTransformers.kva
+    try:
+        Incremento_Pot_gd = float(Incremento_gd)/100 * Rede.dssTransformers.kva
+    except:
+        Incremento_Pot_gd = 0.025
 
     Sem_GD = 0
     rest = 0
@@ -178,8 +182,9 @@ def HC(Rede):
 
         [Limpar_DF(DF) for DF in [DF_Geradores, DF_Barras, DF_General, DF_Elements, DF_PV, DF_PVPowerData,
                                   DF_Lista_Monitors, DF_PVPowerData, DF_Monitors_Data_2]]
+        Verify = True
 
-        while Nummero_Simulacoes == 0 or Check(Rede, Simulation) is True:
+        while Nummero_Simulacoes == 0 or Verify is True:
 
             logger.info("Starting Case " + str(len(Casos) if Casos != [] else 0) +
                         " simulation " + str(Simulation) + " Iteração " + str(Nummero_Simulacoes))
@@ -202,6 +207,8 @@ def HC(Rede):
 
             Nummero_Simulacoes += 1
             rest += 1
+            Verify = Check(Rede, Simulation)
+
             if Nummero_Simulacoes < 3:
                 Pot_GD += 3*Incremento_Pot_gd if Criar_GD and Nummero_Simulacoes > 0 else 0
             else:

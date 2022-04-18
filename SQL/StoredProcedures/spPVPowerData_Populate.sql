@@ -15,12 +15,12 @@ BEGIN
 						MD2.Simulation = PV.Simulation AND
 						MD2.Elemento =  PV.[Name] AND
 						MD2.Measurement like ' watts'),
-			kvar = (select min(MD2.[Value]) from MonitoresData_2 MD2
+			kvar = (select MAX(MD2.[Value]) from MonitoresData_2 MD2
 					 where 
 						MD2.[Case] = PV.[Case] AND
 						MD2.Simulation = PV.Simulation AND
 						MD2.Elemento =  PV.[Name] AND
-						MD2.Measurement like ' vars'),
+						MD2.Measurement like ' vars')
 
 		FROM PVSystems PV
 

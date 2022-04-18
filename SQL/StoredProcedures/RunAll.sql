@@ -1,0 +1,8 @@
+exec spPVPowerData_Populate
+GO
+exec spPVPowerData_Populate_KVA
+go
+exec spCalc_HC
+go
+exec spConvertVregMeasurament
+go

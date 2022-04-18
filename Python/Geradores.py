@@ -37,11 +37,9 @@ def Adicionar_GDs(Rede, Pot_GD, Simulation):
                            "temp=(File=C:\\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\Temp.txt)")
     Shapes.append("New LoadShape.irrad npts=96 minterval=15 "
                            "mult=(file=C:\\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\Irrad.txt)")
-    Shapes.append("New XYcurve.generic npts=4 Xarray=(0.5,0.89,0.92,1,1.05,1.1,1.5) "
+    Shapes.append("New XYcurve.vv_curve npts=4 Xarray=(0.5,0.89,0.92,1,1.05,1.1,1.5) "
                            "Yarray=(1.0,1.0,0.8,0,-0.5,-1.0,-1.0)")
-    Shapes.append("New XYCurve.vv_curve npts=7 Yarray=[1 1 0 0 0 -1 -1] "
-                           "XArray = [0.5 0.87 0.92 1 1.05 1.01 1.5]")
-    Shapes.append("New XYcurve.vw_curve npts=3 yarray=[1 0.95 0.9 0.9] xarray=[1 1.02 1.05 2]")
+    Shapes.append("New XYcurve.vw_curve npts=3 yarray=[1 1 0.90 0.85 0.8] xarray=[0.8 1 1.01 1.05 1.5]")
 
     for shape in Shapes:
         Rede.dssText.Command = shape
@@ -80,7 +78,9 @@ def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
     DF_PV.loc[index, 'Irrad'] = Irrad
     DF_PV.loc[index, 'Temp'] = Temp
 
-    # Pmpp - Ponto de máx pot
+    kvbase = Rede.dssBus.kVBase
+
+    # Pmpp - Potência nominal para 1kw/m^2 ( tem de incrementar essa variável )
     # kva - pot nom inversor - Pot gerada n pode ser maior
     # pot dc = ppmppx x irrad x (1-irrad_tempo) x temp_por_pot
     # pot ac = pot dc x eff
@@ -89,8 +89,8 @@ def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
                            str(Identify_Phases(DF_PV.loc[index, 'Phases'])[1]) + \
                            " bus1=" + str(DF_PV.loc[index, 'Bus']) + \
                            str(Identify_Phases(DF_PV.loc[index, 'Phases'])[0]) + \
-                           " Pmpp=4" + \
-                           " kv=" + str(Rede.dssBus.kVBase) + \
+                           " Pmpp=" + str(Pmp) +  \
+                           " kv=" + str(kvbase) + \
                            " kVA=" + str(Pmp * 1.05) + \
                            " con=wye" + \
                            " %Cutin=0.1 %cutout=0.1 EffCurve=Eff P-TCurve=FactorPVsT" + \
@@ -102,36 +102,46 @@ def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
     Rede.dssText.Command = Command
 
     Rede.dssText.Command = "set maxcontroliter=2000"
+    kvbase = [kvbase * 1000 for i in range(Identify_Phases(DF_PV.loc[index, 'Phases'])[1])]
+
     if Simulation == 3 and Debug_VV == 1:
 
         Command ="New InvControl.InvPVCtrl_" + Nome + " DERList=PVSystem." + Nome + \
                            " mode=VOLTVAR voltage_curvex_ref=rated" +\
-                           " vvc_curve1=generic monVoltageCalc=MIN" +\
-                           " deltaQ_factor=0.05 RefReactivePower=VARAVAL varchangetolerance=0.25 EventLog=yes"
+                           " vvc_curve1=vv_curve" +\
+                           " deltaQ_factor=-1 RefReactivePower=VARAVAL varchangetolerance=0.25" + \
+                           " monBus=" + str(DF_PV.loc[index, 'Bus']) + \
+                           str(Identify_Phases(DF_PV.loc[index, 'Phases'])[0]) + \
+                           " monBusesVbase=" + str(kvbase) + \
+                           " monVoltageCalc=AVG EventLog=yes"
         logger.info("Create_PV - Define InvControl VV " + Command)
         Rede.dssText.Command = Command
 
     if Simulation == 4 and Debug_VV == 1:
 
         Command ="New InvControl.InvPVCtrl_" + Nome + " DERList=PVSystem." + Nome + \
-                              " mode=VOLTWATT voltage_curvex_ref=rated" \
-                              " vvc_curve1=generic monVoltageCalc=MIN" + \
-                              " deltaQ_factor=0.05 RefReactivePower=VARAVAL varchangetolerance=0.25" \
-                              " voltwatt_curve=vw_curve DeltaP_factor=0.05 activePchangetolerance=0.25" \
-                              " VoltwattYAxis=PMPPPU EventLog=yes"
-
-        logger.info("Create_PV - Define InvControl VV + VW " + Command)
+                              " mode=VOLTWATT voltage_curvex_ref=rated" +\
+                              " voltwatt_curve=vw_curve DeltaP_factor=-1 activePchangetolerance=0.25" +\
+                              " VoltwattYAxis=PAVAILABLEPU " +\
+                              " monBus=" + str(DF_PV.loc[index, 'Bus']) + \
+                              str(Identify_Phases(DF_PV.loc[index, 'Phases'])[0]) + \
+                              " monBusesVbase=" + str(kvbase) +\
+                              " monVoltageCalc=AVG EventLog=yes"
+        logger.info("Create_PV - Define InvControl VW " + Command)
         Rede.dssText.Command = Command
 
     if Simulation > 4 and Debug_VV == 1:
 
         Command ="New InvControl.InvPVCtrl_" + Nome + " DERList=PVSystem." + Nome + \
                  " Combimode=VV_VW voltage_curvex_ref=rated" \
-                 " vvc_curve1=generic monVoltageCalc=MIN" + \
-                 " deltaQ_factor=0.05 RefReactivePower=VARAVAL varchangetolerance=0.25" \
-                 " voltwatt_curve=vw_curve DeltaP_factor=0.05 activePchangetolerance=0.25" \
-                 " VoltwattYAxis=PMPPPU EventLog=yes"
-
+                 " vvc_curve1=vv_curve" + \
+                 " deltaQ_factor=-1 RefReactivePower=VARAVAL varchangetolerance=0.25" \
+                 " voltwatt_curve=vw_curve DeltaP_factor=0.45 activePchangetolerance=0.25" \
+                 " VoltwattYAxis=PAVAILABLEPU " + \
+                 " monBus=" + str(DF_PV.loc[index, 'Bus']) + \
+                 str(Identify_Phases(DF_PV.loc[index, 'Phases'])[0]) + \
+                 " monBusesVbase=" + str(kvbase) + \
+                 " monVoltageCalc=AVG EventLog=yes"
         logger.info("Create_PV - Define InvControl VV + VW " + Command)
         Rede.dssText.Command = Command
 

@@ -5,16 +5,11 @@ import pandas as pd
 from Princ import *
 import numpy as np
 import logging
-logging.basicConfig(
-    level=logging.DEBUG,
-    #format='%(asctime)s:%(levelname)s:%(funcname)s:%(message)s', # funcname não funcionava
-    format='%(asctime)s:%(levelname)s:%(message)s',
-    filename='LOG.log'#filename='/Debug/LOG.log'
-)
 
 
 #Rede_Path = "C:\\Users\hugo1\Desktop\Projeto_Rede_Fornecida\Python\TCC\Rede" # IEEE13
 Rede_Path = "C:\\Users\hugo1\Desktop\Rede_03\_trafo3"                       #Rede_03
+#Rede_Path = "C:\\Users\hugo1\Desktop\Rede_03\Teste"                       #Rede_03
 Debug_Path = "C:\\Users\hugo1\Desktop\Projeto_Rede_Fornecida\Python\Debug"
 
 #############################################################################
@@ -40,8 +35,8 @@ if os.path.isfile(Log_path):
 import logging
 
 logger = logging.getLogger(__name__)
-#logger.setLevel(logging.DEBUG)
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
+#logger.setLevel(logging.INFO)
 formatter = logging.Formatter('%(asctime)s:%(name)s:%(levelname)s:%(message)s')
 file_Handler = logging.FileHandler(Log_path)
 file_Handler.setFormatter(formatter)
@@ -249,15 +244,18 @@ Salva_Dados = 0         # Aciona o script que faz o levantamento dos dados da re
 # Não da para tirar isso aqui, pq?
 Savar_Dados_Elem = 0    # Habilita que os dados de pot e tensão dos elementos sejam salvos
 Criar_GD = 1            # Aciona a inserção de GDs na rede
+
+
+
 Num_GDs = 9             # Definição do número de GDs que serão adicionadas
 Calc_HC = 1             # Aciona o cálculo do HC
 All_GDs = 1
 
 Use_PV = 1              # 1- Usa o PVSystem  0 - Usa geradore
 Norma = 1               #  # 0 - PRODIST # 1 - IEEE
-Num_Simulations = 4     # Deifnie o número de simulações que serão realizadas
+Num_Simulations = 5     # Deifnie o número de simulações que serão realizadas
 
-Num_Estudos_de_Caso = 100 # Define o estudo de caso em questão (configuração das GDs)
+Num_Estudos_de_Caso = 1 # Define o estudo de caso em questão (configuração das GDs)
 
 Debug_VV = 1            # Modo Debug para mensurar e comparar o comportamento do VV no sistema ( 1 - liga 0 - desliga)
 Thiago = 0
@@ -271,7 +269,7 @@ FP_1 = 1
 Const_Irrad = .705
 Const_Temp = 25
 FP = 1
-Incremento_gd = 0.5  # Valores em porcentagem (%) da pot do trafo de entrada
+Incremento_gd = 0.25  # Valores em porcentagem (%) da pot do trafo de entrada
     # Considerar inversores reais
 
 Steps_wtout_unbalance = 4#10 # Creio que tem de ser 4

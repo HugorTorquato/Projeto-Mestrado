@@ -533,7 +533,7 @@ def Save_Data(Simulation, DF_Voltage_Data, DF_Tensao_Data_Ang,
     
     DF_General.to_sql('General', sqlalchemy(), if_exists='append', index=False)
     DF_PV.to_sql('PVSystems', sqlalchemy(), if_exists='append', index=False)
-    DF_Monitors_Data_2.to_sql('MonitoresData_2', sqlalchemy(), if_exists='append', index=False)
+
     DF_Barras.to_sql('Barras', sqlalchemy(), if_exists='append', index=False)
     DF_Elements.to_sql('Grid_Elements', sqlalchemy(), if_exists='append', index=False)
     DF_Check_Report.to_sql('Check_Report', sqlalchemy(), if_exists='append', index=False)
@@ -542,6 +542,8 @@ def Save_Data(Simulation, DF_Voltage_Data, DF_Tensao_Data_Ang,
     DF_Voltage_Data.to_sql('Voltage_Data', sqlalchemy(), if_exists='append', index=False)
     DF_Tensao_Data_Ang.to_sql('Voltage_Data_Ang', sqlalchemy(), if_exists='append', index=False)
     DF_Unbalance_Data.to_sql('Unbalance_Data', sqlalchemy(), if_exists='append', index=False)
+
+    DF_Monitors_Data_2.to_sql('MonitoresData_2', sqlalchemy(), if_exists='append', index=False)
 
     if Remove == 0:
         DF_Corrente_Data.to_sql('Current_Elemt_Data', sqlalchemy(), if_exists='append', index=False)
