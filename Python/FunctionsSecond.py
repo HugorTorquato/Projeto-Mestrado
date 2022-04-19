@@ -468,7 +468,7 @@ def Check(Rede, Simulation):
     # return True if overvoltage == 0 and undervoltage == 0 and overcurrent == 0 and unbalance == 0 \
 
     print('Max Voltage = ' + str(a) + ' ////////////////////  Min Voltage = ' + str(b))
-    #logger.debug('Max Voltage = ' + str(a) + ' ////////////////////  Min Voltage = ' + str(b))
+    logger.debug('Max Voltage = ' + str(a) + ' ////////////////////  Min Voltage = ' + str(b))
     logger.debug("Check took {" + str(time.time() - t1) + " sec} to execulte "
                                                           "in simulation: " + str(Simulation))
 
@@ -733,3 +733,17 @@ def Return_Time_String_Colum_Case_Options(Rede):
         commandMin += ' WHEN ValueMinPU = Time_' + str(i) + ' AND Time_' + str(i) + ' <> 0 THEN \'Time_' + str(i) + '\''
 
     return commandMax, commandMin
+
+def Populate_VBase_IvControl(phases, kvbase):
+
+    kvbasetemp = [0, 0, 0]
+
+    for phase in str(phases).replace('.', ''):
+        if phase == '1':
+            kvbasetemp[0] = kvbase * 1000
+        if phase == '2':
+            kvbasetemp[1] = kvbase * 1000
+        if phase == '3':
+            kvbasetemp[2] = kvbase * 1000
+
+    return kvbasetemp

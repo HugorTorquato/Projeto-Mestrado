@@ -139,7 +139,8 @@ def Solve_Hora_por_Hora(Rede, Simulation, Pot_GD):
             Rede.dssText.Command = "Export EventLog"
 
             # Medição já está sendo feita pelos monitores ( pode remover )
-            Data_PV(Rede, itera) # Creio que esses dados já estão sendo salvos pelos monitores, não precisa mais
+            # Data_PV(Rede, itera)
+            # Creio que esses dados já estão sendo salvos pelos monitores, não precisa mais
 
         Rede.dssSolution.FinishTimeStep()
 
@@ -147,7 +148,7 @@ def HC(Rede):
 
     # Essa função é o pulmão do código, aqui que é feito o cálculo do HC
     from FunctionsSecond import Limpar_DF, Check
-    from Definitions import Num_GDs, DF_Geradores, DF_Barras, DF_General, DF_Elements, DF_PV,\
+    from Definitions import DF_Geradores, DF_Barras, DF_General, DF_Elements, DF_PV,\
         DF_PVPowerData, DF_Lista_Monitors, Incremento_gd,\
         DF_Monitors_Data_2, Casos, logger
 
