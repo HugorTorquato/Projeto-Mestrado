@@ -3,9 +3,13 @@
   <component name="ChangeListManager">
     <list default="true" id="c0a353b0-9d94-497b-99cd-a779928dfe5d" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python/Definitions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/Definitions.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Python/FunctionsSecond.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/FunctionsSecond.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Python/Geradores.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/Geradores.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python/Monitores.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/Monitores.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Python/SistemFunctions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/SistemFunctions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL/BI/PerdasLinhas.pbix" beforeDir="false" afterPath="$PROJECT_DIR$/SQL/BI/PerdasLinhas.pbix" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL/StoredProcedures/RunAll.sql" beforeDir="false" afterPath="$PROJECT_DIR$/SQL/StoredProcedures/RunAll.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -224,9 +228,14 @@
           <option name="timeStamp" value="135" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Python/FunctionsSecond.py</url>
+          <line>757</line>
+          <option name="timeStamp" value="168" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Python/Geradores.py</url>
-          <line>116</line>
-          <option name="timeStamp" value="159" />
+          <line>82</line>
+          <option name="timeStamp" value="172" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -239,6 +248,7 @@
         <watch expression="DF_Monitors_Data" />
         <watch expression="DF_Monitors_Data_2" />
         <watch expression="DF_Check_Report" />
+        <watch expression="Rede.dssBus.SectionID" />
       </configuration>
     </watches-manager>
   </component>

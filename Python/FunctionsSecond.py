@@ -734,6 +734,34 @@ def Return_Time_String_Colum_Case_Options(Rede):
 
     return commandMax, commandMin
 
+def Set_Bus_kvbase(Rede):
+
+    a = list(DF_Tensao_A.Barras.values)
+    kvlln = 0.220/sqrt3
+
+    ba = []
+    bu = []
+
+    for bus in list(DF_Tensao_A.Barras.values):
+
+
+        Rede.dssCircuit.SetActiveBus(bus)
+        bu.append(Rede.dssBus.Name)
+        ba.append(Rede.dssBus.kvbase)
+
+
+        if Rede.dssBus.NumNodes == 1:
+
+            Rede.dssText.Command = 'setkvbase ' + bus + ' kvln=' + str(kvln)
+
+
+    print(1)
+
+
+
+
+
+# Não está sendo usada
 def Populate_VBase_IvControl(phases, kvbase):
 
     kvbasetemp = [0, 0, 0]

@@ -55,8 +55,8 @@ def Adicionar_GDs(Rede, Pot_GD, Simulation):
 
 def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
 
-    from Definitions import DF_PV, Barras_GDs, Casos, logger
-    from FunctionsSecond import ativa_barra, Identify_Phases
+    from Definitions import DF_PV, Barras_GDs, Casos, logger, sqrt3
+    from FunctionsSecond import ativa_barra, Identify_Phases, Set_Bus_kvbase
     from Monitores import Define_Random_Monior_Test
 
     index = len(DF_PV)
@@ -78,7 +78,13 @@ def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
     DF_PV.loc[index, 'Irrad'] = Irrad
     DF_PV.loc[index, 'Temp'] = Temp
 
-    kvbase = Rede.dssBus.kVBase
+    kvbase = 0.220
+
+    if Rede.dssBus.NumNodes == 2:
+        kvbase = kvbase/sqrt3
+
+
+
     Identify_Phases0 =Identify_Phases(DF_PV.loc[index, 'Phases'])[0]
     Identify_Phases1 = Identify_Phases(DF_PV.loc[index, 'Phases'])[1]
 
@@ -111,7 +117,8 @@ def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
     ta = Identify_Phases0
 
     from FunctionsSecond import Populate_VBase_IvControl
-    kvbase = [kvbase * 1000 for i in range(Identify_Phases1)]
+    #Set_Bus_kvbase(Rede)
+    #kvbase = [kvbase * 1000 for i in range(Identify_Phases1)]
     #kvbase = Populate_VBase_IvControl(Identify_Phases0, kvbase)
 
     if Simulation == 3 and Debug_VV == 1:
@@ -119,8 +126,7 @@ def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
         Command ="New InvControl.InvPVCtrl_" + Nome + " DERList=PVSystem." + Nome + \
                            " mode=VOLTVAR voltage_curvex_ref=rated" +\
                            " vvc_curve1=vv_curve" +\
-                           " deltaQ_factor=0.3 RefReactivePower=VARAVAL varchangetolerance=0.25" + \
-                           " monBusesVbase=" + str(kvbase) + \
+                           " deltaQ_factor=-1 RefReactivePower=VARAVAL varchangetolerance=0.25" + \
                            " monVoltageCalc=AVG EventLog=yes"
         logger.info("Create_PV - Define InvControl VV " + Command)
         Rede.dssText.Command = Command
@@ -129,9 +135,8 @@ def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
 
         Command ="New InvControl.InvPVCtrl_" + Nome + " DERList=PVSystem." + Nome + \
                               " mode=VOLTWATT voltage_curvex_ref=rated" +\
-                              " voltwatt_curve=vw_curve DeltaP_factor=0.3 activePchangetolerance=0.25" +\
+                              " voltwatt_curve=vw_curve DeltaP_factor=-1 activePchangetolerance=0.25" +\
                               " VoltwattYAxis=PAVAILABLEPU " +\
-                              " monBusesVbase=" + str(kvbase) +\
                               " monVoltageCalc=AVG EventLog=yes"
         logger.info("Create_PV - Define InvControl VW " + Command)
         Rede.dssText.Command = Command
@@ -141,13 +146,17 @@ def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
         Command ="New InvControl.InvPVCtrl_" + Nome + " DERList=PVSystem." + Nome + \
                  " Combimode=VV_VW voltage_curvex_ref=rated" \
                  " vvc_curve1=vv_curve" + \
-                 " deltaQ_factor=0.3 RefReactivePower=VARAVAL varchangetolerance=0.25" \
-                 " voltwatt_curve=vw_curve DeltaP_factor=0.45 activePchangetolerance=0.25" \
+                 " deltaQ_factor=-1 RefReactivePower=VARAVAL varchangetolerance=0.25" \
+                 " voltwatt_curve=vw_curve DeltaP_factor=-1 activePchangetolerance=0.25" \
                  " VoltwattYAxis=PAVAILABLEPU " + \
-                 " monBusesVbase=" + str(kvbase) + \
                  " monVoltageCalc=AVG EventLog=yes"
         logger.info("Create_PV - Define InvControl VV + VW " + Command)
         Rede.dssText.Command = Command
+
+    # " monBusesVbase=" + str(kvbase) +\
+
+
+
 
     ## deltaQ_factor -> Mudança máxima da pot reativa da solução anterior para a desejada durante
     #                   cada iteração de controle
@@ -163,7 +172,7 @@ def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
     Define_Random_Monior_Test(Rede, "InvControl", "PVSystem." + Nome, 1, 3)
 
 def Create_GD(Rede, Nome, kW, kvar, LoadShape, Simulation):
-    from Definitions import DF_Geradores, Barras_GDs,Casos
+    from Definitions import DF_Geradores, Barras_GDs, Casos
 
     # Preparação para armazenamento dos dados
     index = len(DF_Geradores)  # Define a linha para aplicar as alterações
@@ -198,8 +207,10 @@ def Fase2String(STRING):
        a += str(i)
     return a
 
-def FindBusGD(Num_GDs):
-    from Definitions import DF_Tensao_A, Barras_GDs, Debug_VV
+def FindBusGD(Rede, Num_GDs):
+
+    from Definitions import Barras_GDs, Debug_VV
+    from SistemFunctions import Nome_Barras
 
     if Debug_VV == 3000000000000000:
         #Barras_GDs_list = ['bus_33998182_039']#, 'bus_33998182_011',
@@ -232,7 +243,7 @@ def FindBusGD(Num_GDs):
             Barras_GDs.append(Barras_GDs_list[i])
         return
 
-    vet_choice = list(DF_Tensao_A.Barras.values)
+    vet_choice = list(Nome_Barras(Rede))
 
     ###############################################################################################
     # Remover manualmente mas tem de mudar para identificar de forma automatica a barra do trafo

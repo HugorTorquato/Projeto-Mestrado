@@ -57,9 +57,6 @@ def Inicializa(Rede):
     DF_irradNow_PV.insert(0, 'PVs', PVs, allow_duplicates=True)
     [DF_irradNow_PV.insert(i + 1, str(i), 0) for i in range(originalSteps(Rede))]
 
-    # Defnição das barras em que os geradores vão estar inseridos no sistema
-    # FindBusGD(Num_GDs)
-
     logger.debug("Inicializa took {" + str(time.time() - t1) + " sec} to execulte")
 
 def Version(Rede):
@@ -116,7 +113,6 @@ def Solve_Hora_por_Hora(Rede, Simulation, Pot_GD):
     # OBS: Se definir um DF, lembrar de limpar o mesmo na seção anterior
 
     Adicionar_GDs(Rede, Pot_GD, Simulation)
-    #Adicionar_EnergyMeter(Rede) #needs to be implemented
     Adicionar_Monitores(Rede)
 
     # ----------------------------------------------------------------------------------------------------------
@@ -127,7 +123,10 @@ def Solve_Hora_por_Hora(Rede, Simulation, Pot_GD):
 
         # Se acahr uma forma de não precisar fazer o solve das horas fora do intervalo seria lega
 
+        t1 = time.time()
         Rede.dssSolution.SolveSnap()
+        logger.debug("SolveSnap took {" + str(time.time() - t1) + " sec} to execulte "
+                                                                "in iteration: " + str(itera))
 
         if Converter_Intervalo_de_Simulacao(Rede, Inicio_Sim) <= itera\
                 <= Converter_Intervalo_de_Simulacao(Rede, Fim_Sim):
@@ -212,6 +211,8 @@ def HC(Rede):
 
             if Nummero_Simulacoes < 3:
                 Pot_GD += 3*Incremento_Pot_gd if Criar_GD and Nummero_Simulacoes > 0 else 0
+            elif len(Casos) if Casos != [] else 0 > 2:
+                Pot_GD += 2*Incremento_Pot_gd if Criar_GD and Nummero_Simulacoes > 0 else 0
             else:
                 Pot_GD += Incremento_Pot_gd if Criar_GD and Nummero_Simulacoes > 0 else 0
 
@@ -249,8 +250,8 @@ def Case_by_Case(Rede):
     from FunctionsSecond import Identify_Overcurrent_Limits
 
     Identify_Overcurrent_Limits(Rede)
-    a = range(Num_Estudos_de_Caso)
+    #a = range(Num_Estudos_de_Caso)
     for Caso in range(Num_Estudos_de_Caso):
         Casos.append(Caso + 1)
-        FindBusGD(Num_GDs)
+        FindBusGD(Rede, Num_GDs)
         HC(Rede)

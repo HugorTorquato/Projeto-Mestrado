@@ -269,7 +269,7 @@ FP_1 = 1
 Const_Irrad = .705
 Const_Temp = 25
 FP = 1
-Incremento_gd = 0.25  # Valores em porcentagem (%) da pot do trafo de entrada
+Incremento_gd = 0.75  # Valores em porcentagem (%) da pot do trafo de entrada
     # Considerar inversores reais
 
 Steps_wtout_unbalance = 4#10 # Creio que tem de ser 4
