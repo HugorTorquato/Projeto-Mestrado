@@ -1,0 +1,10 @@
+EXEC spPVPowerData_Populate
+GO
+EXEC spPVPowerData_Populate_KVA
+GO
+EXEC spCalc_HC
+GO
+EXEC spGenerateLossesTables
+GO
+EXEC spConvertVregMeasurament
+GO

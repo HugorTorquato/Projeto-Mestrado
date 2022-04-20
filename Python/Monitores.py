@@ -50,9 +50,9 @@ def Define_Monitor(Rede, Lista_Monitores):
             Command3 = "New monitor." + str(element.replace('.', '_')) + "_loss element=" + str(element) \
                        + " terminal=1 mode=9 enabled=Yes"
 
-            logger.debug("Starting Monitor 1  - " + Command1)
-            logger.debug("Starting Monitor 2  - " + Command2)
-            logger.debug("Starting Monitor 3  - " + Command3)
+            #logger.debug("Starting Monitor 1  - " + Command1)
+            #logger.debug("Starting Monitor 2  - " + Command2)
+            #logger.debug("Starting Monitor 3  - " + Command3)
             Rede.dssText.Command = Command1
             Rede.dssText.Command = Command2
             Rede.dssText.Command = Command3

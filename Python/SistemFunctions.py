@@ -57,9 +57,6 @@ def Inicializa(Rede):
     DF_irradNow_PV.insert(0, 'PVs', PVs, allow_duplicates=True)
     [DF_irradNow_PV.insert(i + 1, str(i), 0) for i in range(originalSteps(Rede))]
 
-    # Defnição das barras em que os geradores vão estar inseridos no sistema
-    # FindBusGD(Num_GDs)
-
     logger.debug("Inicializa took {" + str(time.time() - t1) + " sec} to execulte")
 
 def Version(Rede):
@@ -74,6 +71,8 @@ def Compila_DSS(Rede):
     Rede.dssText.Command = "set mode=daily"
     Rede.dssText.Command = "set stepsize = 15m"
     Rede.dssText.Command = "set number = 96"
+    Rede.dssText.Command = "Set voltagebases=[0.22 11.9 0.3811 0.127]"
+    Rede.dssText.Command = "Calcvoltagebases"
 
     Rede.dssSolution.Solve()
 
@@ -114,7 +113,6 @@ def Solve_Hora_por_Hora(Rede, Simulation, Pot_GD):
     # OBS: Se definir um DF, lembrar de limpar o mesmo na seção anterior
 
     Adicionar_GDs(Rede, Pot_GD, Simulation)
-    #Adicionar_EnergyMeter(Rede) #needs to be implemented
     Adicionar_Monitores(Rede)
 
     # ----------------------------------------------------------------------------------------------------------
@@ -125,7 +123,10 @@ def Solve_Hora_por_Hora(Rede, Simulation, Pot_GD):
 
         # Se acahr uma forma de não precisar fazer o solve das horas fora do intervalo seria lega
 
+        t1 = time.time()
         Rede.dssSolution.SolveSnap()
+        logger.debug("SolveSnap took {" + str(time.time() - t1) + " sec} to execulte "
+                                                                "in iteration: " + str(itera))
 
         if Converter_Intervalo_de_Simulacao(Rede, Inicio_Sim) <= itera\
                 <= Converter_Intervalo_de_Simulacao(Rede, Fim_Sim):
@@ -134,27 +135,30 @@ def Solve_Hora_por_Hora(Rede, Simulation, Pot_GD):
             # functions related to violation check. Everything else can be measured using monitors.
             Tensao_Barras(Rede, itera)
             Correntes_elementos(Rede, itera)
+            Rede.dssText.Command = "Export EventLog"
 
             # Medição já está sendo feita pelos monitores ( pode remover )
-            Data_PV(Rede, itera) # Creio que esses dados já estão sendo salvos pelos monitores, não precisa mais
+            # Data_PV(Rede, itera)
+            # Creio que esses dados já estão sendo salvos pelos monitores, não precisa mais
 
         Rede.dssSolution.FinishTimeStep()
 
 def HC(Rede):
 
     # Essa função é o pulmão do código, aqui que é feito o cálculo do HC
-    from FunctionsSecond import Limpar_DF, Check, Identify_Overcurrent_Limits, \
-        Max_and_Min_Voltage_DF
-    from Definitions import Num_GDs, DF_Geradores, DF_Barras, DF_General, DF_Elements, DF_PV,\
-        DF_PVPowerData, DF_Lista_Monitors, DF_Tensao_A, DF_Tensao_B, DF_Tensao_C, Incremento_gd,\
+    from FunctionsSecond import Limpar_DF, Check
+    from Definitions import DF_Geradores, DF_Barras, DF_General, DF_Elements, DF_PV,\
+        DF_PVPowerData, DF_Lista_Monitors, Incremento_gd,\
         DF_Monitors_Data_2, Casos, logger
-    from Geradores import FindBusGD
 
     # Define o primeiro transformador como o ponto de PCC e o incremento de pot em cada verificação do HC é
     # definido em termos de % frente a pot do trafo de entrada
 
     Rede.dssTransformers.Name = Rede.dssTransformers.AllNames[0]
-    Incremento_Pot_gd = float(Incremento_gd)/100 * Rede.dssTransformers.kva
+    try:
+        Incremento_Pot_gd = float(Incremento_gd)/100 * Rede.dssTransformers.kva
+    except:
+        Incremento_Pot_gd = 0.025
 
     Sem_GD = 0
     rest = 0
@@ -178,8 +182,9 @@ def HC(Rede):
 
         [Limpar_DF(DF) for DF in [DF_Geradores, DF_Barras, DF_General, DF_Elements, DF_PV, DF_PVPowerData,
                                   DF_Lista_Monitors, DF_PVPowerData, DF_Monitors_Data_2]]
+        Verify = True
 
-        while Nummero_Simulacoes == 0 or Check(Rede, Simulation) is True:
+        while Nummero_Simulacoes == 0 or Verify is True:
 
             logger.info("Starting Case " + str(len(Casos) if Casos != [] else 0) +
                         " simulation " + str(Simulation) + " Iteração " + str(Nummero_Simulacoes))
@@ -202,8 +207,12 @@ def HC(Rede):
 
             Nummero_Simulacoes += 1
             rest += 1
+            Verify = Check(Rede, Simulation)
+
             if Nummero_Simulacoes < 3:
                 Pot_GD += 3*Incremento_Pot_gd if Criar_GD and Nummero_Simulacoes > 0 else 0
+            elif len(Casos) if Casos != [] else 0 > 2:
+                Pot_GD += 2*Incremento_Pot_gd if Criar_GD and Nummero_Simulacoes > 0 else 0
             else:
                 Pot_GD += Incremento_Pot_gd if Criar_GD and Nummero_Simulacoes > 0 else 0
 
@@ -241,8 +250,8 @@ def Case_by_Case(Rede):
     from FunctionsSecond import Identify_Overcurrent_Limits
 
     Identify_Overcurrent_Limits(Rede)
-    a = range(Num_Estudos_de_Caso)
+    #a = range(Num_Estudos_de_Caso)
     for Caso in range(Num_Estudos_de_Caso):
         Casos.append(Caso + 1)
-        FindBusGD(Num_GDs)
+        FindBusGD(Rede, Num_GDs)
         HC(Rede)

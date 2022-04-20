@@ -467,6 +467,8 @@ def Check(Rede, Simulation):
     #  Verificar o desequilibrio
     # return True if overvoltage == 0 and undervoltage == 0 and overcurrent == 0 and unbalance == 0 \
 
+    print('Max Voltage = ' + str(a) + ' ////////////////////  Min Voltage = ' + str(b))
+    logger.debug('Max Voltage = ' + str(a) + ' ////////////////////  Min Voltage = ' + str(b))
     logger.debug("Check took {" + str(time.time() - t1) + " sec} to execulte "
                                                           "in simulation: " + str(Simulation))
 
@@ -731,3 +733,45 @@ def Return_Time_String_Colum_Case_Options(Rede):
         commandMin += ' WHEN ValueMinPU = Time_' + str(i) + ' AND Time_' + str(i) + ' <> 0 THEN \'Time_' + str(i) + '\''
 
     return commandMax, commandMin
+
+def Set_Bus_kvbase(Rede):
+
+    a = list(DF_Tensao_A.Barras.values)
+    kvlln = 0.220/sqrt3
+
+    ba = []
+    bu = []
+
+    for bus in list(DF_Tensao_A.Barras.values):
+
+
+        Rede.dssCircuit.SetActiveBus(bus)
+        bu.append(Rede.dssBus.Name)
+        ba.append(Rede.dssBus.kvbase)
+
+
+        if Rede.dssBus.NumNodes == 1:
+
+            Rede.dssText.Command = 'setkvbase ' + bus + ' kvln=' + str(kvln)
+
+
+    print(1)
+
+
+
+
+
+# Não está sendo usada
+def Populate_VBase_IvControl(phases, kvbase):
+
+    kvbasetemp = [0, 0, 0]
+
+    for phase in str(phases).replace('.', ''):
+        if phase == '1':
+            kvbasetemp[0] = kvbase * 1000
+        if phase == '2':
+            kvbasetemp[1] = kvbase * 1000
+        if phase == '3':
+            kvbasetemp[2] = kvbase * 1000
+
+    return kvbasetemp

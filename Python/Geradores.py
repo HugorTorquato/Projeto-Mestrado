@@ -37,11 +37,9 @@ def Adicionar_GDs(Rede, Pot_GD, Simulation):
                            "temp=(File=C:\\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\Temp.txt)")
     Shapes.append("New LoadShape.irrad npts=96 minterval=15 "
                            "mult=(file=C:\\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\Irrad.txt)")
-    Shapes.append("New XYcurve.generic npts=4 Xarray=(0.5,0.89,0.92,1,1.05,1.1,1.5) "
+    Shapes.append("New XYcurve.vv_curve npts=4 Xarray=(0.5,0.89,0.96,1,1.02,1.1,1.5) "
                            "Yarray=(1.0,1.0,0.8,0,-0.5,-1.0,-1.0)")
-    Shapes.append("New XYCurve.vv_curve npts=7 Yarray=[1 1 0 0 0 -1 -1] "
-                           "XArray = [0.5 0.87 0.92 1 1.05 1.01 1.5]")
-    Shapes.append("New XYcurve.vw_curve npts=3 yarray=[1 0.95 0.9 0.9] xarray=[1 1.02 1.05 2]")
+    Shapes.append("New XYcurve.vw_curve npts=3 yarray=[1 1 0.90 0.85 0.8] xarray=[0.8 1 1.01 1.05 1.5]")
 
     for shape in Shapes:
         Rede.dssText.Command = shape
@@ -57,8 +55,8 @@ def Adicionar_GDs(Rede, Pot_GD, Simulation):
 
 def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
 
-    from Definitions import DF_PV, Barras_GDs, Casos, logger
-    from FunctionsSecond import ativa_barra, Identify_Phases
+    from Definitions import DF_PV, Barras_GDs, Casos, logger, sqrt3
+    from FunctionsSecond import ativa_barra, Identify_Phases, Set_Bus_kvbase
     from Monitores import Define_Random_Monior_Test
 
     index = len(DF_PV)
@@ -80,17 +78,27 @@ def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
     DF_PV.loc[index, 'Irrad'] = Irrad
     DF_PV.loc[index, 'Temp'] = Temp
 
-    # Pmpp - Ponto de máx pot
+    kvbase = 0.220
+
+    if Rede.dssBus.NumNodes == 2:
+        kvbase = kvbase/sqrt3
+
+
+
+    Identify_Phases0 =Identify_Phases(DF_PV.loc[index, 'Phases'])[0]
+    Identify_Phases1 = Identify_Phases(DF_PV.loc[index, 'Phases'])[1]
+
+    # Pmpp - Potência nominal para 1kw/m^2 ( tem de incrementar essa variável )
     # kva - pot nom inversor - Pot gerada n pode ser maior
     # pot dc = ppmppx x irrad x (1-irrad_tempo) x temp_por_pot
     # pot ac = pot dc x eff
 
     Command = "New PVSystem." + Nome + " phases=" + \
-                           str(Identify_Phases(DF_PV.loc[index, 'Phases'])[1]) + \
+                           str(Identify_Phases1) + \
                            " bus1=" + str(DF_PV.loc[index, 'Bus']) + \
-                           str(Identify_Phases(DF_PV.loc[index, 'Phases'])[0]) + \
-                           " Pmpp=4" + \
-                           " kv=" + str(Rede.dssBus.kVBase) + \
+                           str(Identify_Phases0) + \
+                           " Pmpp=" + str(Pmp) +  \
+                           " kv=" + str(kvbase) + \
                            " kVA=" + str(Pmp * 1.05) + \
                            " con=wye" + \
                            " %Cutin=0.1 %cutout=0.1 EffCurve=Eff P-TCurve=FactorPVsT" + \
@@ -102,38 +110,53 @@ def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
     Rede.dssText.Command = Command
 
     Rede.dssText.Command = "set maxcontroliter=2000"
+
+    #Creio que o erro pode estar aqui, ele define a base para a fase A mas não tem para a base C por exemplo
+
+
+    ta = Identify_Phases0
+
+    from FunctionsSecond import Populate_VBase_IvControl
+    #Set_Bus_kvbase(Rede)
+    #kvbase = [kvbase * 1000 for i in range(Identify_Phases1)]
+    #kvbase = Populate_VBase_IvControl(Identify_Phases0, kvbase)
+
     if Simulation == 3 and Debug_VV == 1:
 
         Command ="New InvControl.InvPVCtrl_" + Nome + " DERList=PVSystem." + Nome + \
                            " mode=VOLTVAR voltage_curvex_ref=rated" +\
-                           " vvc_curve1=generic monVoltageCalc=MIN" +\
-                           " deltaQ_factor=0.05 RefReactivePower=VARAVAL varchangetolerance=0.25 EventLog=yes"
+                           " vvc_curve1=vv_curve" +\
+                           " deltaQ_factor=-1 RefReactivePower=VARAVAL varchangetolerance=0.25" + \
+                           " monVoltageCalc=AVG EventLog=yes"
         logger.info("Create_PV - Define InvControl VV " + Command)
         Rede.dssText.Command = Command
 
     if Simulation == 4 and Debug_VV == 1:
 
         Command ="New InvControl.InvPVCtrl_" + Nome + " DERList=PVSystem." + Nome + \
-                              " mode=VOLTWATT voltage_curvex_ref=rated" \
-                              " vvc_curve1=generic monVoltageCalc=MIN" + \
-                              " deltaQ_factor=0.05 RefReactivePower=VARAVAL varchangetolerance=0.25" \
-                              " voltwatt_curve=vw_curve DeltaP_factor=0.05 activePchangetolerance=0.25" \
-                              " VoltwattYAxis=PMPPPU EventLog=yes"
-
-        logger.info("Create_PV - Define InvControl VV + VW " + Command)
+                              " mode=VOLTWATT voltage_curvex_ref=rated" +\
+                              " voltwatt_curve=vw_curve DeltaP_factor=-1 activePchangetolerance=0.25" +\
+                              " VoltwattYAxis=PAVAILABLEPU " +\
+                              " monVoltageCalc=AVG EventLog=yes"
+        logger.info("Create_PV - Define InvControl VW " + Command)
         Rede.dssText.Command = Command
 
     if Simulation > 4 and Debug_VV == 1:
 
         Command ="New InvControl.InvPVCtrl_" + Nome + " DERList=PVSystem." + Nome + \
                  " Combimode=VV_VW voltage_curvex_ref=rated" \
-                 " vvc_curve1=generic monVoltageCalc=MIN" + \
-                 " deltaQ_factor=0.05 RefReactivePower=VARAVAL varchangetolerance=0.25" \
-                 " voltwatt_curve=vw_curve DeltaP_factor=0.05 activePchangetolerance=0.25" \
-                 " VoltwattYAxis=PMPPPU EventLog=yes"
-
+                 " vvc_curve1=vv_curve" + \
+                 " deltaQ_factor=-1 RefReactivePower=VARAVAL varchangetolerance=0.25" \
+                 " voltwatt_curve=vw_curve DeltaP_factor=-1 activePchangetolerance=0.25" \
+                 " VoltwattYAxis=PAVAILABLEPU " + \
+                 " monVoltageCalc=AVG EventLog=yes"
         logger.info("Create_PV - Define InvControl VV + VW " + Command)
         Rede.dssText.Command = Command
+
+    # " monBusesVbase=" + str(kvbase) +\
+
+
+
 
     ## deltaQ_factor -> Mudança máxima da pot reativa da solução anterior para a desejada durante
     #                   cada iteração de controle
@@ -149,7 +172,7 @@ def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
     Define_Random_Monior_Test(Rede, "InvControl", "PVSystem." + Nome, 1, 3)
 
 def Create_GD(Rede, Nome, kW, kvar, LoadShape, Simulation):
-    from Definitions import DF_Geradores, Barras_GDs,Casos
+    from Definitions import DF_Geradores, Barras_GDs, Casos
 
     # Preparação para armazenamento dos dados
     index = len(DF_Geradores)  # Define a linha para aplicar as alterações
@@ -172,7 +195,7 @@ def Create_GD(Rede, Nome, kW, kvar, LoadShape, Simulation):
     Rede.dssText.Command = "new generator.GD_" + str(index + 1) + " phases=" + \
                            str(Identify_Phases(DF_Geradores.loc[index, 'Phases'])[1]) + \
                            " bus1=" + str(DF_Geradores.loc[index, 'Bus'] +
-                                          Identify_Phases(DF_Geradores.loc[index, 'Phases'])[0]) + \
+                           Identify_Phases(DF_Geradores.loc[index, 'Phases'])[0]) + \
                            " kv=" + str(Rede.dssBus.kVBase) + " kW=" + str(kW) + \
                            " kVAr=" + str(kvar + 0.001) + " model=1" + \
                            " daily=" + str(LoadShape)
@@ -184,8 +207,10 @@ def Fase2String(STRING):
        a += str(i)
     return a
 
-def FindBusGD(Num_GDs):
-    from Definitions import DF_Tensao_A, Barras_GDs, Debug_VV
+def FindBusGD(Rede, Num_GDs):
+
+    from Definitions import Barras_GDs, Debug_VV
+    from SistemFunctions import Nome_Barras
 
     if Debug_VV == 3000000000000000:
         #Barras_GDs_list = ['bus_33998182_039']#, 'bus_33998182_011',
@@ -218,7 +243,7 @@ def FindBusGD(Num_GDs):
             Barras_GDs.append(Barras_GDs_list[i])
         return
 
-    vet_choice = list(DF_Tensao_A.Barras.values)
+    vet_choice = list(Nome_Barras(Rede))
 
     ###############################################################################################
     # Remover manualmente mas tem de mudar para identificar de forma automatica a barra do trafo
