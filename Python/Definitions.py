@@ -35,8 +35,8 @@ if os.path.isfile(Log_path):
 import logging
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-#logger.setLevel(logging.INFO)
+#logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 formatter = logging.Formatter('%(asctime)s:%(name)s:%(levelname)s:%(message)s')
 file_Handler = logging.FileHandler(Log_path)
 file_Handler.setFormatter(formatter)
@@ -255,7 +255,7 @@ Use_PV = 1              # 1- Usa o PVSystem  0 - Usa geradore
 Norma = 1               #  # 0 - PRODIST # 1 - IEEE
 Num_Simulations = 5     # Deifnie o número de simulações que serão realizadas
 
-Num_Estudos_de_Caso = 1 # Define o estudo de caso em questão (configuração das GDs)
+Num_Estudos_de_Caso = 10 # Define o estudo de caso em questão (configuração das GDs)
 
 Debug_VV = 1            # Modo Debug para mensurar e comparar o comportamento do VV no sistema ( 1 - liga 0 - desliga)
 Thiago = 0
@@ -266,10 +266,11 @@ Remove = 1  # Com a refatoração dos monitores, não é preciso salvar dados em
 
 # PVSystem
 FP_1 = 1
-Const_Irrad = .705
+#Const_Irrad = .705
+Const_Irrad = .735
 Const_Temp = 25
 FP = 1
-Incremento_gd = 0.75  # Valores em porcentagem (%) da pot do trafo de entrada
+Incremento_gd = 2  # Valores em porcentagem (%) da pot do trafo de entrada
     # Considerar inversores reais
 
 Steps_wtout_unbalance = 4#10 # Creio que tem de ser 4
@@ -299,6 +300,10 @@ Fim_Sim = 1500
 #############################################################################
 #############################################################################
 
+if Norma == 2:
+    limite_superior = 1.05
+    limite_inferior = 0.92
+    limite_Deseq = 3
 if Norma == 1:
     limite_superior = 1.05
     limite_inferior = 0.92

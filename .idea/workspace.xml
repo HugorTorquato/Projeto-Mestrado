@@ -6,10 +6,9 @@
       <change beforePath="$PROJECT_DIR$/Python/Definitions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/Definitions.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Python/FunctionsSecond.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/FunctionsSecond.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Python/Geradores.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/Geradores.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python/Monitores.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/Monitores.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Python/SistemFunctions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/SistemFunctions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL/BI/PerdasLinhas.pbix" beforeDir="false" afterPath="$PROJECT_DIR$/SQL/BI/PerdasLinhas.pbix" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SQL/StoredProcedures/RunAll.sql" beforeDir="false" afterPath="$PROJECT_DIR$/SQL/StoredProcedures/RunAll.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL/StoredProcedures/spGenerateLossesTables.sql" beforeDir="false" afterPath="$PROJECT_DIR$/SQL/StoredProcedures/spGenerateLossesTables.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -234,7 +233,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Python/Geradores.py</url>
-          <line>82</line>
+          <line>86</line>
           <option name="timeStamp" value="172" />
         </line-breakpoint>
       </breakpoints>

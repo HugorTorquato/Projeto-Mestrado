@@ -467,8 +467,8 @@ def Check(Rede, Simulation):
     #  Verificar o desequilibrio
     # return True if overvoltage == 0 and undervoltage == 0 and overcurrent == 0 and unbalance == 0 \
 
-    print('Max Voltage = ' + str(a) + ' ////////////////////  Min Voltage = ' + str(b))
-    logger.debug('Max Voltage = ' + str(a) + ' ////////////////////  Min Voltage = ' + str(b))
+    #print('Max Voltage = ' + str(a) + ' ////////////////////  Min Voltage = ' + str(b))
+    logger.info('Max Voltage = ' + str(a) + ' ////////////////////  Min Voltage = ' + str(b))
     logger.debug("Check took {" + str(time.time() - t1) + " sec} to execulte "
                                                           "in simulation: " + str(Simulation))
 

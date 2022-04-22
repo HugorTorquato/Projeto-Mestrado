@@ -66,7 +66,9 @@ def Compila_DSS(Rede):
 
     from Definitions import logger
 
+    time.sleep(1)
     Rede.dssObj.ClearALL()
+
     Rede.dssText.Command = "compile " + Rede.Modelo_Barras
     Rede.dssText.Command = "set mode=daily"
     Rede.dssText.Command = "set stepsize = 15m"
@@ -135,7 +137,7 @@ def Solve_Hora_por_Hora(Rede, Simulation, Pot_GD):
             # functions related to violation check. Everything else can be measured using monitors.
             Tensao_Barras(Rede, itera)
             Correntes_elementos(Rede, itera)
-            Rede.dssText.Command = "Export EventLog"
+            #Rede.dssText.Command = "Export EventLog"
 
             # Medição já está sendo feita pelos monitores ( pode remover )
             # Data_PV(Rede, itera)
@@ -188,8 +190,8 @@ def HC(Rede):
 
             logger.info("Starting Case " + str(len(Casos) if Casos != [] else 0) +
                         " simulation " + str(Simulation) + " Iteração " + str(Nummero_Simulacoes))
-            print("Starting Case " + str(len(Casos) if Casos != [] else 0) +
-                  " simulation " + str(Simulation) + " Iteração " + str(Nummero_Simulacoes))
+            #print("Starting Case " + str(len(Casos) if Casos != [] else 0) +
+            #      " simulation " + str(Simulation) + " Iteração " + str(Nummero_Simulacoes))
 
             if rest == 5:
                 rest = 0
@@ -209,10 +211,8 @@ def HC(Rede):
             rest += 1
             Verify = Check(Rede, Simulation)
 
-            if Nummero_Simulacoes < 3:
-                Pot_GD += 3*Incremento_Pot_gd if Criar_GD and Nummero_Simulacoes > 0 else 0
-            elif len(Casos) if Casos != [] else 0 > 2:
-                Pot_GD += 2*Incremento_Pot_gd if Criar_GD and Nummero_Simulacoes > 0 else 0
+            if Nummero_Simulacoes < 2:
+                Pot_GD += Incremento_Pot_gd if Criar_GD and Nummero_Simulacoes > 0 else 0
             else:
                 Pot_GD += Incremento_Pot_gd if Criar_GD and Nummero_Simulacoes > 0 else 0
 
@@ -231,7 +231,9 @@ def HC(Rede):
         Save_General_Data(Simulation)
         Process_Data(Rede, Simulation, DF_Monitors_Data_2)
 
-        print('Número da Simulação : ' + str(Simulation) + ' Pot GDs : ' + str(Pot_GD - Incremento_Pot_gd))
+        print('Caso=' + str(len(Casos) if Casos != [] else 0) + ' Número da Simulação : ' +
+              str(Simulation) + " Número de iterações : " + str(Nummero_Simulacoes) +
+              ' Pot GDs : ' + str(Pot_GD - Incremento_Pot_gd))
 
 def Case_by_Case(Rede):
 
@@ -250,7 +252,7 @@ def Case_by_Case(Rede):
     from FunctionsSecond import Identify_Overcurrent_Limits
 
     Identify_Overcurrent_Limits(Rede)
-    #a = range(Num_Estudos_de_Caso)
+
     for Caso in range(Num_Estudos_de_Caso):
         Casos.append(Caso + 1)
         FindBusGD(Rede, Num_GDs)
