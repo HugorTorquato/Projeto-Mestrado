@@ -8,7 +8,7 @@
       <change beforePath="$PROJECT_DIR$/Python/Geradores.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/Geradores.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Python/SistemFunctions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/SistemFunctions.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SQL/StoredProcedures/RunAll.sql" beforeDir="false" afterPath="$PROJECT_DIR$/SQL/StoredProcedures/RunAll.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL/StoredProcedures/spGenerateLossesTables.sql" beforeDir="false" afterPath="$PROJECT_DIR$/SQL/StoredProcedures/spGenerateLossesTables.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL/StoredProcedures/spGenerateInvControlTables.sql" beforeDir="false" afterPath="$PROJECT_DIR$/SQL/StoredProcedures/spGenerateInvControlTables.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -228,13 +228,18 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Python/FunctionsSecond.py</url>
-          <line>757</line>
-          <option name="timeStamp" value="168" />
+          <line>486</line>
+          <option name="timeStamp" value="173" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Python/Geradores.py</url>
-          <line>86</line>
-          <option name="timeStamp" value="172" />
+          <url>file://$PROJECT_DIR$/Python/SistemFunctions.py</url>
+          <line>149</line>
+          <option name="timeStamp" value="185" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Python/SistemFunctions.py</url>
+          <line>131</line>
+          <option name="timeStamp" value="190" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

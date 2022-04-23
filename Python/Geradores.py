@@ -60,7 +60,7 @@ def Adicionar_GDs(Rede, Pot_GD, Simulation):
 def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
 
     from Definitions import DF_PV, Barras_GDs, Casos, logger, sqrt3
-    from FunctionsSecond import ativa_barra, Identify_Phases, Set_Bus_kvbase
+    from FunctionsSecond import ativa_barra, Identify_Phases
     from Monitores import Define_Random_Monior_Test
 
     index = len(DF_PV)
@@ -115,21 +115,12 @@ def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
 
     Rede.dssText.Command = "set maxcontroliter=2000"
 
-    #Creio que o erro pode estar aqui, ele define a base para a fase A mas não tem para a base C por exemplo
-
-
-    ta = Identify_Phases0
-
-    from FunctionsSecond import Populate_VBase_IvControl
-    #Set_Bus_kvbase(Rede)
-    #kvbase = [kvbase * 1000 for i in range(Identify_Phases1)]
-    #kvbase = Populate_VBase_IvControl(Identify_Phases0, kvbase)
-
     if Simulation == 3 and Debug_VV == 1:
 
         Command ="New InvControl.InvPVCtrl_" + Nome + " DERList=PVSystem." + Nome + \
                            " mode=VOLTVAR voltage_curvex_ref=rated" +\
-                           " vvc_curve1=vv_curve" +\
+                           " vvc_curve1=vv_curve " \
+                           " varchangetolerance=0.5 voltagechangetolerance=0.01" +\
                            " deltaQ_factor=-1 RefReactivePower=VARAVAL" + \
                            " monVoltageCalc=AVG EventLog=yes"
         logger.debug("Create_PV - Define InvControl VV " + Command)
@@ -140,7 +131,8 @@ def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
         Command ="New InvControl.InvPVCtrl_" + Nome + " DERList=PVSystem." + Nome + \
                               " mode=VOLTWATT voltage_curvex_ref=rated" +\
                               " voltwatt_curve=vw_curve DeltaP_factor=-1" +\
-                              " VoltwattYAxis=PAVAILABLEPU " +\
+                              " VoltwattYAxis=PAVAILABLEPU " + \
+                              " varchangetolerance=0.5 voltagechangetolerance=0.01" + \
                               " monVoltageCalc=AVG EventLog=yes"
         logger.debug("Create_PV - Define InvControl VW " + Command)
         Rede.dssText.Command = Command
@@ -153,6 +145,7 @@ def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
                  " deltaQ_factor=-1 RefReactivePower=VARAVAL" \
                  " voltwatt_curve=vw_curve DeltaP_factor=-1" \
                  " VoltwattYAxis=PAVAILABLEPU " + \
+                 " varchangetolerance=0.5 voltagechangetolerance=0.01" + \
                  " monVoltageCalc=AVG EventLog=yes"
         logger.debug("Create_PV - Define InvControl VV + VW " + Command)
         Rede.dssText.Command = Command

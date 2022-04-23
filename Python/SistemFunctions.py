@@ -2,7 +2,8 @@
 import time
 
 from Geradores import *
-from Definitions import *
+import time
+from multiprocessing import Process
 
 def Inicializa(Rede):
 
@@ -92,6 +93,13 @@ def Tamanho_pmult(Rede):
     Rede.dssLoadShapes.Name = Rede.dssLoadShapes.AllNames[1]
     return len(Rede.dssLoadShapes.pmult)
 
+def barrr():
+    a = 0
+    for i in range(100):
+        a += 1
+        print(a)
+        time.sleep(1)
+
 def Solve_Hora_por_Hora(Rede, Simulation, Pot_GD):
     # Essa função é o coração do código, aqui que são feitos todos os comandos e designações para os calculos durante
     # a simulação diária
@@ -126,7 +134,16 @@ def Solve_Hora_por_Hora(Rede, Simulation, Pot_GD):
         # Se acahr uma forma de não precisar fazer o solve das horas fora do intervalo seria lega
 
         t1 = time.time()
+        timekill = 10
+
         Rede.dssSolution.SolveSnap()
+
+
+
+        if time.time() - t1 >= timekill - 0.5:
+            Rede.dssSolution.FinishTimeStep()
+            logger.info("Deu ruim na iteração=" + str(itera))
+
         logger.debug("SolveSnap took {" + str(time.time() - t1) + " sec} to execulte "
                                                                 "in iteration: " + str(itera))
 
@@ -137,13 +154,15 @@ def Solve_Hora_por_Hora(Rede, Simulation, Pot_GD):
             # functions related to violation check. Everything else can be measured using monitors.
             Tensao_Barras(Rede, itera)
             Correntes_elementos(Rede, itera)
-            #Rede.dssText.Command = "Export EventLog"
+            Rede.dssText.Command = "Export EventLog"
 
             # Medição já está sendo feita pelos monitores ( pode remover )
             # Data_PV(Rede, itera)
             # Creio que esses dados já estão sendo salvos pelos monitores, não precisa mais
 
         Rede.dssSolution.FinishTimeStep()
+
+
 
 def HC(Rede):
 
@@ -192,11 +211,6 @@ def HC(Rede):
                         " simulation " + str(Simulation) + " Iteração " + str(Nummero_Simulacoes))
             #print("Starting Case " + str(len(Casos) if Casos != [] else 0) +
             #      " simulation " + str(Simulation) + " Iteração " + str(Nummero_Simulacoes))
-
-            if rest == 5:
-                rest = 0
-                logger.debug("Rest 1s")
-                time.sleep(1)
 
             # Confere se a definição para adicionar GHD está ativa e se não for a primeira simulação, reseta os devidos
             # valores para fazer o código funcionar

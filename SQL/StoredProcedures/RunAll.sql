@@ -7,5 +7,7 @@ GO
 EXEC spGenerateLossesTables
 EXEC spGenerateInvControlTables
 GO
+-- Só podem ser chamados uma vez!!!!!!! Causam alterações nos dados
 EXEC spConvertVregMeasurament
+EXEC spRemoveDuplicatesCheckReport
 GO

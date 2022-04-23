@@ -27,6 +27,7 @@ BEGIN
 			Simulation int,
 			Monitor varchar(50),
 			Elemento varchar(50)
+			-- Adicionar aqui
 		);
 	END
 
@@ -63,7 +64,6 @@ BEGIN
 		-- Adicionar aqui
 	FROM MonitoresData_2 MD2 WITH (NOLOCK)
 		WHERE Elemento like 'pvsystem%' 
-			  and Monitor like 'invcontrol%' 
 		ORDER BY Simulation, [Case]
 
 	-----------------------------------------------------------------------------
@@ -81,8 +81,21 @@ BEGIN
 	join MonitoresData_2 AS MD2 WITH (NOLOCK)
 		ON SI.[Case] = MD2.[Case]
 		   and SI.Simulation = MD2.Simulation
-		   and SI.Monitor = MD2.Monitor
 		   and SI.Elemento = MD2.Elemento
-	WHERE Measurement in ('Vreg', 'volt-var', 'volt-watt')
+	WHERE Measurement in ('Vreg', 'volt-var', 'volt-watt',
+	' P1 (kW)', ' P2 (kW)', ' P3 (kW)', ' Q1 (kvar)', ' Q2 (kvar)', ' Q3 (kvar)')
 	ORDER BY Measurement, id_Summary, TimeStep
+	
+	-----------------------------------------------------------------------------
+	------------------------------ Validade DATA --------------------------------
+	-----------------------------------------------------------------------------	
+	--select * from MonitoresData_2
+	--where Elemento like 'pvsystem.pv_8' and
+	--	Measurement in ('Vreg', ' v1', ' v2', ' v3') and
+	--	Simulation = 3 and TimeStep=50
+	--
+	--SELECT * FROM MonitoresData_2
+	--where Elemento like 'pvsystem.pv_3' and
+	--		Measurement in ('Vreg', 'volt-var', 'volt-watt') and
+	--		Simulation = 5
 END
