@@ -82,7 +82,8 @@ BEGIN
 		ON SI.[Case] = MD2.[Case]
 		   and SI.Simulation = MD2.Simulation
 		   and SI.Elemento = MD2.Elemento
-	WHERE Measurement in ('Vreg', 'volt-var', 'volt-watt',
+		   and SI.Monitor = MD2.Monitor
+	WHERE Measurement in ('Vreg', 'volt-var', 'volt-watt', ' vars', ' watts',
 	' P1 (kW)', ' P2 (kW)', ' P3 (kW)', ' Q1 (kvar)', ' Q2 (kvar)', ' Q3 (kvar)')
 	ORDER BY Measurement, id_Summary, TimeStep
 	

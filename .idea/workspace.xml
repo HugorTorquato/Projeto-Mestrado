@@ -3,10 +3,15 @@
   <component name="ChangeListManager">
     <list default="true" id="c0a353b0-9d94-497b-99cd-a779928dfe5d" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python/Definitions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/Definitions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python/FunctionsSecond.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/FunctionsSecond.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python/Geradores.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/Geradores.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python/SistemFunctions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/SistemFunctions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Figs/Diagrama_Simulação.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Figs/Diagrama_Simulação.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Figs/VVVW.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Figs/VVVW.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Reffs/A comprehensive Assessment of PV Hosting Capacity on Low Voltage Distribution Systems.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/Reffs/A comprehensive Assessment of PV Hosting Capacity on Low Voltage Distribution Systems.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Reffs/HUGO_IEEE_for_journals_template_with_bibtex_example_files_included.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/Reffs/HUGO_IEEE_for_journals_template_with_bibtex_example_files_included.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Reffs/TCC_Maisa_Martins_Gomes.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/Reffs/TCC_Maisa_Martins_Gomes.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Reffs/Usadas/10_Technologies toIncrease PV Hosting Capacity in Distribution Feeders.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/Reffs/Usadas/10_Technologies toIncrease PV Hosting Capacity in Distribution Feeders.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Reffs/Usadas/11Overload and overvoltage in low-voltage and medium-voltage networks due to renewable energy - some illustrative case studies.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/Reffs/Usadas/11Overload and overvoltage in low-voltage and medium-voltage networks due to renewable energy - some illustrative case studies.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Reffs/Usadas/9_Improving Distribution Network PV Hosting Capacity via Smart Inverter Reactive Power Support.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/Reffs/Usadas/9_Improving Distribution Network PV Hosting Capacity via Smart Inverter Reactive Power Support.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL/BI/Resultados_Source.pbix" beforeDir="false" afterPath="$PROJECT_DIR$/SQL/BI/Resultados_Source.pbix" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SQL/StoredProcedures/RunAll.sql" beforeDir="false" afterPath="$PROJECT_DIR$/SQL/StoredProcedures/RunAll.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SQL/StoredProcedures/spGenerateInvControlTables.sql" beforeDir="false" afterPath="$PROJECT_DIR$/SQL/StoredProcedures/spGenerateInvControlTables.sql" afterDir="false" />
     </list>

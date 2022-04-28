@@ -6,6 +6,7 @@ EXEC spCalc_HC
 GO
 EXEC spGenerateLossesTables
 EXEC spGenerateInvControlTables
+EXEC spGenerateSourceTables
 GO
 -- Só podem ser chamados uma vez!!!!!!! Causam alterações nos dados
 EXEC spConvertVregMeasurament
