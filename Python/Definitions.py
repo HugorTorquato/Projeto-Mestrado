@@ -246,7 +246,7 @@ Criar_GD = 1            # Aciona a inserção de GDs na rede
 
 
 
-Num_GDs = 9             # Definição do número de GDs que serão adicionadas
+Num_GDs = 6             # Definição do número de GDs que serão adicionadas
 Calc_HC = 1             # Aciona o cálculo do HC
 All_GDs = 1
 
@@ -269,7 +269,7 @@ FP_1 = 1
 Const_Irrad = .735
 Const_Temp = 25
 FP = 1
-Incremento_gd = 1.5  # Valores em porcentagem (%) da pot do trafo de entrada
+Incremento_gd = 0.5  # Valores em porcentagem (%) da pot do trafo de entrada
     # Considerar inversores reais
 
 Steps_wtout_unbalance = 4#10 # Creio que tem de ser 4

@@ -70,6 +70,7 @@ def Compila_DSS(Rede):
     time.sleep(1)
     Rede.dssObj.ClearALL()
 
+
     Rede.dssText.Command = "compile " + Rede.Modelo_Barras
     Rede.dssText.Command = "set mode=daily"
     Rede.dssText.Command = "set stepsize = 15m"
@@ -226,7 +227,7 @@ def HC(Rede):
             Verify = Check(Rede, Simulation)
 
             if Nummero_Simulacoes < 2:
-                Pot_GD += Incremento_Pot_gd if Criar_GD and Nummero_Simulacoes > 0 else 0
+                Pot_GD += 3*Incremento_Pot_gd if Criar_GD and Nummero_Simulacoes > 0 else 0
             else:
                 Pot_GD += Incremento_Pot_gd if Criar_GD and Nummero_Simulacoes > 0 else 0
 
@@ -236,6 +237,24 @@ def HC(Rede):
 
             if Nummero_Simulacoes > 20:
                 break
+
+        # Step Back
+        Reduction = Incremento_Pot_gd if Criar_GD and Nummero_Simulacoes > 0 else 0
+        Pot_GD -= Reduction
+        logger.info("Redução de : " + str(Reduction))
+        logger.info("Starting Step Back " + str(len(Casos) if Casos != [] else 0) +
+                    " simulation " + str(Simulation) + " Iteração " + str(Nummero_Simulacoes))
+        #print("Starting Case " + str(len(Casos) if Casos != [] else 0) +
+        #      " simulation " + str(Simulation) + " Iteração " + str(Nummero_Simulacoes))
+
+        # Confere se a definição para adicionar GHD está ativa e se não for a primeira simulação, reseta os devidos
+        # valores para fazer o código funcionar
+        if Criar_GD and Nummero_Simulacoes > 0:
+            Compila_DSS(Rede)
+            [Limpar_DF(DF) for DF in [DF_Geradores, DF_Elements, DF_PV, DF_Lista_Monitors, DF_PVPowerData]]
+
+        # trocar .insert por .concat ( primeiro tem performance ruim )
+        Solve_Hora_por_Hora(Rede, Simulation, Pot_GD)  # Chamada da função que levanta o perfil diário
 
         from Monitores import Export_And_Read_Monitors_Data
         from DB_Rede import Save_General_Data, Process_Data
