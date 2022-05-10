@@ -2,7 +2,8 @@
 import time
 
 from Geradores import *
-from Definitions import *
+import time
+from multiprocessing import Process
 
 def Inicializa(Rede):
 
@@ -66,7 +67,10 @@ def Compila_DSS(Rede):
 
     from Definitions import logger
 
+    time.sleep(1)
     Rede.dssObj.ClearALL()
+
+
     Rede.dssText.Command = "compile " + Rede.Modelo_Barras
     Rede.dssText.Command = "set mode=daily"
     Rede.dssText.Command = "set stepsize = 15m"
@@ -89,6 +93,13 @@ def Nome_Barras(Rede):
 def Tamanho_pmult(Rede):
     Rede.dssLoadShapes.Name = Rede.dssLoadShapes.AllNames[1]
     return len(Rede.dssLoadShapes.pmult)
+
+def barrr():
+    a = 0
+    for i in range(100):
+        a += 1
+        print(a)
+        time.sleep(1)
 
 def Solve_Hora_por_Hora(Rede, Simulation, Pot_GD):
     # Essa função é o coração do código, aqui que são feitos todos os comandos e designações para os calculos durante
@@ -124,7 +135,16 @@ def Solve_Hora_por_Hora(Rede, Simulation, Pot_GD):
         # Se acahr uma forma de não precisar fazer o solve das horas fora do intervalo seria lega
 
         t1 = time.time()
+        timekill = 10
+
         Rede.dssSolution.SolveSnap()
+
+
+
+        if time.time() - t1 >= timekill - 0.5:
+            Rede.dssSolution.FinishTimeStep()
+            logger.info("Deu ruim na iteração=" + str(itera))
+
         logger.debug("SolveSnap took {" + str(time.time() - t1) + " sec} to execulte "
                                                                 "in iteration: " + str(itera))
 
@@ -142,6 +162,8 @@ def Solve_Hora_por_Hora(Rede, Simulation, Pot_GD):
             # Creio que esses dados já estão sendo salvos pelos monitores, não precisa mais
 
         Rede.dssSolution.FinishTimeStep()
+
+
 
 def HC(Rede):
 
@@ -188,13 +210,8 @@ def HC(Rede):
 
             logger.info("Starting Case " + str(len(Casos) if Casos != [] else 0) +
                         " simulation " + str(Simulation) + " Iteração " + str(Nummero_Simulacoes))
-            print("Starting Case " + str(len(Casos) if Casos != [] else 0) +
-                  " simulation " + str(Simulation) + " Iteração " + str(Nummero_Simulacoes))
-
-            if rest == 5:
-                rest = 0
-                logger.debug("Rest 1s")
-                time.sleep(1)
+            #print("Starting Case " + str(len(Casos) if Casos != [] else 0) +
+            #      " simulation " + str(Simulation) + " Iteração " + str(Nummero_Simulacoes))
 
             # Confere se a definição para adicionar GHD está ativa e se não for a primeira simulação, reseta os devidos
             # valores para fazer o código funcionar
@@ -209,10 +226,8 @@ def HC(Rede):
             rest += 1
             Verify = Check(Rede, Simulation)
 
-            if Nummero_Simulacoes < 3:
+            if Nummero_Simulacoes < 2:
                 Pot_GD += 3*Incremento_Pot_gd if Criar_GD and Nummero_Simulacoes > 0 else 0
-            elif len(Casos) if Casos != [] else 0 > 2:
-                Pot_GD += 2*Incremento_Pot_gd if Criar_GD and Nummero_Simulacoes > 0 else 0
             else:
                 Pot_GD += Incremento_Pot_gd if Criar_GD and Nummero_Simulacoes > 0 else 0
 
@@ -223,6 +238,24 @@ def HC(Rede):
             if Nummero_Simulacoes > 20:
                 break
 
+        # Step Back
+        Reduction = Incremento_Pot_gd if Criar_GD and Nummero_Simulacoes > 0 else 0
+        Pot_GD -= Reduction
+        logger.info("Redução de : " + str(Reduction))
+        logger.info("Starting Step Back " + str(len(Casos) if Casos != [] else 0) +
+                    " simulation " + str(Simulation) + " Iteração " + str(Nummero_Simulacoes))
+        #print("Starting Case " + str(len(Casos) if Casos != [] else 0) +
+        #      " simulation " + str(Simulation) + " Iteração " + str(Nummero_Simulacoes))
+
+        # Confere se a definição para adicionar GHD está ativa e se não for a primeira simulação, reseta os devidos
+        # valores para fazer o código funcionar
+        if Criar_GD and Nummero_Simulacoes > 0:
+            Compila_DSS(Rede)
+            [Limpar_DF(DF) for DF in [DF_Geradores, DF_Elements, DF_PV, DF_Lista_Monitors, DF_PVPowerData]]
+
+        # trocar .insert por .concat ( primeiro tem performance ruim )
+        Solve_Hora_por_Hora(Rede, Simulation, Pot_GD)  # Chamada da função que levanta o perfil diário
+
         from Monitores import Export_And_Read_Monitors_Data
         from DB_Rede import Save_General_Data, Process_Data
 
@@ -231,7 +264,9 @@ def HC(Rede):
         Save_General_Data(Simulation)
         Process_Data(Rede, Simulation, DF_Monitors_Data_2)
 
-        print('Número da Simulação : ' + str(Simulation) + ' Pot GDs : ' + str(Pot_GD - Incremento_Pot_gd))
+        print('Caso=' + str(len(Casos) if Casos != [] else 0) + ' Número da Simulação : ' +
+              str(Simulation) + " Número de iterações : " + str(Nummero_Simulacoes) +
+              ' Pot GDs : ' + str(Pot_GD - Incremento_Pot_gd))
 
 def Case_by_Case(Rede):
 
@@ -250,7 +285,7 @@ def Case_by_Case(Rede):
     from FunctionsSecond import Identify_Overcurrent_Limits
 
     Identify_Overcurrent_Limits(Rede)
-    #a = range(Num_Estudos_de_Caso)
+
     for Caso in range(Num_Estudos_de_Caso):
         Casos.append(Caso + 1)
         FindBusGD(Rede, Num_GDs)

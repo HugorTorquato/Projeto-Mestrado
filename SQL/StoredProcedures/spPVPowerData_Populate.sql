@@ -5,7 +5,10 @@ AS
 BEGIN
 
 	SET NOCOUNT ON;
-
+		-- Não está considerando o tempo, pega o valor minimo, mas esse pode acontecer em qualquer momento
+		-- sorte que não precisa rodar toda a simulação para ter esse resultado mudado, só alterar essa SP e EXECUTE
+		
+		-- Tem de identificar o timestep de maior geração e depois pegar os valores de pot, de cada GD, para ele
 		UPDATE 
 			PVSystems
 		SET

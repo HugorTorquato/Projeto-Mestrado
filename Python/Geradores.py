@@ -5,7 +5,7 @@ import random2
 
 def Adicionar_GDs(Rede, Pot_GD, Simulation):
 
-    from Definitions import DF_PV, Num_GDs, logger
+    from Definitions import FP, Num_GDs, logger
     from FunctionsSecond import originalSteps
 
     STEPS = originalSteps(Rede)
@@ -37,9 +37,13 @@ def Adicionar_GDs(Rede, Pot_GD, Simulation):
                            "temp=(File=C:\\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\Temp.txt)")
     Shapes.append("New LoadShape.irrad npts=96 minterval=15 "
                            "mult=(file=C:\\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\Irrad.txt)")
-    Shapes.append("New XYcurve.vv_curve npts=4 Xarray=(0.5,0.89,0.96,1,1.02,1.1,1.5) "
-                           "Yarray=(1.0,1.0,0.8,0,-0.5,-1.0,-1.0)")
-    Shapes.append("New XYcurve.vw_curve npts=3 yarray=[1 1 0.90 0.85 0.8] xarray=[0.8 1 1.01 1.05 1.5]")
+    #Shapes.append("New XYcurve.vv_curve npts=4 Xarray=(0.5,0.89,0.96,1,1.02,1.1,1.5) "
+    Shapes.append("New XYcurve.vv_curve npts=5 Xarray=(0.92, 0.99, 1, 1.01, 1.05) "
+                           "Yarray=(1.0, 0, 0, 0, -1.0)")
+    #Shapes.append("New XYcurve.vw_curve npts=4 yarray=[1 1 0.90 0.85 0.8] xarray=[0.8 1 1.01 1.05 1.5]")
+
+    #  Fazer um estudo para avaliar o nível de redução da pot ativa
+    Shapes.append("New XYcurve.vw_curve npts=4 yarray=(1 1 0.85 0.85) xarray=(0.8 1.03 1.05 2)")
 
     for shape in Shapes:
         Rede.dssText.Command = shape
@@ -56,7 +60,7 @@ def Adicionar_GDs(Rede, Pot_GD, Simulation):
 def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
 
     from Definitions import DF_PV, Barras_GDs, Casos, logger, sqrt3
-    from FunctionsSecond import ativa_barra, Identify_Phases, Set_Bus_kvbase
+    from FunctionsSecond import ativa_barra, Identify_Phases
     from Monitores import Define_Random_Monior_Test
 
     index = len(DF_PV)
@@ -106,39 +110,31 @@ def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
                            " irradiance=" + str(Const_Irrad) + " temperature=" + str(Const_Temp) + \
                            " daily=irrad Tdaily=Temp wattpriority=yes debugtrace=yes"
 
-    logger.info("Create_PV - " + Command)
+    logger.debug("Create_PV - " + Command)
     Rede.dssText.Command = Command
 
     Rede.dssText.Command = "set maxcontroliter=2000"
-
-    #Creio que o erro pode estar aqui, ele define a base para a fase A mas não tem para a base C por exemplo
-
-
-    ta = Identify_Phases0
-
-    from FunctionsSecond import Populate_VBase_IvControl
-    #Set_Bus_kvbase(Rede)
-    #kvbase = [kvbase * 1000 for i in range(Identify_Phases1)]
-    #kvbase = Populate_VBase_IvControl(Identify_Phases0, kvbase)
 
     if Simulation == 3 and Debug_VV == 1:
 
         Command ="New InvControl.InvPVCtrl_" + Nome + " DERList=PVSystem." + Nome + \
                            " mode=VOLTVAR voltage_curvex_ref=rated" +\
-                           " vvc_curve1=vv_curve" +\
-                           " deltaQ_factor=-1 RefReactivePower=VARAVAL varchangetolerance=0.25" + \
+                           " vvc_curve1=vv_curve " \
+                           " varchangetolerance=0.5 voltagechangetolerance=0.01" +\
+                           " deltaQ_factor=-1 RefReactivePower=VARAVAL" + \
                            " monVoltageCalc=AVG EventLog=yes"
-        logger.info("Create_PV - Define InvControl VV " + Command)
+        logger.debug("Create_PV - Define InvControl VV " + Command)
         Rede.dssText.Command = Command
 
     if Simulation == 4 and Debug_VV == 1:
 
         Command ="New InvControl.InvPVCtrl_" + Nome + " DERList=PVSystem." + Nome + \
                               " mode=VOLTWATT voltage_curvex_ref=rated" +\
-                              " voltwatt_curve=vw_curve DeltaP_factor=-1 activePchangetolerance=0.25" +\
-                              " VoltwattYAxis=PAVAILABLEPU " +\
+                              " voltwatt_curve=vw_curve DeltaP_factor=-1" +\
+                              " VoltwattYAxis=PAVAILABLEPU " + \
+                              " varchangetolerance=0.5 voltagechangetolerance=0.01" + \
                               " monVoltageCalc=AVG EventLog=yes"
-        logger.info("Create_PV - Define InvControl VW " + Command)
+        logger.debug("Create_PV - Define InvControl VW " + Command)
         Rede.dssText.Command = Command
 
     if Simulation > 4 and Debug_VV == 1:
@@ -146,11 +142,12 @@ def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
         Command ="New InvControl.InvPVCtrl_" + Nome + " DERList=PVSystem." + Nome + \
                  " Combimode=VV_VW voltage_curvex_ref=rated" \
                  " vvc_curve1=vv_curve" + \
-                 " deltaQ_factor=-1 RefReactivePower=VARAVAL varchangetolerance=0.25" \
-                 " voltwatt_curve=vw_curve DeltaP_factor=-1 activePchangetolerance=0.25" \
+                 " deltaQ_factor=-1 RefReactivePower=VARAVAL" \
+                 " voltwatt_curve=vw_curve DeltaP_factor=-1" \
                  " VoltwattYAxis=PAVAILABLEPU " + \
+                 " varchangetolerance=0.5 voltagechangetolerance=0.01" + \
                  " monVoltageCalc=AVG EventLog=yes"
-        logger.info("Create_PV - Define InvControl VV + VW " + Command)
+        logger.debug("Create_PV - Define InvControl VV + VW " + Command)
         Rede.dssText.Command = Command
 
     # " monBusesVbase=" + str(kvbase) +\
@@ -250,6 +247,41 @@ def FindBusGD(Rede, Num_GDs):
     vet_choice.remove('bus_xfmr_pri_33998182')
     vet_choice.remove('bus_xfmr_sec_33998182')
     ###############################################################################################
+
+    vet_choice = list(['bus_33998182_030'
+                      ,'bus_33998182_025'
+                      ,'bus_33998182_031'
+                      ,'bus_33998182_032'
+                      ,'bus_33998182_033'
+                      ,'bus_33998182_029'
+                      ,'bus_33998182_015'
+                      ,'bus_33998182_038'
+                      ,'bus_33998182_037'
+                      ,'bus_33998182_028'
+                      ,'bus_33998182_026'
+                      ,'bus_33998182_027'
+                      ,'bus_33998182_035'
+                      ,'bus_33998182_018'
+                      ,'bus_33998182_019'
+                      ,'bus_33998182_039'
+                      ,'bus_33998182_016'
+                      ,'bus_33998182_024'
+                      ,'bus_33998182_017'
+                      ,'bus_33998182_034'
+                      ,'bus_33998182_020'
+                      ,'bus_33998182_022'
+                      ,'bus_33998182_026'
+                      ,'bus_33998182_019'
+                      ,'bus_33998182_024'
+                      ,'bus_33998182_021'
+                      ,'bus_33998182_023'])
+
+    vet_choice2 = list(['bus_33998182_030'
+                          ,'bus_33998182_015'
+                          ,'bus_33998182_018'
+                          ,'bus_33998182_013'
+                          ,'bus_33998182_022'
+                          ,'bus_33998182_025'])
 
     #vet_choice = list(DF_Tensao_A.Barras.values)
     for i in range(Num_GDs):
