@@ -453,6 +453,13 @@ def Check(Rede, Simulation):
     overcurrent = 0
     unbalance = 0
 
+    # --------------------------------------------------------------------------------------------------------
+
+    # Fazer uma melhoria na forma de conferir violação
+        # Tem de identificar o número de valores > Limite max ou < Limit min
+        # Se for maior que uma % do tempo de simulação, é considerado violação
+        # se não não
+
     a = float(Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[0])
     b = float(Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[1])
 
@@ -460,6 +467,16 @@ def Check(Rede, Simulation):
         else 1
     undervoltage = 0 if float(Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[1]) >= limite_inferior \
         else 1
+    # --------------------------------------------------------------------------------------------------------
+    # A lógica vai ficar a mesmo, setar 1 ou 0 para a variável,mas a condição tem de mudar
+
+    # OPÇÕES
+        # 1 - Contar quantos valores são maiores que X e depois ver se isso é maior que %
+
+
+    # --------------------------------------------------------------------------------------------------------
+
+
     overcurrent = 0 if Check_overcurrent() == 0 \
         else 1
     unbalance = 0 if Check_Desq(Rede, DF_Desq_IEC, DF_Desq_IEEE, DF_Desq_NEMA) is False \
@@ -497,12 +514,14 @@ def Check_overcurrent():
             try:
                 Violations.append(
                     t_df.iloc[ind].where(
-                        t_df.iloc[ind] > df_temp_curr.set_index('Elementos')['Current_Limits'][ind]).count())
+                        t_df.iloc[ind] >
+                        df_temp_curr.set_index('Elementos')['Current_Limits'][ind]).count())
             except:
                 logger.debug("Deu Ruim Check_overcurrent()")
 
 
-        df_temp_curr.insert(df_temp_curr.ndim + 2, 'Num_Violations', Violations, allow_duplicates=True)
+        df_temp_curr.insert(df_temp_curr.ndim + 2, 'Num_Violations',
+                            Violations, allow_duplicates=True)
 
         for line in df_temp_curr['Num_Violations']:
             if line > Steps_wtout_overcurrent:
@@ -526,11 +545,18 @@ def Check_Desq(Rede, IEC, IEEE, NEMA):
 
     # Se alguma barra tiver mais que 5% violações de tensão, acusa o overvoltage
     count = 0
+
+    # --------------------------------------------------------------------------------------------------------
     aa = DF.set_index('Barras')
     aaa = DF.set_index('Barras').where(DF.set_index('Barras') > limite_Deseq).count(axis=1)
     a = DF.set_index('Barras').where(DF.set_index('Barras') > limite_Deseq).count(axis=1).values
-    for barra in DF.set_index('Barras').where(DF.set_index('Barras') > limite_Deseq).count(axis=1).values:
-        count += 1 if barra >= np.floor(originalSteps(Rede) * float(Steps_wtout_unbalance / 100)) else 0
+    # --------------------------------------------------------------------------------------------------------
+
+    for barra in DF.set_index(
+            'Barras').where(DF.set_index('Barras') >
+                            limite_Deseq).count(axis=1).values:
+        count += 1 if barra >= np.floor(originalSteps(Rede) * float(Steps_wtout_unbalance / 100)) \
+            else 0
 
     logger.debug("Check_Desq took {" + str(time.time() - t1) + " sec} to execulte")
 
