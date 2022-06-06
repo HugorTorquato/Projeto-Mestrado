@@ -427,13 +427,6 @@ def Colunas_DF_Horas(Rede):
 
 
 def Check(Rede, Simulation):
-    # Adicionar condições de vioçação aqui:
-    # print(DF_Desq_IEC)
-    # print(Check_Desq(DF_Desq_IEC, DF_Desq_IEEE, DF_Desq_NEMA))
-
-    # and \
-    # float(Check_Desq(DF_Desq_IEC, DF_Desq_IEEE, DF_Desq_NEMA)) <= limite_Deseq:
-    # print(Check_Desq(DF_Desq_IEC, DF_Desq_IEEE, DF_Desq_NEMA))
 
     # --------------------------------------------------------------------------------------------------------
     # Requirements
@@ -453,39 +446,15 @@ def Check(Rede, Simulation):
     overcurrent = 0
     unbalance = 0
 
-    # --------------------------------------------------------------------------------------------------------
-
-    # Fazer uma melhoria na forma de conferir violação
-        # Tem de identificar o número de valores > Limite max ou < Limit min
-        # Se for maior que uma % do tempo de simulação, é considerado violação
-        # se não não
-
-    a = float(Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[0])
-    b = float(Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[1])
-
-    overvoltage = 0 if float(Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[0]) <= limite_superior \
+    overvoltage = 0 if Check_Overvoltage_Range(Rede, DF_Tensao_A, DF_Tensao_B, DF_Tensao_C) is False \
         else 1
-    undervoltage = 0 if float(Max_and_Min_Voltage_DF(DF_Tensao_A, DF_Tensao_B, DF_Tensao_C)[1]) >= limite_inferior \
+    undervoltage = 0 if Check_Undervoltage_Range(Rede, DF_Tensao_A, DF_Tensao_B, DF_Tensao_C) is False \
         else 1
-    # --------------------------------------------------------------------------------------------------------
-    # A lógica vai ficar a mesmo, setar 1 ou 0 para a variável,mas a condição tem de mudar
-
-    # OPÇÕES
-        # 1 - Contar quantos valores são maiores que X e depois ver se isso é maior que %
-
-
-    # --------------------------------------------------------------------------------------------------------
-
-
     overcurrent = 0 if Check_overcurrent() == 0 \
         else 1
-    unbalance = 0 if Check_Desq(Rede, DF_Desq_IEC, DF_Desq_IEEE, DF_Desq_NEMA) is False \
+    unbalance = 0 if Check_Desq_Range(Rede, DF_Desq_IEC, DF_Desq_IEEE, DF_Desq_NEMA) is False \
         else 1
-    #  Verificar o desequilibrio
-    # return True if overvoltage == 0 and undervoltage == 0 and overcurrent == 0 and unbalance == 0 \
 
-    #print('Max Voltage = ' + str(a) + ' ////////////////////  Min Voltage = ' + str(b))
-    logger.info('Max Voltage = ' + str(a) + ' ////////////////////  Min Voltage = ' + str(b))
     logger.debug("Check took {" + str(time.time() - t1) + " sec} to execulte "
                                                           "in simulation: " + str(Simulation))
 
@@ -535,33 +504,66 @@ def Check_overcurrent():
 
     return Violacao
 
+def Check_Violations_Single_Limit(DF, limit, interval_limit, smaller = 0):
 
-def Check_Desq(Rede, IEC, IEEE, NEMA):
     t1 = time.time()
-
-    # Só o IEEE está funcionando por hora
-
-    DF = IEC if Norma == 1 else IEEE if Norma == 0 else NEMA
-
-    # Se alguma barra tiver mais que 5% violações de tensão, acusa o overvoltage
+    DF2 = DF.set_index('Barras')
     count = 0
 
-    # --------------------------------------------------------------------------------------------------------
-    aa = DF.set_index('Barras')
-    aaa = DF.set_index('Barras').where(DF.set_index('Barras') > limite_Deseq).count(axis=1)
-    a = DF.set_index('Barras').where(DF.set_index('Barras') > limite_Deseq).count(axis=1).values
-    # --------------------------------------------------------------------------------------------------------
+    #A1 = DF2.where(DF2 > limit).count(axis=1)
+    #A2 = DF2.where(DF2 > limit).count(axis=1).values
 
-    for barra in DF.set_index(
-            'Barras').where(DF.set_index('Barras') >
-                            limite_Deseq).count(axis=1).values:
-        count += 1 if barra >= np.floor(originalSteps(Rede) * float(Steps_wtout_unbalance / 100)) \
-            else 0
+    if smaller == 0:
+        for barra in DF2.where(DF2 > limit).count(axis=1).values:
+            count += 1 if barra >= interval_limit else 0
+    else:
+        for barra in DF2.where(DF2 < limit).count(axis=1).values:
+            count += 1 if barra >= interval_limit else 0
 
-    logger.debug("Check_Desq took {" + str(time.time() - t1) + " sec} to execulte")
+    logger.debug("Check_Violations_Single_Limit took {" + str(time.time() - t1) + " sec} to execulte")
+    return count
 
-    return False if count == 0 else True
+def Check_Overvoltage_Range(Rede, A, B, C):
 
+    t1 = time.time()
+    from Definitions import limite_superior
+
+    interval_limit = np.floor(originalSteps(Rede) * float(Steps_wtout_unbalance / 100))
+
+    A = Check_Violations_Single_Limit(A, limite_superior, interval_limit)
+    B = Check_Violations_Single_Limit(B, limite_superior, interval_limit)
+    C = Check_Violations_Single_Limit(C, limite_superior, interval_limit)
+
+    logger.debug("Check_Overvoltage_Range took {" + str(time.time() - t1) + " sec} to execulte")
+    return False if (A + B + C) == 0 else True
+
+def Check_Undervoltage_Range(Rede, A, B, C):
+
+    t1 = time.time()
+    from Definitions import limite_inferior
+
+    interval_limit = np.floor(originalSteps(Rede) * float(Steps_wtout_unbalance / 100))
+
+    # Esse 1 no final vai falar que é para fazer comparação meor que
+    A = Check_Violations_Single_Limit(A, limite_inferior, interval_limit, 1)
+    B = Check_Violations_Single_Limit(B, limite_inferior, interval_limit, 1)
+    C = Check_Violations_Single_Limit(C, limite_inferior, interval_limit, 1)
+
+    logger.debug("Check_Undervoltage_Range took {" + str(time.time() - t1) + " sec} to execulte")
+    return False if (A + B + C) == 0 else True
+
+def Check_Desq_Range(Rede, IEC, IEEE, NEMA):
+
+    t1 = time.time()
+    from Definitions import limite_Deseq
+
+    interval_limit = np.floor(originalSteps(Rede) * float(Steps_wtout_unbalance / 100))
+    DF = IEC if Norma == 1 else IEEE if Norma == 0 else NEMA
+
+    logger.debug("Check_Desq_Range took {" + str(time.time() - t1) + " sec} to execulte")
+    return \
+        False if Check_Violations_Single_Limit(DF, limite_Deseq, interval_limit) == 0\
+            else True
 
 def Salva_Check_Report(Simulation_Data, overvoltage, undervoltage, overcurrent, unbalance):
     t1 = time.time()
