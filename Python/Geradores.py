@@ -248,6 +248,9 @@ def FindBusGD(Rede, Num_GDs):
     vet_choice.remove('bus_xfmr_sec_33998182')
     ###############################################################################################
 
+    # Tem de melhorar essa lista
+        # Identificar quais barras tem cargas e montar o vetor de escolha com base nisso
+
     vet_choice = list(['bus_33998182_030'
                       ,'bus_33998182_025'
                       ,'bus_33998182_031'
