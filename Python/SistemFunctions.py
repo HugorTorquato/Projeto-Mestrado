@@ -226,7 +226,7 @@ def HC(Rede):
             rest += 1
             Verify = Check(Rede, Simulation)
 
-            if Nummero_Simulacoes < 2:
+            if Nummero_Simulacoes < 4:
                 Pot_GD += 3*Incremento_Pot_gd if Criar_GD and Nummero_Simulacoes > 0 else 0
             else:
                 Pot_GD += Incremento_Pot_gd if Criar_GD and Nummero_Simulacoes > 0 else 0

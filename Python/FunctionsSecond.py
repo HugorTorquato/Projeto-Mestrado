@@ -455,11 +455,18 @@ def Check(Rede, Simulation):
     unbalance = 0 if Check_Desq_Range(Rede, DF_Desq_IEC, DF_Desq_IEEE, DF_Desq_NEMA) is False \
         else 1
 
+    Ress = True if overvoltage == 0 and undervoltage == 0 and overcurrent == 0 and unbalance == 0 \
+        else Salva_Check_Report(Simulation, overvoltage, undervoltage, overcurrent, unbalance)
+
+    logger.debug("Continue? " + str(Ress) + ": "
+            " overvoltage = " + str(overvoltage) +
+            " undervoltage = " + str(undervoltage) +
+            " overcurrent = " + str(overcurrent) +
+            " unbalance = " + str(unbalance))
+
     logger.debug("Check took {" + str(time.time() - t1) + " sec} to execulte "
                                                           "in simulation: " + str(Simulation))
-
-    return True if overvoltage == 0 and undervoltage == 0 and overcurrent == 0 and unbalance == 0 \
-        else Salva_Check_Report(Simulation, overvoltage, undervoltage, overcurrent, unbalance)
+    return Ress
 
 
 def Check_overcurrent():
@@ -510,14 +517,11 @@ def Check_Violations_Single_Limit(DF, limit, interval_limit, smaller = 0):
     DF2 = DF.set_index('Barras')
     count = 0
 
-    #A1 = DF2.where(DF2 > limit).count(axis=1)
-    #A2 = DF2.where(DF2 > limit).count(axis=1).values
-
     if smaller == 0:
-        for barra in DF2.where(DF2 > limit).count(axis=1).values:
+        for barra in DF2[DF2 > limit].count(axis=1).values:
             count += 1 if barra >= interval_limit else 0
     else:
-        for barra in DF2.where(DF2 < limit).count(axis=1).values:
+        for barra in DF2[(DF2 > 0.7) & (DF2 < limit)].count(axis=1).values:
             count += 1 if barra >= interval_limit else 0
 
     logger.debug("Check_Violations_Single_Limit took {" + str(time.time() - t1) + " sec} to execulte")
