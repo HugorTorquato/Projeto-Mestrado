@@ -282,9 +282,6 @@ def Case_by_Case(Rede):
 
     from Definitions import Num_GDs, Casos
     from Geradores import FindBusGD
-    from FunctionsSecond import Identify_Overcurrent_Limits
-
-    Identify_Overcurrent_Limits(Rede)
 
     for Caso in range(Num_Estudos_de_Caso):
         Casos.append(Caso + 1)

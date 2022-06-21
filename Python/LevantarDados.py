@@ -1,6 +1,8 @@
 # coding: utf-8
 from Definitions import *
 import pandas as pd
+import time
+from Definitions import logger
 import matplotlib.pyplot as plt
 
 Geo_Rede = pd.DataFrame()
@@ -10,12 +12,34 @@ Transformers_Rede = pd.DataFrame()
 
 def Salvar_Dados_Rede(Rede):
 
-    Dados_Geometria_Linha(Rede)
-    Dados_Load(Rede)
-    Dados_LoadShapes(Rede)
-    Dados_Transformers(Rede)
+    from DB_Rede import Save_Element_Data
+    LineData(Rede)
+
+    Save_Element_Data()
+
+    #Dados_Geometria_Linha(Rede)
+    #Dados_Load(Rede)
+    #Dados_LoadShapes(Rede)
+    #Dados_Transformers(Rede)
 
     #ToExcel()
+
+
+def LineData(Rede):
+
+    t1 = time.time()
+
+    from FunctionsSecond import Identify_Overcurrent_Limits
+    from Definitions import DF_Corrente_Limite, DF_Elements_Data
+
+    Identify_Overcurrent_Limits(Rede)
+
+    DF_Elements_Data['Element'] = DF_Corrente_Limite['Elementos']
+    DF_Elements_Data['Measurement'] = 'Current_Limits'
+    DF_Elements_Data['Value'] = DF_Corrente_Limite['Current_Limits']
+
+    logger.debug("Save_Element_Data took {" + str(time.time() - t1) + " sec} to execulte")
+
 
 def Dados_Geometria_Linha(Rede):
 
