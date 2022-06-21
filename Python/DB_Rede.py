@@ -396,6 +396,24 @@ def Refresh_Or_Create_Tables(Rede, engine):
         engine.execute('DBCC CHECKIDENT(\'' + DB + '\', RESEED, 0)') # Redefine a PK para começar do zero novamente
         engine.execute('DELETE FROM ' + str(DB))
 
+    # Definição da tabela General
+    DB = 'Elements_Data'
+    if len(pd.read_sql(
+            'SELECT TABLE_NAME '
+            'FROM INFORMATION_SCHEMA.TABLES '
+            'WHERE TABLE_NAME = \'' + DB + '\'', engine)) == 0:
+        logger.info('Create Table :' + str(DB))
+        General = sql.Table(str(DB), metadata,
+                            sql.Column('ID', sql.Integer, primary_key=True),
+                            sql.Column('Element', sql.String),
+                            sql.Column('Measurement', sql.String),
+                            sql.Column('Value', sql.Float)
+                            )
+
+    else:
+        engine.execute('DBCC CHECKIDENT(\'' + DB + '\', RESEED, 0)') # Redefine a PK para começar do zero novamente
+        engine.execute('DELETE FROM ' + str(DB))
+
     metadata.create_all(engine)
     Adjust_tables_to_timestemp(engine, Rede)
 
@@ -867,3 +885,16 @@ def Process_Data_Secondary(Rede, Simulation):
                         DF_Voltage_Elemt_Data_Ang)
 
     logger.debug("Process_Data_Secondary took {" + str(time.time() - t1) + " sec} to execulte")
+
+
+def Save_Element_Data():
+    """
+    All element's data will be stored before the beginning of the simulation using this function
+    """
+    t1 = time.time()
+
+    from Definitions import DF_Elements_Data
+
+    DF_Elements_Data.to_sql('Elements_Data', sqlalchemy(), if_exists='append', index=False)
+
+    logger.debug("Save_Element_Data took {" + str(time.time() - t1) + " sec} to execulte")

@@ -35,8 +35,8 @@ if os.path.isfile(Log_path):
 import logging
 
 logger = logging.getLogger(__name__)
-#logger.setLevel(logging.DEBUG)
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
+#logger.setLevel(logging.INFO)
 formatter = logging.Formatter('%(asctime)s:%(name)s:%(levelname)s:%(message)s')
 file_Handler = logging.FileHandler(Log_path)
 file_Handler.setFormatter(formatter)
@@ -229,6 +229,9 @@ DF_Voltage_Elemt_Data_Ang = pd.DataFrame({'Case'           : [],
                                           'Elementos'      : [],
                                           'Fase'           : []})
 
+DF_Elements_Data = pd.DataFrame({'Element'       : [],
+                                 'Measurement'    : [],
+                                 'Value'          : []})
 
 DF_TESTE = pd.DataFrame({
     "N": ['N', 'M', 'P', 'Q'],
@@ -238,7 +241,7 @@ DF_TESTE = pd.DataFrame({
 
 ##Switches
 
-Salva_Dados = 0         # Aciona o script que faz o levantamento dos dados da rede
+Salva_Dados = 1         # Aciona o script que faz o levantamento dos dados da rede
 
 # Não da para tirar isso aqui, pq?
 Savar_Dados_Elem = 0    # Habilita que os dados de pot e tensão dos elementos sejam salvos

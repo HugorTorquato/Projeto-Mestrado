@@ -1,0 +1,108 @@
+Storages
+
+-> Active power pode ser controlado no modo standalone e com o StorageController
+	mas o InvControl tbm pode limitar ele ao passo que requisita pot reativa.
+-> Em sua operação, ele usa do fluxo de pot calculado no ponto de conexão para
+	determinar as variáveis grid do elemento, após isso são mensuradas as perdas
+	e todas as relações internas que podem acontecer
+-> Modos de Operação
+	-> Charging State: 
+		- Só pode entrar em modo de carregamento se kWhStored < kWhRated
+			kWhRated é definido
+		- Equações para edfinir as perdas está no documento (Diagrama tbm )
+	-> Discharging State:
+		- Só entra em modo de descarga se a quantidade de energia armazenada > que
+			a capacidade de energia que tem de ser mantida em reserva (%Reserve x kWhrated)
+		- Taxa de descarga pode ser definida em KW ou %Discharge (porcentagem da KWRated)
+		- Equações para edfinir as perdas está no documento (Diagrama tbm )
+	-> Idling State:
+		- A energia armazenada fica constante durante essa operação (SOC = cte)
+		- Passa a operar como uma carga, sendo a rede que alimenta as perdas de operação
+		- "%IdliningkW" define as perdas como porcentagem do kWrated
+
+-> Modos de controle
+	-> Tem algumas limitações de uso do controle ativo e reativo ao mesmo tempo
+		OLHAR TABELA PÁGINA 7 
+	-> IEEE1547-2018 -> smart-inverter VW function para storage deve carregar 
+		durante senários de elevada tensão
+	-> O storage opera em determinado state até que:
+		- Charging : a energia armazenada (kWhstored) atinge sua capacidade max (kWhRated) Vai para Idling
+		- Discharging: A energia armazenada atinge o limite inferior de reserva (%reserve) Vai para Idling
+		- A trigger is activated (ChargeTrigger por exemplo)
+		- Manually 
+		- Recebe pedido do StorageController
+	-> Modos:
+		-> Defaut:
+			- Segue uma loadshape para setar os triggers
+			- De acordo com a curva (diária por exemplo) - Daria para carregar de madrugada)
+			- Teria de usar o DischargeTriger e ChargeTrigger
+			- TimeChargerTrigger da para definir a hora do dia (mas tem de ver se a simulação segue isso)
+				- Default 2am
+		-> Follow
+			- Segue um loadshape até que o storage esteja carregado ou descarregado completamente
+			- Valores positivos ele vai descarregar e negativos carregar e 0 é idling
+		-> Reactive Power Dispatch
+			- Funciona de maneira similar ao PVSystem, ativado setando valor para pf ou kvar
+			CONSTANT PF:
+				- Reativa é calculado diretamente da potência ativa
+				- por default segue PF=1
+				- valores positivos -> Pot reativa segue o mesmo sentido que a ativa
+				- valores negativo -> Pot reativa não segue o mesmo sentido que a ativa
+			CONSTANTE KVAR
+				- Sinal positivo mostra que a pot está saindo do elemento e negativo que	
+					está entrando no elemento
+				- tbm usa a pot ativa para calcular o kvar que é decomposto da pot ativa
+			
+			- Tem funções que limitam esse output ( funções de capabilidade )
+
+-> Colocar um monitor em mode 3 pode monitorar todas as variáveis databela 2
+
+-> STORAGECONROLLER
+	- Control a fleet of sorage elements, sendo que o fleet pode ser considerado 1 ou mais elementos
+	- Defini o elemento para monitorar um terminal commun ( trafo por exemplo )
+	- Pelo ElementList o usuário pode definir uma list de elementos a ser controlado por eese controller
+		- Por defaul seleciona todos os elementos
+		- Se mais de um controller atuar no mesmo elemento vai dar erro
+	- MODOS DE DISPACHO
+		- "power flow-driven":
+			-Pega a medição no ponto e compara com o desejado, se inferior faz a requisição de mais potência
+			dos elementos sob esse controlador
+			-Todos seguem para uma banda de conversão (KWTarget e kWTargetLow), pode ser definido por 
+			porcentagem ou valor absoluto ((%)kWBand e (%)kWBandLow)
+			- Tem uma forma de despacho com diferentes pesos dependendo do porte do storage weight ( aceita um array )
+		- "time-driven"
+			- Sua operação é baseada no tempo e não tem o conceito de deadband
+			- Operação é determinada por curvas
+	- MODOS DE DESCARGA
+		- "PeakShave"
+			- é o modo default
+			- Opera os elementos para respeitar a banda especificada ou o kwtarget
+			- Respeita os limites de cada storage, mas faz requisição para manter a operação 
+				dentro dos limites no terminal de medição
+		- "I-PeakShave" 
+			- Comportamento semelhante mas faz o controle da corrente
+			- as medições e variáveis são em amperes nesse modo
+		- "Follow"
+			- Defnida por tempo
+			- Tende a atuar mais durante o ano e tem variação do target ( não entendi bem como )
+		- "Support"
+			- Suporte para energias renováveis por exemplo
+			- Tende a injetar pot quando precisa ou em transientes
+		- "Schedule"
+			- Faz um transitório mais tranquilo, em forma de trapezio. 
+			- Valores são deifnidos
+	- MODOS DE CARGA
+		- "PeakShaveLow"
+			- O conjunto é triggado para carregar quando a pot do elemento monitorado está menor que 
+				um determinado target. Limitado pelo kWrated de cada inversor e respeita a banda especificada
+		- "I-PeakShaveLow" 
+			- Mesma ideia mas com a corrente
+		- 
+			
+	
+
+			
+			
+
+nOTES
+- Olhar os modos de operação do storage ( peakshave follow support ... )
