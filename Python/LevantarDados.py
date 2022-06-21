@@ -38,7 +38,7 @@ def LineData(Rede):
     DF_Elements_Data['Measurement'] = 'Current_Limits'
     DF_Elements_Data['Value'] = DF_Corrente_Limite['Current_Limits']
 
-    logger.debug("Save_Element_Data took {" + str(time.time() - t1) + " sec} to execulte")
+    logger.debug("LineData took {" + str(time.time() - t1) + " sec} to execulte")
 
 
 def Dados_Geometria_Linha(Rede):
