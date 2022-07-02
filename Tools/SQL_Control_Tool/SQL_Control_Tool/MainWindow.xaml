@@ -7,6 +7,27 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
+        
+        <!-- Defining the grid structure. It starts in a zero based count-->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20"/>
+            <ColumnDefinition Width="auto"/>
+            <!-- Automatcly adjust the last collumn to fill the remaining spaces-->
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="20"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="20"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Define the buttom-->
+        <Button x:Name="Connection" Content="Create Conection"
+                Grid.Column="1" Grid.Row="1"
+                Grid.ColumnSpan="2" Grid.RowSpan="2"
+                Margin="0, 0, 0, 0" Click="Create_Con_SQL"/>
 
     </Grid>
 </Window>
