@@ -105,4 +105,5 @@ Storages
 			
 
 nOTES
-- Olhar os modos de operação do storage ( peakshave follow support ... )
+
+ 
