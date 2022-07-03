@@ -115,7 +115,7 @@ def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
 
     Rede.dssText.Command = "set maxcontroliter=2000"
 
-    if Simulation == 3 and Debug_VV == 1:
+    if (Simulation == 3 or Simulation == 7) and Debug_VV == 1:
 
         Command ="New InvControl.InvPVCtrl_" + Nome + " DERList=PVSystem." + Nome + \
                            " mode=VOLTVAR voltage_curvex_ref=rated" +\
@@ -137,7 +137,7 @@ def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
         logger.debug("Create_PV - Define InvControl VW " + Command)
         Rede.dssText.Command = Command
 
-    if Simulation > 4 and Debug_VV == 1:
+    if Simulation == 6 and Debug_VV == 1:
 
         Command ="New InvControl.InvPVCtrl_" + Nome + " DERList=PVSystem." + Nome + \
                  " Combimode=VV_VW voltage_curvex_ref=rated" \

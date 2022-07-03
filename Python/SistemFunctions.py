@@ -198,7 +198,11 @@ def HC(Rede):
         #    logger.info("Default Case already tested - First simulation")
         #    continue
 
-        Pot_GD = 0 if Sem_GD == 0 else 1
+        if Simulation == 5 or Simulation == 7:
+            # Save the last Pot reference value to run the simulation again without VW
+            Pot_GD -= 2*Incremento_Pot_gd if Criar_GD else 0
+        else:
+            Pot_GD = 0 if Sem_GD == 0 else 1
 
         Compila_DSS(Rede)
 
