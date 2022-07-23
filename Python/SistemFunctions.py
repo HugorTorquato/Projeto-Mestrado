@@ -235,6 +235,10 @@ def HC(Rede):
             else:
                 Pot_GD += Incremento_Pot_gd if Criar_GD and Nummero_Simulacoes > 0 else 0
 
+            if Simulation in [1, 5, 7]:
+                Sem_GD = 1
+                break
+
             if Simulation == 1:
                 Sem_GD = 1
                 break

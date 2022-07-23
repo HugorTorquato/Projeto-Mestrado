@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c0a353b0-9d94-497b-99cd-a779928dfe5d" name="Default Changelist" comment="" />
+    <list default="true" id="c0a353b0-9d94-497b-99cd-a779928dfe5d" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python/Definitions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/Definitions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python/SistemFunctions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/SistemFunctions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL/Views/CreateViewsToQuantifyWATTDifferenceWithAndWithoutVW.sql" beforeDir="false" afterPath="$PROJECT_DIR$/SQL/Views/CreateViewsToQuantifyWATTDifferenceWithAndWithoutVW.sql" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -214,9 +219,9 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Python/DB_Rede.py</url>
-          <line>563</line>
-          <option name="timeStamp" value="135" />
+          <url>file://$PROJECT_DIR$/Python/SistemFunctions.py</url>
+          <line>208</line>
+          <option name="timeStamp" value="136" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
