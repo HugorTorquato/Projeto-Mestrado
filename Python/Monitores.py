@@ -29,9 +29,10 @@ def Adicionar_Monitores(Rede):
 
 def Define_Monitor(Rede, Lista_Monitores):
 
-    # Atualmente são definidos dois tipos de monitores por elemento:
+    # Atualmente são definidos3 tipos de monitores por elemento:
     # -> modelo 1 -> Medidores de Pot ( Atia e Reativa )
     # -> modelo 2 -> Medidores de V & I (Tensão e corrente )
+    # -> modelo 3 -> Medidores de loss (Perdas por elemento )
     #
     # Se adicionar mais algum modelo, lembrar de modificar a função "Export_And_Read_Monitors_Data", ela vai salvar e
     # ler os arquivos depois de cada simulação, e a implementação é baseada nem dois modelos de medidores. Se Adicionar
@@ -102,25 +103,26 @@ def Export_And_Read_Monitors_Data(Rede, Simulation):
         Element = Rede.dssMonitors.Element
         Rede.dssText.Command = "Export monitors " + str(Name)
         header = Rede.dssMonitors.Header
+        header_after_filtering = Remove_Measurament
 
         for channel in range(len(header)):
+            if header[channel] not in header_after_filtering:
+                try:
+                    Data = Rede.dssMonitors.Channel(channel+1)
+                except:
+                    Data = 'TBD'
+                    logger.info("Export_And_Read_Monitors_Data DEU RUIM - " + Name + " : " +
+                                Element + " " + str(header) + " ")
 
-            try:
-                Data = Rede.dssMonitors.Channel(channel+1)
-            except:
-                Data = 'TBD'
-                logger.info("Export_And_Read_Monitors_Data DEU RUIM - " + Name + " : " +
-                            Element + " " + str(header) + " ")
+                temp_df = pd.DataFrame({'Case'           : len(Casos) if Casos != [] else 0,
+                                        'Simulation'     : Simulation,
+                                        'Monitor'        : Name,
+                                        'Elemento'       : Element,
+                                        'TimeStep'       : range(0, len(Data)),
+                                        'Measurement'    : header[channel],
+                                        'Value'          : Data})
 
-            temp_df = pd.DataFrame({'Case'           : len(Casos) if Casos != [] else 0,
-                                    'Simulation'     : Simulation,
-                                    'Monitor'        : Name,
-                                    'Elemento'       : Element,
-                                    'TimeStep'       : range(0, len(Data)),
-                                    'Measurement'    : header[channel],
-                                    'Value'          : Data})
-
-            DF_Monitors_Data_2 = pd.concat([DF_Monitors_Data_2, temp_df], ignore_index=True)
+                DF_Monitors_Data_2 = pd.concat([DF_Monitors_Data_2, temp_df], ignore_index=True)
 
         logger.debug("Evaluating monitor : " + str(Name))
         No_Monitor = Rede.dssMonitors.Next

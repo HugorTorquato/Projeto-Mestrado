@@ -35,8 +35,8 @@ if os.path.isfile(Log_path):
 import logging
 
 logger = logging.getLogger(__name__)
-#logger.setLevel(logging.DEBUG)
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
+#logger.setLevel(logging.INFO)
 formatter = logging.Formatter('%(asctime)s:%(name)s:%(levelname)s:%(message)s')
 file_Handler = logging.FileHandler(Log_path)
 file_Handler.setFormatter(formatter)
@@ -255,9 +255,19 @@ All_GDs = 1
 
 Use_PV = 1              # 1- Usa o PVSystem  0 - Usa geradore
 Norma = 1               #  # 0 - PRODIST # 1 - IEEE
+
+#############################################################
+# 1 - Sem PV
+# 2 - Com PV FP=1
+# 3 - Com PV + VV
+# 4 - Com PV + VW
+# 5 - Com PV com valor de pot do item 4 ( remove somente o controle VW )
+# 6 - Com PV + VV + VW
+# 7 - Com PV + VV + com valor de pot do item 6 ( remove somente o controle VW )
+############################################################
 Num_Simulations = 7     # Deifnie o número de simulações que serão realizadas
 
-Num_Estudos_de_Caso = 10 # Define o estudo de caso em questão (configuração das GDs)
+Num_Estudos_de_Caso = 1 # Define o estudo de caso em questão (configuração das GDs)
 
 Debug_VV = 1            # Modo Debug para mensurar e comparar o comportamento do VV no sistema ( 1 - liga 0 - desliga)
 Thiago = 0
@@ -278,10 +288,21 @@ Incremento_gd = 0.5  # Valores em porcentagem (%) da pot do trafo de entrada
 Steps_wtout_unbalance = 4#10 # Creio que tem de ser 4
 Steps_wtout_overcurrent = 4
 
+#############################################################################
 #Constants
 sqrt3 = np.sqrt(3)
 alfa = complex(-0.5, 0.866025403784)
 inv_alfa = complex(-0.5, -0.866025403784)
+
+# List to be removed from Measurements table
+Remove_Measurament = ['P_TFactor',
+                      'Efficiency',
+                      'Vavg (DRC)',
+                      'DRC',
+                      'VV_DRC',
+                      'watt-pf',
+                      'watt-var']
+#############################################################################
 
 #############################################################################
 ###################### Definir Tempo de Simulação ###########################
