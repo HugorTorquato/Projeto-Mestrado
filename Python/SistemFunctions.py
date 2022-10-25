@@ -239,6 +239,7 @@ def HC(Rede):
                 Sem_GD = 1
                 break
 
+            # Creio que n preciso disso aqui, redundante
             if Simulation == 1:
                 Sem_GD = 1
                 break
