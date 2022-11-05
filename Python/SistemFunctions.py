@@ -8,7 +8,7 @@ from multiprocessing import Process
 def Inicializa(Rede):
 
     from Definitions import DF_Tensao_A, DF_Tensao_B, DF_Tensao_C, DF_Desq_IEC, DF_Desq_IEEE, DF_Desq_NEMA,\
-        DF_PVPowerData, DF_kW_PV, DF_kvar_PV, DF_irradNow_PV, Num_GDs, DF_Tensao_Ang_A, DF_Tensao_Ang_B, \
+        DF_kW_PV, DF_kvar_PV, DF_irradNow_PV, Num_GDs, DF_Tensao_Ang_A, DF_Tensao_Ang_B, \
         DF_Tensao_Ang_C, logger
     from FunctionsSecond import originalSteps
 
@@ -44,8 +44,6 @@ def Inicializa(Rede):
 
     DF_Desq_NEMA.insert(0, 'Barras', Nome_Barras(Rede), allow_duplicates=True)
     [DF_Desq_NEMA.insert(i + 1, str(i), 0) for i in range(Tamanho_pmult(Rede))]
-
-    [DF_PVPowerData.insert(i + 4, "Time_" + str(i), 0) for i in range(originalSteps(Rede))]
 
     PVs = ["PV_" + str(i) for i in range(Num_GDs)]
 
@@ -170,8 +168,7 @@ def HC(Rede):
     # Essa função é o pulmão do código, aqui que é feito o cálculo do HC
     from FunctionsSecond import Limpar_DF, Check
     from Definitions import DF_Geradores, DF_Barras, DF_General, DF_Elements, DF_PV,\
-        DF_PVPowerData, DF_Lista_Monitors, Incremento_gd,\
-        DF_Monitors_Data_2, Casos, logger
+        DF_Lista_Monitors, Incremento_gd, DF_Monitors_Data_2, Casos, logger
 
     # Define o primeiro transformador como o ponto de PCC e o incremento de pot em cada verificação do HC é
     # definido em termos de % frente a pot do trafo de entrada
@@ -206,8 +203,8 @@ def HC(Rede):
 
         Compila_DSS(Rede)
 
-        [Limpar_DF(DF) for DF in [DF_Geradores, DF_Barras, DF_General, DF_Elements, DF_PV, DF_PVPowerData,
-                                  DF_Lista_Monitors, DF_PVPowerData, DF_Monitors_Data_2]]
+        [Limpar_DF(DF) for DF in [DF_Geradores, DF_Barras, DF_General, DF_Elements, DF_PV,
+                                  DF_Lista_Monitors, DF_Monitors_Data_2]]
         Verify = True
 
         while Nummero_Simulacoes == 0 or Verify is True:
@@ -221,7 +218,7 @@ def HC(Rede):
             # valores para fazer o código funcionar
             if Criar_GD and Nummero_Simulacoes > 0:
                 Compila_DSS(Rede)
-                [Limpar_DF(DF) for DF in [DF_Geradores, DF_Elements, DF_PV, DF_Lista_Monitors, DF_PVPowerData]]
+                [Limpar_DF(DF) for DF in [DF_Geradores, DF_Elements, DF_PV, DF_Lista_Monitors]]
 
             # trocar .insert por .concat ( primeiro tem performance ruim )
             Solve_Hora_por_Hora(Rede, Simulation, Pot_GD)  # Chamada da função que levanta o perfil diário
@@ -260,7 +257,7 @@ def HC(Rede):
         # valores para fazer o código funcionar
         if Criar_GD and Nummero_Simulacoes > 0:
             Compila_DSS(Rede)
-            [Limpar_DF(DF) for DF in [DF_Geradores, DF_Elements, DF_PV, DF_Lista_Monitors, DF_PVPowerData]]
+            [Limpar_DF(DF) for DF in [DF_Geradores, DF_Elements, DF_PV, DF_Lista_Monitors]]
 
         # trocar .insert por .concat ( primeiro tem performance ruim )
         Solve_Hora_por_Hora(Rede, Simulation, Pot_GD)  # Chamada da função que levanta o perfil diário

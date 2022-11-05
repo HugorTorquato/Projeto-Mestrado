@@ -11,8 +11,8 @@ if __name__ == "__main__":
     Rede = DSS(Rede_Path + "\Master.dss")
     engine = sqlalchemy()
 
-    Version(Rede), Compila_DSS(Rede), Inicializa(Rede), Refresh_Or_Create_Tables(Rede, engine), \
-    Refresh_Or_Create_Views(Rede, engine), Refresh_Or_Create_StoreProcedures(Rede, engine)
+    Version(Rede), Compila_DSS(Rede), Inicializa(Rede)
+    RunSQLDefinitions(engine, Rede)
 
     if Salva_Dados:
         logger.info("Save Network Data Selected")

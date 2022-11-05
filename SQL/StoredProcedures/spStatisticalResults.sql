@@ -15,32 +15,6 @@ BEGIN
 			DELETE FROM spStatisticalResults
 			DBCC CHECKIDENT('spStatisticalResults', RESEED, 0)
 		END
-	ELSE
-		BEGIN
-			CREATE TABLE spStatisticalResults (
-				id int PRIMARY KEY IDENTITY(1,1),
-				Simulation int,
-				Average float,
-				StandardDeviation float
-				-- PARA ADICIONAR MAIS TEM DE LISTAR AS COLUNAS AQUI
-			)
-		END
-	-----------------------------------------------------------------------------
-	IF (NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES
-				WHERE TABLE_NAME IN ('spStatisticalData')
-				)
-		)
-		BEGIN
-			CREATE TABLE spStatisticalData (
-				id int PRIMARY KEY IDENTITY(1,1),
-				id_Results int,
-				HC float
-			)
-
-			ALTER TABLE spStatisticalData
-				ADD CONSTRAINT fk_spStatisticalResoultsspStatisticalData FOREIGN KEY (id_Results) 
-					REFERENCES spStatisticalResoults (id)
-		END
 	-----------------------------------------------------------------------------
 	------------------------------ POPULATE DATA --------------------------------
 	-----------------------------------------------------------------------------

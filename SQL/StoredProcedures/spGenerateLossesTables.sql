@@ -1,6 +1,6 @@
 
---DROP TABLE Summary_Losses
---DROP TABLE Losses
+--DROP TABLE spSummary_Losses
+--DROP TABLE spLossesData
 CREATE OR ALTER   PROCEDURE [dbo].[spGenerateLossesTables]
 AS
 BEGIN
@@ -9,42 +9,14 @@ BEGIN
 	-----------------------------------------------------------------------------
 
 	IF (EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES
-				WHERE TABLE_NAME IN ('Summary_Losses', 'Losses')
+				WHERE TABLE_NAME IN ('spSummary_Losses', 'spLossesData')
 				)
 		)
 	BEGIN
-		DELETE FROM Losses
-		DBCC CHECKIDENT('Losses', RESEED, 0)
-		DELETE FROM Summary_Losses
-		DBCC CHECKIDENT('Summary_Losses', RESEED, 0)
-	END
-	ELSE
-	BEGIN
-		-- Daria para colocar corrente máxima tbm... ponto a se pensar
-		CREATE TABLE Summary_Losses (
-			id int PRIMARY KEY IDENTITY(1,1),
-			[Case] int,
-			Simulation int,
-			Monitor varchar(50),
-			Elemento varchar(50),
-			Loss float
-		);
-	END
-
-	IF (NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES
-				WHERE TABLE_NAME = 'Losses')
-		)
-	BEGIN
-		CREATE TABLE Losses (
-			id int PRIMARY KEY IDENTITY(1,1),
-			id_Summary int,
-			TimeStep int,
-			Measurement varchar(50),
-			[Value] float
-		);
-
-		ALTER TABLE Losses
-		ADD CONSTRAINT fk_LossesSummaryLosses FOREIGN KEY (id_Summary) REFERENCES Summary_Losses (id)
+		DELETE FROM spLossesData
+		DBCC CHECKIDENT('spLossesData', RESEED, 0)
+		DELETE FROM spSummary_Losses
+		DBCC CHECKIDENT('spSummary_Losses', RESEED, 0)
 	END
 
 	-----------------------------------------------------------------------------
@@ -54,7 +26,7 @@ BEGIN
 	-----------------------------------------------------------------------------
 	-- DESCRIPTION: This query will populate the Sumarry_Losses table
 	-----------------------------------------------------------------------------
-	INSERT INTO Summary_Losses
+	INSERT INTO spSummary_Losses
 		([Case], Simulation, Monitor, Elemento, Loss)
 	SELECT DISTINCT
 		[Case],
@@ -82,10 +54,10 @@ BEGIN
 	-----------------------------------------------------------------------------
 
 	-----------------------------------------------------------------------------
-	-- DESCRIPTION: This query will populate the Losses table
+	-- DESCRIPTION: This query will populate the spLossesData table
 	-----------------------------------------------------------------------------
 
-	INSERT INTO Losses
+	INSERT INTO spLossesData
 		(id_Summary, TimeStep, Measurement, [Value])
 	SELECT
 		SL.id AS id_Summary,
@@ -93,7 +65,7 @@ BEGIN
 		MD2.Measurement AS Measurement,
 		MD2.[Value] AS [Value]
 
-	FROM Summary_Losses AS SL WITH (NOLOCK)
+	FROM spSummary_Losses AS SL WITH (NOLOCK)
 	join MonitoresData_2 AS MD2  WITH (NOLOCK)
 		ON SL.[Case] = MD2.[Case]
 		   and SL.Simulation = MD2.Simulation

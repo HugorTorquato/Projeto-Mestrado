@@ -1,6 +1,6 @@
 
---DROP TABLE Summary_InvControl
---DROP TABLE InvControl
+--DROP TABLE spSummary_InvControl
+--DROP TABLE spInvControlData
 CREATE OR ALTER   PROCEDURE [dbo].[spGenerateInvControlTables]
 AS
 BEGIN
@@ -9,43 +9,16 @@ BEGIN
 	-----------------------------------------------------------------------------
 
 	IF (EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES
-				WHERE TABLE_NAME IN ('Summary_InvControl', 'InvControl')
+				WHERE TABLE_NAME IN ('spSummary_InvControl', 'spInvControlData')
 				)
 		)
 	BEGIN
-		DELETE FROM InvControl
-		DBCC CHECKIDENT('InvControl', RESEED, 0)
-		DELETE FROM Summary_InvControl
-		DBCC CHECKIDENT('Summary_InvControl', RESEED, 0)
+		DELETE FROM spInvControlData
+		DBCC CHECKIDENT('spInvControlData', RESEED, 0)
+		DELETE FROM spSummary_InvControl
+		DBCC CHECKIDENT('spSummary_InvControl', RESEED, 0)
 	END
-	ELSE
-	BEGIN
-		-- Daria para colocar corrente máxima tbm... ponto a se pensar
-		CREATE TABLE Summary_InvControl (
-			id int PRIMARY KEY IDENTITY(1,1),
-			[Case] int,
-			Simulation int,
-			Monitor varchar(50),
-			Elemento varchar(50)
-			-- Adicionar aqui
-		);
-	END
-
-	IF (NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES
-				WHERE TABLE_NAME = 'InvControl')
-		)
-	BEGIN
-		CREATE TABLE InvControl (
-			id int PRIMARY KEY IDENTITY(1,1),
-			id_Summary int,
-			TimeStep int,
-			Measurement varchar(50),
-			[Value] float
-		);
-
-		ALTER TABLE InvControl
-		ADD CONSTRAINT fk_InvControlSummaryInvControl FOREIGN KEY (id_Summary) REFERENCES Summary_InvControl (id)
-	END
+	
 	-----------------------------------------------------------------------------
 	------------------------------ POPULATE DATA --------------------------------
 	-----------------------------------------------------------------------------
@@ -54,7 +27,7 @@ BEGIN
 	-- DESCRIPTION: This query will populate the Sumarry_InvControl table
 	-- TODO: Daria para colocar informações aqui, que não depende do Timestemp
 	-----------------------------------------------------------------------------
-	INSERT INTO Summary_InvControl
+	INSERT INTO spSummary_InvControl
 		([Case], Simulation, Monitor, Elemento)
 	SELECT DISTINCT
 		[Case],
@@ -69,7 +42,7 @@ BEGIN
 	-----------------------------------------------------------------------------
 	-- DESCRIPTION: This query will populate the Losses table
 	-----------------------------------------------------------------------------
-	INSERT INTO InvControl
+	INSERT INTO spInvControlData
 		(id_Summary, TimeStep, Measurement, [Value])
 	SELECT
 		SI.id AS id_Summary,
@@ -77,7 +50,7 @@ BEGIN
 		MD2.Measurement AS Measurement,
 		MD2.[Value] AS [Value]
 
-	FROM Summary_InvControl AS SI WITH (NOLOCK)
+	FROM spSummary_InvControl AS SI WITH (NOLOCK)
 	join MonitoresData_2 AS MD2 WITH (NOLOCK)
 		ON SI.[Case] = MD2.[Case]
 		   and SI.Simulation = MD2.Simulation
