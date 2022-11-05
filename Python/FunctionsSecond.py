@@ -53,92 +53,6 @@ def Correntes_elementos(Rede, itera):
     logger.debug("Correntes_elementos took {" + str(time.time() - t1) + " sec} to execulte "
                                                                         "in iteration: " + str(itera))
 
-# Não é usada, pode remover
-
-def Dados_Elements2(Rede, itera):
-    # Essa função é separada da coleta das correntes pq pode ser ou não habilitada, depende do "Savar_Dados_Elem"
-
-    from Definitions import DF_Pot_itera, DF_Voltage_itera
-
-    t1 = time.time()
-
-    # Exportar os dados e prapara o dataframe
-
-    Rede.dssText.Command = "Export ElemPowers file = " + Debug_Path + "\EXP_ELEMPOWERS.CSV"
-    Rede.dssText.Command = "Export ElemVoltages file = " + Debug_Path + "\EXP_ELEMVOLTAGES.CSV"
-
-    Limpar_DF(DF_Pot_itera), Limpar_DF(DF_Voltage_itera)
-
-    # O número de colunas definidas no arquivo não é constante, por isso tempos de fazer a definição das colunas e a
-    # verificação se existe algum valor "nan" -> condição de a coluna não ser definida para determinado elemento
-
-    col_names = ["Element", "Nterminals", "Nconductors", "P_1", "Q_1", "P_2", "Q_2", "P_3", "Q_3", "P_4", "Q_4",
-                 "P_5", "Q_5", "P_6", "Q_6", "P_7", "Q_7", "P_8", "Q_8"]
-    DF_Pot_itera = pd.read_csv(Debug_Path + "\EXP_ELEMPOWERS.CSV", sep=',', names=col_names, skiprows=1)
-
-    col_names = ["Element", "Nterminals", "Nconductors", "V_1", "Ang_1", "V_2", "Ang_2", "V_3", "Ang_3", "V_4", "Ang_4",
-                 "V_5", "Ang_5", "V_6", "Ang_6", "V_7", "Ang_7", "V_8", "Ang_8"]
-    DF_Voltage_itera = pd.read_csv(Debug_Path + "\EXP_ELEMVOLTAGES.CSV", sep=',', names=col_names, skiprows=1)
-
-    DF_Pot_itera.fillna(0, inplace=True), DF_Voltage_itera.fillna(0, inplace=True)
-
-    # Segregação dos resultados e criação do dataframe
-
-    AP = DF_Pot_itera.columns[3]
-    BP = DF_Pot_itera.columns[5]
-    CP = DF_Pot_itera.columns[7]
-    APQ = DF_Pot_itera.columns[4]
-    BPQ = DF_Pot_itera.columns[6]
-    CPQ = DF_Pot_itera.columns[8]
-
-    AV = DF_Voltage_itera.columns[3]
-    BV = DF_Voltage_itera.columns[5]
-    CV = DF_Voltage_itera.columns[7]
-    AVA = DF_Voltage_itera.columns[4]
-    BVA = DF_Voltage_itera.columns[6]
-    CVA = DF_Voltage_itera.columns[8]
-
-    if not 'Elementos' in DF_Pot_P_A:
-        DF_Pot_P_A.insert(0, 'Elementos', DF_Pot_itera['Element'].values, allow_duplicates=True)
-        DF_Pot_P_B.insert(0, 'Elementos', DF_Pot_itera['Element'].values, allow_duplicates=True)
-        DF_Pot_P_C.insert(0, 'Elementos', DF_Pot_itera['Element'].values, allow_duplicates=True)
-        DF_Pot_Q_A.insert(0, 'Elementos', DF_Pot_itera['Element'].values, allow_duplicates=True)
-        DF_Pot_Q_B.insert(0, 'Elementos', DF_Pot_itera['Element'].values, allow_duplicates=True)
-        DF_Pot_Q_C.insert(0, 'Elementos', DF_Pot_itera['Element'].values, allow_duplicates=True)
-
-    if not 'Elementos' in DF_Voltage_A:
-        DF_Voltage_A.insert(0, 'Elementos', DF_Voltage_itera['Element'].values, allow_duplicates=True)
-        DF_Voltage_B.insert(0, 'Elementos', DF_Voltage_itera['Element'].values, allow_duplicates=True)
-        DF_Voltage_C.insert(0, 'Elementos', DF_Voltage_itera['Element'].values, allow_duplicates=True)
-        DF_Voltage_Ang_A.insert(0, 'Elementos', DF_Voltage_itera['Element'].values, allow_duplicates=True)
-        DF_Voltage_Ang_B.insert(0, 'Elementos', DF_Voltage_itera['Element'].values, allow_duplicates=True)
-        DF_Voltage_Ang_C.insert(0, 'Elementos', DF_Voltage_itera['Element'].values, allow_duplicates=True)
-
-    count = 0
-    for element in DF_Pot_itera['Element'].values:
-        DF_Pot_P_A.loc[DF_Pot_P_A.index == count, str(itera)] = DF_Pot_itera[AP].values[count]
-        DF_Pot_P_B.loc[DF_Pot_P_B.index == count, str(itera)] = DF_Pot_itera[BP].values[count]
-        DF_Pot_P_C.loc[DF_Pot_P_C.index == count, str(itera)] = DF_Pot_itera[CP].values[count]
-        DF_Pot_Q_A.loc[DF_Pot_Q_A.index == count, str(itera)] = DF_Pot_itera[APQ].values[count]
-        DF_Pot_Q_B.loc[DF_Pot_Q_B.index == count, str(itera)] = DF_Pot_itera[BPQ].values[count]
-        DF_Pot_Q_C.loc[DF_Pot_Q_C.index == count, str(itera)] = DF_Pot_itera[CPQ].values[count]
-        count += 1
-
-    count = 0
-    for element in DF_Voltage_itera['Element'].values:
-        DF_Voltage_A.loc[DF_Voltage_A.index == count, str(itera)] = DF_Voltage_itera[AV].values[count]
-        DF_Voltage_B.loc[DF_Voltage_B.index == count, str(itera)] = DF_Voltage_itera[BV].values[count]
-        DF_Voltage_C.loc[DF_Voltage_C.index == count, str(itera)] = DF_Voltage_itera[CV].values[count]
-        DF_Voltage_Ang_A.loc[DF_Voltage_Ang_A.index == count, str(itera)] = DF_Voltage_itera[AVA].values[count]
-        DF_Voltage_Ang_B.loc[DF_Voltage_Ang_B.index == count, str(itera)] = DF_Voltage_itera[BVA].values[count]
-        DF_Voltage_Ang_C.loc[DF_Voltage_Ang_C.index == count, str(itera)] = DF_Voltage_itera[CVA].values[count]
-
-        count += 1
-
-    logger.debug("Dados_Elements took {" + str(time.time() - t1) + " sec} to execulte "
-                                                                   "in iteration: " + str(itera))
-
-
 def get_resultados_potencia(self):
     # self.dssText.Command = "Show power kva elements"
     # self.dssText.Command = "Show Voltages LN Nodes"
@@ -643,38 +557,6 @@ def Data_PV(Rede, itera):
     logger.debug("Data_PV took {" + str(time.time() - t1) + " sec} to execulte "
                                                             "in iteration: " + str(itera))
 
-
-def Power_measurement_PV(Rede, Simulation):
-    from Definitions import DF_PVPowerData, DF_PV
-
-    t1 = time.time()
-    Measur = ['kW', 'kvar', 'irradNow']
-    PVs = Rede.dssPVSystems.AllNames
-
-    for PV in range(len(Rede.dssPVSystems.AllNames)):
-        for Meas in range(len(Measur)):
-            index = len(DF_PVPowerData)
-            DF_PVPowerData.loc[index, 'Case'] = len(Casos) if Casos != [] else 0
-            DF_PVPowerData.loc[index, 'Simulation'] = Simulation
-            DF_PVPowerData.loc[index, 'Name'] = PVs[PV]
-            DF_PVPowerData.loc[index, 'Bus'] = \
-                DF_PV.query('Name == "' + str(PVs[PV]).upper() + '"')['Bus'].values
-            DF_PVPowerData.loc[index, 'Measurement'] = Measur[Meas]
-
-            if Meas == 0:
-                for i in range(originalSteps(Rede)):
-                    DF_PVPowerData.loc[index, 'Time_' + str(i)] = DF_kW_PV.loc[PV, str(i)]
-            elif Meas == 1:
-                for i in range(originalSteps(Rede)):
-                    DF_PVPowerData.loc[index, 'Time_' + str(i)] = DF_kvar_PV.loc[PV, str(i)]
-            elif Meas == 2:
-                for i in range(originalSteps(Rede)):
-                    DF_PVPowerData.loc[index, 'Time_' + str(i)] = DF_irradNow_PV.loc[PV, str(i)]
-
-    logger.debug("Power_measurement_PV took {" + str(time.time() - t1) + " sec} to execulte "
-                                                                         "in simulation: " + str(Simulation))
-
-
 def Adicionar_EnergyMeter(Rede):
     # Definir o elemento correto ( barra sourcebus ou a primeira linha? fazer de forma iterativa )
     TE = Rede.dssCircuit.Name
@@ -765,3 +647,13 @@ def Return_Time_String_Colum_Case_Options(Rede):
         commandMin += ' WHEN ValueMinPU = Time_' + str(i) + ' AND Time_' + str(i) + ' <> 0 THEN \'Time_' + str(i) + '\''
 
     return commandMax, commandMin
+
+def OrderFiles(listOfFiles):
+    # This function aims to order files with a numeric value in place. The norma procedure considers
+    # 10 after 1 instead of 2 after 1. This function will fix it
+
+    B = []
+    for item in listOfFiles:
+        B.append([item, item.split(' ')[0]])
+
+    return sorted(B, key=lambda B: int(B[1]))

@@ -11,6 +11,7 @@ import logging
 Rede_Path = "C:\\Users\hugo1\Desktop\Rede_03\_trafo3"                       #Rede_03
 #Rede_Path = "C:\\Users\hugo1\Desktop\Rede_03\Teste"                       #Rede_03
 Debug_Path = "C:\\Users\hugo1\Desktop\Projeto_Rede_Fornecida\Python\Debug"
+SQL_Path = "C:\\Users\hugo1\Desktop\Projeto_Rede_Fornecida\SQL"
 
 #############################################################################
 ###################### Logging Configuration ################################
@@ -119,12 +120,6 @@ DF_Geradores = pd.DataFrame({'Case'      : [],
                              'Phases'    : '',
                              'LoadShape' : ''})
 
-DF_PVPowerData = pd.DataFrame({'Case'       : [],
-                               'Simulation' : [],
-                               'Name'       : [],
-                               'Bus'        : [],
-                               'Measurement': ''})
-
 DF_PV = pd.DataFrame({'Case'      : [],
                       'Simulation': [],
                       'Name'      : [],
@@ -168,13 +163,6 @@ DF_Elements = pd.DataFrame({'Case'           : [],
                             'I_pu_min_b'     : [],
                             'I_pu_min_c'     : []})
 
-# Lembrar de alterar essa tabela sempre que tiver alteração no número de monitores
-# Adicionar os novos campos
-DF_Monitors_Data = pd.DataFrame({'Case'           : [],
-                                 'Simulation'     : [],
-                                 'Elemento'       : [],
-                                 'Measurement'    : []})
-
 DF_Monitors_Data_2 = pd.DataFrame({'Case'           : [],
                                    'Simulation'     : [],
                                    'Monitor'       : [],
@@ -208,16 +196,6 @@ DF_Current_Elemt_Data_Ang = pd.DataFrame({'Case'           : [],
                                           'Simulation'     : [],
                                           'Elementos'      : [],
                                           'Fase'           : []})
-
-DF_Power_P_Elemt_Data = pd.DataFrame({'Case'           : [],
-                                      'Simulation'     : [],
-                                      'Elementos'      : [],
-                                      'Fase'           : []})
-
-DF_Power_Q_Elemt_Data = pd.DataFrame({'Case'           : [],
-                                      'Simulation'     : [],
-                                      'Elementos'      : [],
-                                      'Fase'           : []})
 
 DF_Voltage_Elemt_Data = pd.DataFrame({'Case'           : [],
                                       'Simulation'     : [],
@@ -267,14 +245,13 @@ Norma = 1               #  # 0 - PRODIST # 1 - IEEE
 ############################################################
 Num_Simulations = 7     # Deifnie o número de simulações que serão realizadas
 
-Num_Estudos_de_Caso = 1 # Define o estudo de caso em questão (configuração das GDs)
+Num_Estudos_de_Caso = 2 # Define o estudo de caso em questão (configuração das GDs)
 
 Debug_VV = 1            # Modo Debug para mensurar e comparar o comportamento do VV no sistema ( 1 - liga 0 - desliga)
 Thiago = 0
 
 Remove = 1  # Com a refatoração dos monitores, não é preciso salvar dados em alguns DF
 # Essa chave faz com que o código ignore essa parte, lembrar de remover em um futuro
-# DF_Geradores, DF_PVPowerData, Monitors_Data (Monitors_data2 é o atual), Corrente_Data, Current_data_ang
 
 # PVSystem
 FP_1 = 1
