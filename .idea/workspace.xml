@@ -1,28 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c0a353b0-9d94-497b-99cd-a779928dfe5d" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python/DB_Rede.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/DB_Rede.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python/Definitions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/Definitions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python/FunctionsSecond.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/FunctionsSecond.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python/Monitores.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/Monitores.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python/Princ.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/Princ.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python/SistemFunctions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/SistemFunctions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL/StoredProcedures/RunAll.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL/StoredProcedures/spAVGResoults.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL/StoredProcedures/spCalc_HC.sql" beforeDir="false" afterPath="$PROJECT_DIR$/SQL/StoredProcedures/spCalc_HC.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL/StoredProcedures/spCreateSum_Pot_P_GDs.sql" beforeDir="false" afterPath="$PROJECT_DIR$/SQL/StoredProcedures/spCreateSum_Pot_P_GDs.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL/StoredProcedures/spGenerateInvControlTables.sql" beforeDir="false" afterPath="$PROJECT_DIR$/SQL/StoredProcedures/spGenerateInvControlTables.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL/StoredProcedures/spGenerateLossesTables.sql" beforeDir="false" afterPath="$PROJECT_DIR$/SQL/StoredProcedures/spGenerateLossesTables.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL/StoredProcedures/spGenerateSourceTables.sql" beforeDir="false" afterPath="$PROJECT_DIR$/SQL/StoredProcedures/spGenerateSourceTables.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL/StoredProcedures/spStatisticalResults.sql" beforeDir="false" afterPath="$PROJECT_DIR$/SQL/StoredProcedures/spStatisticalResults.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL/Tables/AllTablesDefinitions.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL/Views/CreateViolationViews.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL/Views/vwAVGHC.sql" beforeDir="false" afterPath="$PROJECT_DIR$/SQL/Views/vwAVGHC.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL/Views/vwVV_VW_Data.sql" beforeDir="false" afterPath="$PROJECT_DIR$/SQL/Views/vwVV_VW_Data.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL/Views/vwVoltageMonitors.sql" beforeDir="false" afterPath="$PROJECT_DIR$/SQL/Views/vwVoltageMonitors.sql" afterDir="false" />
-    </list>
+    <list default="true" id="c0a353b0-9d94-497b-99cd-a779928dfe5d" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
