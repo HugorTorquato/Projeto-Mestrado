@@ -41,14 +41,18 @@ def Define_Monitor(Rede2, Lista_Monitores):
 
     logger.debug("Starting Monitors")
     for element in Lista_Monitores:
-        if element.split('.')[0] != 'Monitor':
+        Command = []
 
-            Command1 = "New monitor." + str(element.replace('.', '_')) + "_power element=" + str(element) \
-                       + " terminal=1 mode=1 ppolar=no enabled=Yes"
-            Command2 = "New monitor." + str(element.replace('.', '_')) + "_voltage element=" + str(element) \
-                       + " terminal=1 mode=0 enabled=Yes"
-            Command3 = "New monitor." + str(element.replace('.', '_')) + "_loss element=" + str(element) \
-                       + " terminal=1 mode=9 enabled=Yes"
+        if element.split('.')[1].startswith("fakeload"):
+            Command.append("New monitor." + str(element.replace('.', '_')) + "_voltage element=" + str(element) \
+                       + " terminal=1 mode=0 enabled=Yes")
+        elif element.split('.')[0] != 'Monitor':
+            Command.append("New monitor." + str(element.replace('.', '_')) + "_power element=" + str(element) \
+                       + " terminal=1 mode=1 ppolar=no enabled=Yes")
+            Command.append("New monitor." + str(element.replace('.', '_')) + "_voltage element=" + str(element) \
+                       + " terminal=1 mode=0 enabled=Yes")
+            Command.append("New monitor." + str(element.replace('.', '_')) + "_loss element=" + str(element) \
+                       + " terminal=1 mode=9 enabled=Yes")
 
             #logger.debug("Starting Monitor 1  - " + Command1)
             #logger.debug("Starting Monitor 2  - " + Command2)
@@ -56,9 +60,7 @@ def Define_Monitor(Rede2, Lista_Monitores):
             #Rede.dssText.Command = Command1
             #Rede.dssText.Command = Command2
             #Rede.dssText.Command = Command3
-            Rede2.text(Command1)
-            Rede2.text(Command2)
-            Rede2.text(Command3)
+        [Rede2.text(Cmd) for Cmd in Command]
 
 def Define_Random_Monior_Test(Rede2, description, element, terminal, mode):
 

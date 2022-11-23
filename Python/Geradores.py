@@ -62,11 +62,12 @@ def Adicionar_GDs(Rede2, Pot_GD, Simulation):
 def Create_PV(Rede2, Nome, Pmp, FP, Irrad, Temp, Simulation):
 
     from Definitions import DF_PV, Barras_GDs, Casos, logger, sqrt3
-    from FunctionsSecond import ativa_barra, Identify_Phases
+    from FunctionsSecond import ativa_barra, Identify_Phases, Fase2String
     from Monitores import Define_Random_Monior_Test
 
     index = len(DF_PV)
     STRING = ['A', 'B', 'C', 'N']
+    invcontrol = 0
 
     DF_PV.loc[index, 'Case'] = len(Casos) if Casos != [] else 0
     DF_PV.loc[index, 'Simulation'] = Simulation
@@ -107,17 +108,19 @@ def Create_PV(Rede2, Nome, Pmp, FP, Irrad, Temp, Simulation):
                            " kv=" + str(kvbase) + \
                            " kVA=" + str(Pmp * 1.05) + \
                            " con=wye" + \
-                           " %Cutin=0.1 %cutout=0.1 EffCurve=Eff P-TCurve=FactorPVsT" + \
+                           " %Cutin=0.1 %cutout=0.1 P-TCurve=FactorPVsT" + \
                            " pf=1 " + \
                            " irradiance=" + str(Const_Irrad) + " temperature=" + str(Const_Temp) + \
-                           " daily=irrad Tdaily=Temp debugtrace=yes"
+                           " daily=irrad Tdaily=Temp"
+
+    Command + " debugtrace=yes" if Debug else 0
 
     logger.debug("Create_PV - " + Command)
     #Rede.dssText.Command = Command
     Rede2.text(Command)
 
     #Rede.dssText.Command = "set maxcontroliter=2000"
-    Rede2.text("set maxcontroliter=2000")
+
 
     if (Simulation == 3 or Simulation == 7) and Debug_VV == 1:
 
@@ -129,6 +132,7 @@ def Create_PV(Rede2, Nome, Pmp, FP, Irrad, Temp, Simulation):
                            " monVoltageCalc=AVG EventLog=yes"
         logger.debug("Create_PV - Define InvControl VV " + Command)
         Rede2.text(Command)
+        invcontrol = 1
 
     if Simulation == 4 and Debug_VV == 1:
 
@@ -140,6 +144,7 @@ def Create_PV(Rede2, Nome, Pmp, FP, Irrad, Temp, Simulation):
                               " monVoltageCalc=AVG EventLog=yes"
         logger.debug("Create_PV - Define InvControl VW " + Command)
         Rede2.text(Command)
+        invcontrol = 1
 
     if Simulation == 6 and Debug_VV == 1:
 
@@ -153,6 +158,7 @@ def Create_PV(Rede2, Nome, Pmp, FP, Irrad, Temp, Simulation):
                  " monVoltageCalc=AVG EventLog=yes"
         logger.debug("Create_PV - Define InvControl VV + VW " + Command)
         Rede2.text(Command)
+        invcontrol = 1
 
     ## deltaQ_factor -> Mudança máxima da pot reativa da solução anterior para a desejada durante
     #                   cada iteração de controle
@@ -164,15 +170,17 @@ def Create_PV(Rede2, Nome, Pmp, FP, Irrad, Temp, Simulation):
     #                    suficiente e, casos mais complesxo de multiplos GDs
 
     # Define um monitor para observar as configurações do PV durante o InvControl
-    Define_Random_Monior_Test(Rede2, "InvControl", "PVSystem." + Nome, 1, 3)
+    if invcontrol:
+        Define_Random_Monior_Test(Rede2, "InvControl", "PVSystem." + Nome, 1, 3)
 
 def Create_GD(Rede, Nome, kW, kvar, LoadShape, Simulation):
     from Definitions import DF_Geradores, Barras_GDs, Casos
+    from FunctionsSecond import ativa_barra, Identify_Phases, Fase2String
 
     # Preparação para armazenamento dos dados
     index = len(DF_Geradores)  # Define a linha para aplicar as alterações
     STRING = ['A', 'B', 'C', 'N']  # Definie a string de fases para o gerador
-    from FunctionsSecond import ativa_barra, Identify_Phases  # Importa a função para ativação da barra
+
 
     # Armazenar e salvar dados
     DF_Geradores.loc[index, 'Case'] = len(Casos) if Casos != [] else 0
@@ -194,13 +202,6 @@ def Create_GD(Rede, Nome, kW, kvar, LoadShape, Simulation):
                            " kv=" + str(Rede.dssBus.kVBase) + " kW=" + str(kW) + \
                            " kVAr=" + str(kvar + 0.001) + " model=1" + \
                            " daily=" + str(LoadShape)
-
-def Fase2String(STRING):
-    a = ''
-    for i in STRING:
-        #if i != 'N':
-       a += str(i)
-    return a
 
 def FindBusGD(Rede2, Num_GDs):
 

@@ -178,8 +178,7 @@ def Solve_Hora_por_Hora(Rede2, Simulation, Pot_GD):
         e = Rede2.solution_mode_id()
 
         aa = Rede2.circuit_all_bus_vmag_pu()[45]
-        #Compila_DSS_snap(Rede2)
-        Rede2.solution_init_snap()
+        Rede2.solution_solve()
         aaa = Rede2.circuit_all_bus_vmag_pu()[45]
 
         f = Rede2.solution_read_step_size()
@@ -218,13 +217,15 @@ def Solve_Hora_por_Hora(Rede2, Simulation, Pot_GD):
 def Solve_Daily(Rede2, Simulation, Pot_GD):
 
     from Definitions import logger
+    from FunctionsSecond import CreateFakeLoads
+    from Monitores import Adicionar_Monitores
 
     logger.debug("Starting Solve_Daily")
     t1 = time.time()
-    from Monitores import Adicionar_Monitores
 
     Compila_DSS2(Rede2)
     Adicionar_GDs(Rede2, Pot_GD, Simulation)
+    CreateFakeLoads(Rede2)
     Adicionar_Monitores(Rede2)
 
     a = Rede2.circuit_all_bus_vmag_pu()
