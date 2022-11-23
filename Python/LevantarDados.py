@@ -83,7 +83,6 @@ def Dados_Geometria_Linha(Rede):
         print("hugo")
         print(Rede.dssLines.Name)
         print(Rmatrix[-1])
-        pause()
 
     for linha in Nome:
         Rede.dssLines.Name = linha

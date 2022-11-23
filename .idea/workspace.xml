@@ -2,26 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c0a353b0-9d94-497b-99cd-a779928dfe5d" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/Projeto_Rede_Fornecida.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Projeto_Rede_Fornecida.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CikicarNaPR_SaiComErro.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Python/DB_Rede.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/DB_Rede.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Python/Definitions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/Definitions.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Python/FunctionsSecond.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/FunctionsSecond.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python/Geradores.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/Geradores.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python/LevantarDados.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/LevantarDados.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Python/Monitores.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/Monitores.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Python/Princ.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/Princ.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Python/SistemFunctions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/SistemFunctions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL/StoredProcedures/RunAll.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL/StoredProcedures/spAVGResoults.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL/StoredProcedures/spCalc_HC.sql" beforeDir="false" afterPath="$PROJECT_DIR$/SQL/StoredProcedures/spCalc_HC.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL/StoredProcedures/spCreateSum_Pot_P_GDs.sql" beforeDir="false" afterPath="$PROJECT_DIR$/SQL/StoredProcedures/spCreateSum_Pot_P_GDs.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL/StoredProcedures/spGenerateInvControlTables.sql" beforeDir="false" afterPath="$PROJECT_DIR$/SQL/StoredProcedures/spGenerateInvControlTables.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL/StoredProcedures/spGenerateLossesTables.sql" beforeDir="false" afterPath="$PROJECT_DIR$/SQL/StoredProcedures/spGenerateLossesTables.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL/StoredProcedures/spGenerateSourceTables.sql" beforeDir="false" afterPath="$PROJECT_DIR$/SQL/StoredProcedures/spGenerateSourceTables.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL/StoredProcedures/spStatisticalResults.sql" beforeDir="false" afterPath="$PROJECT_DIR$/SQL/StoredProcedures/spStatisticalResults.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL/Tables/AllTablesDefinitions.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL/Views/CreateViolationViews.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL/Views/vwAVGHC.sql" beforeDir="false" afterPath="$PROJECT_DIR$/SQL/Views/vwAVGHC.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL/Views/vwVV_VW_Data.sql" beforeDir="false" afterPath="$PROJECT_DIR$/SQL/Views/vwVV_VW_Data.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL/Views/vwVoltageMonitors.sql" beforeDir="false" afterPath="$PROJECT_DIR$/SQL/Views/vwVoltageMonitors.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,7 +30,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="Inprov_bus_seletion" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -70,7 +62,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/Python" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/Python/RedeTeste/Fiststeswith_pydssinterface.py" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
@@ -121,6 +113,27 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="Princ2 (1)" type="PythonConfigurationType" factoryName="Python">
+      <module name="Projeto_Rede_Fornecida" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="C:\Users\hugo1\AppData\Local\Programs\Python\Python311\python.exe" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Python" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Python/Princ.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="Princ2" type="PythonConfigurationType" factoryName="Python">
       <module name="Projeto_Rede_Fornecida" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -128,12 +141,33 @@
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="C:\Users\hugo1\AppData\Local\Programs\Python\Python38-32\python.exe" />
+      <option name="SDK_HOME" value="C:\Users\hugo1\AppData\Local\Programs\Python\Python38\python.exe" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Python" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Python/Princ.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="pyinterface" type="PythonConfigurationType" factoryName="Python">
+      <module name="Projeto_Rede_Fornecida" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="C:\Users\hugo1\AppData\Local\Programs\Python\Python311\python.exe" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Python/RedeTeste" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Python/RedeTeste/Fiststeswith_pydssinterface.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -173,12 +207,15 @@
     <list>
       <item itemvalue="Python.Main" />
       <item itemvalue="Python.Princ2" />
+      <item itemvalue="Python.Princ2 (1)" />
+      <item itemvalue="Python.pyinterface" />
       <item itemvalue="Python.Princ" />
       <item itemvalue="Python tests.Unittests for test_FunctionsSecond.Test" />
       <item itemvalue="Python tests.Unittests for test_FunctionsSecond.Test.test_min_2" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python tests.Unittests for test_FunctionsSecond.Test.test_min_2" />
         <item itemvalue="Python tests.Unittests for test_FunctionsSecond.Test.test_min_2" />
       </list>
     </recent_temporary>
@@ -236,22 +273,47 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Python/Monitores.py</url>
-          <line>107</line>
+          <line>109</line>
           <option name="timeStamp" value="137" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Python/FunctionsSecond.py</url>
+          <line>417</line>
+          <option name="timeStamp" value="144" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Python/FunctionsSecond.py</url>
+          <line>399</line>
+          <option name="timeStamp" value="145" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Python/FunctionsSecond.py</url>
+          <line>52</line>
+          <option name="timeStamp" value="146" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Python/SistemFunctions.py</url>
+          <line>299</line>
+          <option name="timeStamp" value="178" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Python/SistemFunctions.py</url>
+          <line>302</line>
+          <option name="timeStamp" value="180" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Python/SistemFunctions.py</url>
+          <line>235</line>
+          <option name="timeStamp" value="182" />
+        </line-breakpoint>
       </breakpoints>
+      <default-breakpoints>
+        <breakpoint type="python-exception">
+          <properties notifyOnTerminate="true" exception="BaseException">
+            <option name="notifyOnTerminate" value="true" />
+          </properties>
+        </breakpoint>
+      </default-breakpoints>
     </breakpoint-manager>
-    <watches-manager>
-      <configuration name="PythonConfigurationType">
-        <watch expression="DF_Tensao_A" />
-        <watch expression="DF_Tensao_Ang_A" />
-        <watch expression="DF_Tensao_Ang_A" />
-        <watch expression="Rede" />
-        <watch expression="DF_Monitors_Data" />
-        <watch expression="DF_Monitors_Data_2" />
-        <watch expression="DF_Check_Report" />
-        <watch expression="Rede.dssBus.SectionID" />
-      </configuration>
-    </watches-manager>
   </component>
 </project>

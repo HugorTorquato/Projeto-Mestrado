@@ -7,27 +7,28 @@ from Definitions import *
 import pandas as pd
 import time
 
-def Adicionar_Monitores(Rede):
+def Adicionar_Monitores(Rede2):
 
     # Se precisar adicionar algum monitor no circuito, basta replicar a linha seguinte refasendo a atribuição de
     # valor. Lembrar que o comando de criação do monitor necessita do tipo de elemento para determinar o parametro
     # "element" da declaração, mas o nome do monitor não precisa... Basta seguir o padrão :
     #                                                                       <TIPO>.<NOME_ELEMENTO>
 
-    from FunctionsSecond import Limpar_DF
+    from FunctionsSecond import Limpar_DF, GetAllElemtfNames
+
     Limpar_DF(DF_Lista_Monitors)
 
     #DF_Lista_Monitors.loc[len(DF_Lista_Monitors), "Elemento_com_monitor"] = "line." + str(Rede.dssLines.AllNames[0])
-    for element in Rede.dssCircuit.AllElementNames:
+    for element in GetAllElemtfNames(Rede2):
         if element.split('.')[0] != 'Monitor':
             DF_Lista_Monitors.loc[len(DF_Lista_Monitors), "Elemento_com_monitor"] = element
     # ...
 
-    Define_Monitor(Rede, DF_Lista_Monitors["Elemento_com_monitor"].values)
+    Define_Monitor(Rede2, DF_Lista_Monitors["Elemento_com_monitor"].values)
 
     #Define_Monitor(Rede, Rede.dssCircuit.AllElementNames)
 
-def Define_Monitor(Rede, Lista_Monitores):
+def Define_Monitor(Rede2, Lista_Monitores):
 
     # Atualmente são definidos3 tipos de monitores por elemento:
     # -> modelo 1 -> Medidores de Pot ( Atia e Reativa )
@@ -42,8 +43,6 @@ def Define_Monitor(Rede, Lista_Monitores):
     for element in Lista_Monitores:
         if element.split('.')[0] != 'Monitor':
 
-            # Medição de corrente?
-
             Command1 = "New monitor." + str(element.replace('.', '_')) + "_power element=" + str(element) \
                        + " terminal=1 mode=1 ppolar=no enabled=Yes"
             Command2 = "New monitor." + str(element.replace('.', '_')) + "_voltage element=" + str(element) \
@@ -54,17 +53,20 @@ def Define_Monitor(Rede, Lista_Monitores):
             #logger.debug("Starting Monitor 1  - " + Command1)
             #logger.debug("Starting Monitor 2  - " + Command2)
             #logger.debug("Starting Monitor 3  - " + Command3)
-            Rede.dssText.Command = Command1
-            Rede.dssText.Command = Command2
-            Rede.dssText.Command = Command3
+            #Rede.dssText.Command = Command1
+            #Rede.dssText.Command = Command2
+            #Rede.dssText.Command = Command3
+            Rede2.text(Command1)
+            Rede2.text(Command2)
+            Rede2.text(Command3)
 
-def Define_Random_Monior_Test(Rede, description, element, terminal, mode):
+def Define_Random_Monior_Test(Rede2, description, element, terminal, mode):
 
     Command = "New monitor." + str(description) + "_" + str(element.split('.')[1]) + " element=" \
               + str(element) + " terminal=" + str(terminal) + " mode=" + str(mode) + " enabled=Yes"
 
     logger.debug("Define_Random_Monior_Test - " + Command)
-    Rede.dssText.Command = Command
+    Rede2.text(Command)
 
 def Export_Random_Monitor_Test(Rede, description, element):
 

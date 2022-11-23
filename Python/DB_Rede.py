@@ -23,7 +23,7 @@ def sqlalchemyengine():
     return sql.create_engine(
         'mssql+pyodbc://LAPTOP-5R3FI4O0\SQLEXPRESS/DB_Rede_3?driver=ODBC Driver 17 for SQL Server')
 
-def RunSQLDefinitions(engine, Rede):
+def RunSQLDefinitions(engine, Rede2):
 
     t = time.time()
     t1 = time.time()
@@ -87,21 +87,21 @@ def RunSQLDefinitions(engine, Rede):
                 sys.exit()
 
     # I'll have to leave it here because this definition is dynamic, depends on originalSteps(Rede)
-    Adjust_tables_to_timestemp(engine, Rede)
-    Refresh_Or_Create_StoreProcedures(Rede, engine)
+    Adjust_tables_to_timestemp(engine, Rede2)
+    Refresh_Or_Create_StoreProcedures(engine, Rede2)
     logger.debug("RunStoredProceduresDefinitions took {" + str(time.time() - t1) + " sec} to execulte")
 
     logger.debug("RunSQLDefinitions took {" + str(time.time() - t) + " sec} to execulte")
     print("SQL Definitions completed")
 
-def Refresh_Or_Create_StoreProcedures(Rede, engine):
+def Refresh_Or_Create_StoreProcedures(engine, Rede2):
 
     from FunctionsSecond import Return_Time_String_Colum, Return_Time_String_Colum_Case_Options
 
     # Lembrar de adicionar os SP da pasta ###############################################################
 
     storeProcedure = 'spUpdate_Voltage_Data_Table_Max_Min'
-    Ary = Return_Time_String_Colum(Rede)
+    Ary = Return_Time_String_Colum(Rede2)
 
     if len(pd.read_sql(
         'SELECT * '
@@ -127,8 +127,8 @@ def Refresh_Or_Create_StoreProcedures(Rede, engine):
         logger.info('StoreProcedure already exists :' + str(storeProcedure))
 
     storeProcedure = 'spUpdate_Voltage_Data_Table_Max_Min_Time_Value'
-    AryMax = Return_Time_String_Colum_Case_Options(Rede)[0]
-    AryMin = Return_Time_String_Colum_Case_Options(Rede)[1]
+    AryMax = Return_Time_String_Colum_Case_Options(Rede2)[0]
+    AryMin = Return_Time_String_Colum_Case_Options(Rede2)[1]
 
     if len(pd.read_sql(
             'SELECT * '
@@ -149,7 +149,7 @@ def Refresh_Or_Create_StoreProcedures(Rede, engine):
     else:
         logger.info('StoreProcedure already exists :' + str(storeProcedure))
 
-def Adjust_tables_to_timestemp(engine, Rede):
+def Adjust_tables_to_timestemp(engine, Rede2):
 
     from FunctionsSecond import originalSteps
 
@@ -164,7 +164,7 @@ def Adjust_tables_to_timestemp(engine, Rede):
         if pd.read_sql('SELECT COUNT(COLUMN_NAME) AS resultado FROM INFORMATION_SCHEMA.COLUMNS '
                        'WHERE TABLE_NAME = \'' + str(table) + '\' AND  COLUMN_NAME = \'Time_1\'', engine).values == 0:
 
-            for i in range(originalSteps(Rede)):
+            for i in range(originalSteps(Rede2)):
                 engine.execute("ALTER TABLE " + table + " ADD Time_" + str(i) + " float(53)")
 
 def Save_Data(Simulation, DF_Voltage_Data, DF_Tensao_Data_Ang,

@@ -321,18 +321,22 @@ def NEMA(Vmedio, Vmax):
     return ((Vmax - Vmedio) / Vmedio) if Vmedio != 0 else 0
 
 
-def ativa_barra(Rede, nome_barra):
-    Rede.dssCircuit.SetActiveBus(nome_barra)
+def ativa_barra(Rede2, nome_barra):
+    #Rede.dssCircuit.SetActiveBus(nome_barra)
+    Rede2.circuit_set_active_bus(nome_barra)
 
 
 def puVmagAngle(Rede):
     return Rede.dssBus.puVmagAngle
 
 
-def originalSteps(Rede):
-    Rede.dssLoadShapes.Name = Rede.dssLoadShapes.AllNames[1]
+def originalSteps(Rede2):
+    #Rede.dssLoadShapes.Name = Rede.dssLoadShapes.AllNames[1]
     # print len(Rede.dssLoadShapes.pmult)
-    return len(Rede.dssLoadShapes.pmult)
+    #return len(Rede.dssLoadShapes.pmult)
+
+    Rede2.loadshapes_write_name(Rede2.loadshapes_all_names()[1])
+    return Rede2.loadshapes_read_npts()
 
 
 def Colunas_DF_Horas(Rede):
@@ -406,8 +410,9 @@ def Check_overcurrent():
                     t_df.iloc[ind].where(
                         t_df.iloc[ind] >
                         df_temp_curr.set_index('Elementos')['Current_Limits'][ind]).count())
-            except:
-                logger.debug("Deu Ruim Check_overcurrent()")
+            except Exception as e:
+                logger.info("Deu Ruim Check_overcurrent()")
+                logger.info("Deu Ruim Check_overcurrent() com erro : " + str(e))
 
 
         df_temp_curr.insert(df_temp_curr.ndim + 2, 'Num_Violations',
@@ -620,30 +625,28 @@ def Min_2(Vet):
     return Vet
 
 
-def Return_Time_String_Colum(Rede):
+def Return_Time_String_Colum(Rede2):
     # Essa função retorna uma string com o número correto de colunas para ser usada nas buscas
     # pelas tabelas do SQL
 
     Ary = ''
-    MaxLen = originalSteps(Rede)
+    MaxLen = originalSteps(Rede2)
 
     for i in range(MaxLen):
         Ary += '(Time_' + str(i) + ')' if i == MaxLen - 1 else '(Time_' + str(i) + '),'
-
     return Ary
 
-
-def Return_Time_String_Colum_Case_Options(Rede):
+def Return_Time_String_Colum_Case_Options(Rede2):
     # Essa função retorna uma string com os casos para o store procedure 'Update_Voltage_Data_Table_Max_Min_Time_Value'
     # Vai variar de acordo com o tamanho da amostragem desejada para o dia
 
     commandMax = ''
     commandMin = ''
 
-    for i in range(originalSteps(Rede)):
+    for i in range(originalSteps(Rede2)):
         commandMax += ' WHEN ValueMaxPU = Time_' + str(i) + ' AND Time_' + str(i) + ' <> 0 THEN \'Time_' + str(i) + '\''
 
-    for i in range(originalSteps(Rede)):
+    for i in range(originalSteps(Rede2)):
         commandMin += ' WHEN ValueMinPU = Time_' + str(i) + ' AND Time_' + str(i) + ' <> 0 THEN \'Time_' + str(i) + '\''
 
     return commandMax, commandMin
@@ -657,3 +660,12 @@ def OrderFiles(listOfFiles):
         B.append([item, item.split(' ')[0]])
 
     return sorted(B, key=lambda B: int(B[1]))
+
+def GetAllLoadsNames(Rede2):
+    return Rede2.loads_all_names()
+
+def GetAllTransfNames(Rede2):
+    return Rede2.transformers_all_Names()
+
+def GetAllElemtfNames(Rede2):
+    return Rede2.circuit_all_element_names()

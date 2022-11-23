@@ -219,7 +219,7 @@ DF_TESTE = pd.DataFrame({
 
 ##Switches
 
-Salva_Dados = 1         # Aciona o script que faz o levantamento dos dados da rede
+Salva_Dados = 0         # Aciona o script que faz o levantamento dos dados da rede
 
 # Não da para tirar isso aqui, pq?
 Savar_Dados_Elem = 0    # Habilita que os dados de pot e tensão dos elementos sejam salvos
@@ -245,7 +245,7 @@ Norma = 1               #  # 0 - PRODIST # 1 - IEEE
 ############################################################
 Num_Simulations = 7     # Deifnie o número de simulações que serão realizadas
 
-Num_Estudos_de_Caso = 2 # Define o estudo de caso em questão (configuração das GDs)
+Num_Estudos_de_Caso = 50 # Define o estudo de caso em questão (configuração das GDs)
 
 Debug_VV = 1            # Modo Debug para mensurar e comparar o comportamento do VV no sistema ( 1 - liga 0 - desliga)
 Thiago = 0
