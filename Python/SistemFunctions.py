@@ -228,27 +228,28 @@ def Solve_Daily(Rede2, Simulation, Pot_GD):
     CreateFakeLoads(Rede2)
     Adicionar_Monitores(Rede2)
 
-    a = Rede2.circuit_all_bus_vmag_pu()
-    aa = Rede2.circuit_all_bus_vmag_pu()[44]
+    #a = Rede2.circuit_all_bus_vmag_pu()
+    #aa = Rede2.circuit_all_bus_vmag_pu()[44]
     Rede2.solution_solve()
-    aaa = Rede2.circuit_all_bus_vmag_pu()[44]
+    #aaa = Rede2.circuit_all_bus_vmag_pu()[44]
 
     logger.debug("Solve_Daily took {" + str(time.time() - t1) + " sec} to execulte")
-    print()
+    #print()
 
 def HC(Rede2):
 
     # Essa função é o pulmão do código, aqui que é feito o cálculo do HC
-    from FunctionsSecond import Limpar_DF, Check, GetAllTransfNames
+    from FunctionsSecond import Limpar_DF, Check2, GetAllTransfNames, Identify_Overcurrent_Limits
     from Definitions import DF_Geradores, DF_Barras, DF_General, DF_Elements, DF_PV,\
-        DF_Lista_Monitors, Incremento_gd, DF_Monitors_Data_2, Casos, logger
+        DF_Lista_Monitors, Incremento_gd, DF_Monitors_Data_2, Casos, logger, DF_Violations_Data
 
     # Define o primeiro transformador como o ponto de PCC e o incremento de pot em cada verificação do HC é
     # definido em termos de % frente a pot do trafo de entrada
 
     #Rede.dssTransformers.Name = Rede.dssTransformers.AllNames[0]
     Rede2.transformers_write_name(GetAllTransfNames(Rede2)[0])
-    a = Rede2.transformers_read_name()
+    Identify_Overcurrent_Limits(Rede2)
+    #a = Rede2.transformers_read_name()
     try:
         #Incremento_Pot_gd = float(Incremento_gd)/100 * Rede.dssTransformers.kva
         Incremento_Pot_gd = float(Incremento_gd)/100 * Rede2.transformers_read_kva()
@@ -280,7 +281,7 @@ def HC(Rede2):
         Compila_DSS(Rede2)
 
         [Limpar_DF(DF) for DF in [DF_Geradores, DF_Barras, DF_General, DF_Elements, DF_PV,
-                                  DF_Lista_Monitors, DF_Monitors_Data_2]]
+                                  DF_Lista_Monitors, DF_Monitors_Data_2, DF_Violations_Data]]
         Verify = True
 
         while Nummero_Simulacoes == 0 or Verify is True:
@@ -303,7 +304,8 @@ def HC(Rede2):
 
             Nummero_Simulacoes += 1
             rest += 1
-            Verify = Check(Rede, Simulation)
+            Verify = Check2(Rede2, Simulation)
+            #Verify = Check(Rede, Simulation)
 
             if Nummero_Simulacoes < 4:
                 Pot_GD += 3*Incremento_Pot_gd if Criar_GD and Nummero_Simulacoes > 0 else 0
@@ -320,6 +322,7 @@ def HC(Rede2):
                 break
 
             if Nummero_Simulacoes > 20:
+                Verify = False
                 break
 
         # Step Back
@@ -334,19 +337,22 @@ def HC(Rede2):
         # Confere se a definição para adicionar GHD está ativa e se não for a primeira simulação, reseta os devidos
         # valores para fazer o código funcionar
         if Criar_GD and Nummero_Simulacoes > 0:
-            Compila_DSS(Rede)
+            Compila_DSS2(Rede2)
             [Limpar_DF(DF) for DF in [DF_Geradores, DF_Elements, DF_PV, DF_Lista_Monitors]]
 
         # trocar .insert por .concat ( primeiro tem performance ruim )
-        Solve_Hora_por_Hora(Rede, Simulation, Pot_GD)  # Chamada da função que levanta o perfil diário
+        #Solve_Hora_por_Hora(Rede, Simulation, Pot_GD)  # Chamada da função que levanta o perfil diário
+        Solve_Daily(Rede2, Simulation, Pot_GD)
 
-        from Monitores import Export_And_Read_Monitors_Data
-        from DB_Rede import Save_General_Data, Process_Data
+        from Monitores import Export_And_Read_Monitors_Data2
+        from DB_Rede import Save_General_Data, Save_Data
 
-        DF_Monitors_Data_2 = Export_And_Read_Monitors_Data(Rede, Simulation)
+        DF_Monitors_Data_2 = Export_And_Read_Monitors_Data2(Rede2, Simulation)
+        #DF_Monitors_Data_2 = Export_And_Read_Monitors_Data(Rede, Simulation)
 
         Save_General_Data(Simulation)
-        Process_Data(Rede, Simulation, DF_Monitors_Data_2)
+        #Process_Data(Simulation, DF_Monitors_Data_2)
+        Save_Data(DF_Monitors_Data_2)
 
         print('Caso=' + str(len(Casos) if Casos != [] else 0) + ' Número da Simulação : ' +
               str(Simulation) + " Número de iterações : " + str(Nummero_Simulacoes) +
@@ -360,8 +366,10 @@ def Case_by_Case(Rede2):
     # 1 - Sem PV
     # 2 - Com PV FP=1
     # 3 - Com PV + VV
-    # 4 - Com PV + VW
-    # 5 - Com PV + VV + VW
+    # 4 - Com PV
+    # 5 - Com PV + VW
+    # 6 - Com PV + VV
+    # 7 - Com PV + VV + VW
     #
 
     from Definitions import Num_GDs, Casos

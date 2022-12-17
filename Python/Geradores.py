@@ -109,9 +109,9 @@ def Create_PV(Rede2, Nome, Pmp, FP, Irrad, Temp, Simulation):
                            " kVA=" + str(Pmp * 1.05) + \
                            " con=wye" + \
                            " %Cutin=0.1 %cutout=0.1 P-TCurve=FactorPVsT" + \
-                           " pf=1 " + \
+                           " pf=1 VarFollowInverter=true" + \
                            " irradiance=" + str(Const_Irrad) + " temperature=" + str(Const_Temp) + \
-                           " daily=irrad Tdaily=Temp"
+                           " daily=irrad Tdaily=Temp wattpriority=yes"
 
     Command + " debugtrace=yes" if Debug else 0
 

@@ -5,6 +5,7 @@ import pandas as pd
 from Princ import *
 import numpy as np
 import logging
+from enum import Enum
 
 
 #Rede_Path = "C:\\Users\hugo1\Desktop\Projeto_Rede_Fornecida\Python\TCC\Rede" # IEEE13
@@ -212,11 +213,36 @@ DF_Elements_Data = pd.DataFrame({'Element'       : [],
                                  'Measurement'    : [],
                                  'Value'          : []})
 
+DF_Violations_Data = pd.DataFrame({
+    'Case'         : [],
+    'Simulation'   : [],
+    'Element'      : [],
+    'Fase'         : [],
+    'ViolationType': [],
+    'TimeStep'     : [],
+    'Value'        : []
+})
+
+# Ainda tenho de popular isso, mas te de ser quando sair do check ( q se n vai para cada num_simulação)
+# e não quero isso, só quero isso populado quando achar o HC
+DF_List_Desq_IEC = pd.DataFrame({
+    'Case'          : [],
+    'Simulation'    : [],
+    'Bus'           : [],
+    'Type'          : [],
+    'TimeStep'      : [],
+    'Value'         : []
+})
+
 DF_TESTE = pd.DataFrame({
     "N": ['N', 'M', 'P', 'Q'],
     "A": [1, 2, 3.5, 4],
     "B": [4.5, 3.1, 2, 1],
     "C": [4.6, 1, 2, 3]})
+
+## Enum definitions
+ViolationType = Enum('ViolationType', ['overvoltage', 'undervoltage', 'unbalance', 'overcurrent'])
+UnbalanceType = Enum('UnbalanceType', ['IEC', 'IEEE', 'NEMA'])
 
 ##Switches
 
@@ -246,7 +272,7 @@ Norma = 1               #  # 0 - PRODIST # 1 - IEEE
 ############################################################
 Num_Simulations = 7     # Deifnie o número de simulações que serão realizadas
 
-Num_Estudos_de_Caso = 50 # Define o estudo de caso em questão (configuração das GDs)
+Num_Estudos_de_Caso = 2 # Define o estudo de caso em questão (configuração das GDs)
 
 Debug_VV = 1            # Modo Debug para mensurar e comparar o comportamento do VV no sistema ( 1 - liga 0 - desliga)
 Thiago = 0
@@ -274,7 +300,6 @@ inv_alfa = complex(-0.5, -0.866025403784)
 
 # List to be removed from Measurements table
 Remove_Measurament = ['P_TFactor',
-                      'Efficiency',
                       'Vavg (DRC)',
                       'DRC',
                       'VV_DRC',

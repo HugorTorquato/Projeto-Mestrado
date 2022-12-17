@@ -92,6 +92,87 @@ def Move_Files():
             os.rename(file, Debug_Path + file.replace(file.split("_")[0], "\\"))
 
 
+def Export_And_Read_Monitors_Data2(Rede2, Simulation):
+
+    t1 = time.time()
+    from Definitions import DF_Monitors_Data_2
+    from FunctionsSecond import IEC
+    from DB_Rede import Save_Data
+    import sqlalchemy as sql
+
+    No_Monitor = Rede2.monitors_first()
+    header_after_filtering = Remove_Measurament
+
+    while No_Monitor != 0:
+        Name = Rede2.monitors_read_name()
+        Element = Rede2.monitors_read_element()
+
+        if Element.split('.')[0].startswith("reactor"):
+            No_Monitor = Rede2.monitors_next()
+            continue
+
+        header = Rede2.monitors_header()
+
+        V1  = []
+        V1A = []
+        V2  = []
+        V2A = []
+        V3  = []
+        V3A = []
+
+        for channel in range(len(header)):
+            if header[channel] not in header_after_filtering:
+                try:
+                    Data = Rede2.monitors_channel(header.index(header[channel]) + 1) if header[channel] in header else []
+
+                    if Element.split('.')[1].startswith("fakeload"):
+                        V1  = Data if ' V1' == header[channel] else V1
+                        V1A = Data if ' VAngle1' == header[channel] else V1A
+                        V2  = Data if ' V2' == header[channel] else V2
+                        V2A = Data if ' VAngle2' == header[channel] else V2A
+                        V3  = Data if ' V3' == header[channel] else V3
+                        V3A = Data if ' VAngle3' == header[channel] else V3A
+
+                except:
+                    logger.info("Export_And_Read_Monitors_Data DEU RUIM - " + Name + " : " +
+                                Element + " " + str(header) + " ")
+
+                temp_df = pd.DataFrame({'Case'           : len(Casos) if Casos != [] else 0,
+                                        'Simulation'     : Simulation,
+                                        'Monitor'        : Name,
+                                        'Elemento'       : Element,
+                                        'TimeStep'       : range(0, len(Data)),
+                                        'Measurement'    : str(header[channel]),
+                                        'Value'          : Data})
+
+                DF_Monitors_Data_2 = pd.concat([DF_Monitors_Data_2, temp_df], ignore_index=True)
+
+        if Element.split('.')[1].startswith("fakeload"):
+
+            # Calcular desequilibrio
+
+            Data = IEC(V1, V2, V3, V1A, V2A, V3A, Rede2)
+            Element = Name.replace("load_fakeload_", "").replace("_voltage", "")
+            Measurement = UnbalanceType.IEC.name
+
+            temp_df = pd.DataFrame({'Case'           : len(Casos) if Casos != [] else 0,
+                                    'Simulation'     : Simulation,
+                                    'Monitor'        : Name,
+                                    'Elemento'       : Element,
+                                    'TimeStep'       : range(0, len(Data)),
+                                    'Measurement'    : Measurement,
+                                    'Value'          : Data})
+
+            DF_Monitors_Data_2 = pd.concat([DF_Monitors_Data_2, temp_df], ignore_index=True)
+
+        logger.debug("Evaluating monitor : " + str(Name))
+        No_Monitor = Rede2.monitors_next()
+
+    logger.debug("Export_And_Read_Monitors_Data2 took {" + str(time.time() - t1) + " sec} to execulte")
+
+    return DF_Monitors_Data_2
+
+
 def Export_And_Read_Monitors_Data(Rede, Simulation):
 
     # 2022-04-10 16:11:52,858:Definitions:DEBUG: New = 11.477030754089355 Old = 80.24969696998596

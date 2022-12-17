@@ -288,22 +288,30 @@ def Max_Min(Tensao1, Tensao2, Tensao3):
         return max_Tensao, min_Tensao
 
 
-def IEC(Tensao1, Tensao2, Tensao3, Angle1, Angle2, Angle3):  # Limite de 3%
+def IEC(V1, V2, V3, VAngle1, VAngle2, VAngle3, Rede2):  # Limite de 3%
 
-    Tensao1 = 0 if Tensao1 < 0.3 else Tensao1
-    Tensao2 = 0 if Tensao2 < 0.3 else Tensao2
-    Tensao3 = 0 if Tensao3 < 0.3 else Tensao3
+    List_Desq_IEC = []
 
-    if Tensao1 != 0 and Tensao2 != 0 and Tensao3 != 0:
-        Positiva = 0.333333 * ((cmath.rect(Tensao1, np.deg2rad(Angle1))) +
-                               (alfa * cmath.rect(Tensao2, np.deg2rad(Angle2))) +
-                               (inv_alfa * cmath.rect(Tensao3, np.deg2rad(Angle3))))
-        Negativa = 0.333333 * ((cmath.rect(Tensao1, np.deg2rad(Angle1))) +
-                               (inv_alfa * cmath.rect(Tensao2, np.deg2rad(Angle2))) +
-                               (alfa * cmath.rect(Tensao3, np.deg2rad(Angle3))))
-        return (abs(Negativa) / abs(Positiva)) * 100
-    else:
-        return 0
+    for i in range(originalSteps(Rede2)):
+
+        # Add other unbalances calculations here, and also add to dataframe to be sent to database
+
+        Tensao1 = V1[i] if len(V1) > 1 and V1[i] > 0.3 else 0
+        Tensao2 = V2[i] if len(V2) > 1 and V2[i] > 0.3 else 0
+        Tensao3 = V3[i] if len(V3) > 1 and V3[i] > 0.3 else 0
+
+        if Tensao1 != 0 and Tensao2 != 0 and Tensao3 != 0:
+            Positiva = 0.333333 * ((cmath.rect(Tensao1, np.deg2rad(VAngle1[i]))) +
+                                   (alfa * cmath.rect(Tensao2, np.deg2rad(VAngle2[i]))) +
+                                   (inv_alfa * cmath.rect(Tensao3, np.deg2rad(VAngle3[i]))))
+            Negativa = 0.333333 * ((cmath.rect(Tensao1, np.deg2rad(VAngle1[i]))) +
+                                   (inv_alfa * cmath.rect(Tensao2, np.deg2rad(VAngle2[i]))) +
+                                   (alfa * cmath.rect(Tensao3, np.deg2rad(VAngle3[i]))))
+            List_Desq_IEC.append((abs(Negativa) / abs(Positiva)) * 100)
+        else:
+            List_Desq_IEC.append(0)
+
+    return List_Desq_IEC
 
 
 def IEEE(Tensao1, Tensao2, Tensao3, max, min):  # limite de 2.5%
@@ -343,6 +351,170 @@ def Colunas_DF_Horas(Rede):
     coll = []
     [coll.append(str(i)) for i in range(originalSteps(Rede))]
 
+def Check2(Rede2, Simulation):
+
+    from Definitions import limite_superior, limite_inferior, limite_Deseq
+
+    t1 = time.time()
+
+    Check_Voltages(Rede2, Simulation)
+    Check_Current(Rede2, Simulation)
+
+    # Processas DF_Violation_Data para saber se teve violação. Seguir as regras
+        # > Steps_wtout_overcurrent
+        # > interval_limit = np.floor(originalSteps(Rede) * float(Steps_wtout_unbalance / 100))
+
+    overvoltage = 1 if DF_Violations_Data["ViolationType"][DF_Violations_Data["ViolationType"] ==
+                                                           ViolationType.overvoltage.value].count() > 0 \
+        else 0
+    undervoltage = 1 if DF_Violations_Data["ViolationType"][DF_Violations_Data["ViolationType"] ==
+                                                            ViolationType.undervoltage.value].count() > 0 \
+        else 0
+    unbalance = 1 if DF_Violations_Data["ViolationType"][DF_Violations_Data["ViolationType"] ==
+                                                         ViolationType.unbalance.value].count() > 0 \
+        else 0
+    overcurrent = 1 if DF_Violations_Data["ViolationType"][DF_Violations_Data["ViolationType"] ==
+                                                           ViolationType.overcurrent.value].count() > 0 \
+        else 0
+
+    Ress = True if overvoltage == 0 and undervoltage == 0 and overcurrent == 0 and unbalance == 0 \
+        else Salva_Check_Report(Simulation, overvoltage, undervoltage, overcurrent, unbalance)
+
+    logger.debug("Continue? " + str(Ress) + ": "
+                                            " overvoltage = " + str(overvoltage) +
+                 " undervoltage = " + str(undervoltage) +
+                 " overcurrent = " + str(overcurrent) +
+                 " unbalance = " + str(unbalance))
+
+    logger.debug("Check2 took {" + str(time.time() - t1) + " sec} to execulte in simulation: " + str(Simulation))
+    return Ress
+
+def Populate_DF_Violations_Data(Simulation, bus, fase, type, i , data):
+
+    t1 = time.time()
+
+    index = len(DF_Violations_Data.index)
+    DF_Violations_Data.loc[index, 'Case'] = len(Casos) if Casos != [] else 0
+    DF_Violations_Data.loc[index, 'Simulation'] = Simulation
+    DF_Violations_Data.loc[index, 'Element'] = bus
+    DF_Violations_Data.loc[index, 'Fase'] = fase
+    DF_Violations_Data.loc[index, 'ViolationType'] = type
+    DF_Violations_Data.loc[index, 'TimeStep'] = i
+    DF_Violations_Data.loc[index, 'Value'] = data
+
+    logger.debug("Populate_DF_Violations_Data took {" + str(time.time() - t1) + " sec} to execulte in simulation: " + str(Simulation))
+
+def Check_Current(Rede2, Simulation):
+
+    t1 = time.time()
+
+    LinesMonNames = []
+    [LinesMonNames.append(mon) if mon.startswith("line") and mon.endswith("_voltage") else ""
+         for mon in Rede2.monitors_all_names()]
+
+    # Overcurrent
+    df_temp_curr = DF_Corrente_Limite.copy(deep=True)
+    for line in LinesMonNames:
+
+        Rede2.monitors_write_name(line)
+        line_name_df = line.replace("line_", "").replace("_voltage", "").upper()
+        header = Rede2.monitors_header()
+
+        I1 = Rede2.monitors_channel(header.index(' I1') + 1) if ' I1' in header else []
+        I2 = Rede2.monitors_channel(header.index(' I2') + 1) if ' I2' in header else []
+        I3 = Rede2.monitors_channel(header.index(' I3') + 1) if ' I3' in header else []
+        #A1A = Rede2.monitors_channel(header.index(' IAngle1') + 1) if ' IAngle1' in header else []
+        #A2A = Rede2.monitors_channel(header.index(' IAngle2') + 1) if ' IAngle2' in header else []
+        #A3A = Rede2.monitors_channel(header.index(' IAngle3') + 1) if ' IAngle3' in header else []
+        #I2 = [5000, 5000, 5000, 5000, 5.383053212426603e-05, 5000, 5000, 5000, 4000, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05, 5.383053212426603e-05]
+
+        Nom_Element_Curr = DF_Corrente_Limite["Current_Limits"][
+            DF_Corrente_Limite["Elementos"] == "Line." + line_name_df].values
+        logger.debug("Overcurrent check : Line name : " + line_name_df + " Current Limit : " + str(Nom_Element_Curr))
+
+        phase = 1
+        for data in [I1, I2, I3]:
+            if data.__len__() > 0 and max(data) > Nom_Element_Curr:
+                count = 0
+                for i in range(len(data)):
+                    if data[i] > Nom_Element_Curr:
+                        count += 1
+                        if count >= Steps_wtout_overcurrent:
+                            count = 0
+                            Populate_DF_Violations_Data(Simulation, line_name_df, phase,
+                                                        ViolationType.overcurrent.value, i, data[i])
+            phase = phase + 1
+    logger.debug("Check_Current took {" + str(time.time() - t1) + " sec} to execulte in simulation: " + str(Simulation))
+
+def Check_Voltages(Rede2, Simulation):
+
+    t1 = time.time()
+
+    FakeLoadsMonNames = []
+    [FakeLoadsMonNames.append(mon) if mon.startswith("load_fakeload") else ""
+     for mon in Rede2.monitors_all_names()]
+
+    for mon in FakeLoadsMonNames:
+
+        # Get bus base voltage
+        bus = mon.replace("load_fakeload_", "").replace("_voltage", "")
+        ativa_barra(Rede2, bus)
+        kvbase = Rede2.bus_kv_base()
+
+        Rede2.monitors_write_name(mon)
+        header = Rede2.monitors_header()
+
+        pross_inf_limit = limite_inferior * 1000 * kvbase
+        pross_sup_limit = limite_superior * 1000 * kvbase
+
+        V1  = Rede2.monitors_channel(header.index(' V1') + 1) if ' V1' in header else []
+        V1A = Rede2.monitors_channel(header.index(' VAngle1') + 1) if ' VAngle1' in header else []
+        V2  = Rede2.monitors_channel(header.index(' V2') + 1) if ' V2' in header else []
+        V2A = Rede2.monitors_channel(header.index(' VAngle2') + 1) if ' VAngle2' in header else []
+        V3  = Rede2.monitors_channel(header.index(' V3') + 1) if ' V3' in header else []
+        V3A = Rede2.monitors_channel(header.index(' VAngle3') + 1) if ' VAngle3' in header else []
+
+        #V1 = [70.46826171875, 2270.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 16870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875]
+        # Calcular desequilibrio
+
+        List_Desq_IEC = IEC(V1, V2, V3, V1A, V2A, V3A, Rede2)
+
+        # Overvoltage and undervoltage
+        phase = 1
+        for data in [V1, V2, V3]:
+            if len(data) > 1 and max(data) > pross_sup_limit:
+                count = 0
+                for i in range(len(data)):
+                    if (data[i]> pross_sup_limit):
+                        count += 1
+                        if count >= Steps_wtout_overcurrent:
+                            count = 0
+                            Populate_DF_Violations_Data(Simulation, bus, phase,
+                                                        ViolationType.overvoltage.value, i, data[i])
+            if len(data) > 1 and min(data) < pross_inf_limit:
+                count = 0
+                for i in range(len(data)):
+                    if (data[i] < pross_inf_limit and data[i] > 0.3 * kvbase * 1000):
+                        count += 1
+                        if count >= Steps_wtout_overcurrent:
+                            count = 0
+                            Populate_DF_Violations_Data(Simulation, bus, phase,
+                                                        ViolationType.undervoltage.value, i, data[i])
+
+            phase = phase + 1
+
+        # Unbalance
+        if max(List_Desq_IEC) > limite_Deseq:
+            count = 0
+            for i in range(len(List_Desq_IEC)):
+                if len(List_Desq_IEC) > 1 and (List_Desq_IEC[i] > limite_Deseq):
+                    count += 1
+                    if count >= Steps_wtout_overcurrent:
+                        count = 0
+                        Populate_DF_Violations_Data(Simulation, bus, 0,
+                                                    ViolationType.unbalance.value, i, List_Desq_IEC[i])
+
+    logger.debug("Check_Voltages took {" + str(time.time() - t1) + " sec} to execulte in simulation: " + str(Simulation))
 
 def Check(Rede, Simulation):
 
@@ -590,17 +762,17 @@ def Adjust_Colum_Name(DF):
     return new_Col
 
 
-def Identify_Overcurrent_Limits(Rede):
+def Identify_Overcurrent_Limits(Rede2):
 
     NormAmps = []
     Line_Names = []
     Wire_Geometry = []
 
-    for Line in Rede.dssLines.AllNames:
-        Rede.dssLines.Name = Line
+    for Line in GetAllLinesfNames(Rede2):
+        Rede2.lines_write_name(Line)
         Line_Names.append("Line." + str(Line).upper())
-        NormAmps.append(float(Rede.dssLines.NormAmps))
-        Wire_Geometry.append(Rede.dssLines.Geometry)
+        NormAmps.append(float(Rede2.lines_read_norm_amps()))
+        Wire_Geometry.append(Rede2.lines_read_geometry())
 
         # Acharo nome dos cabos pelo opendss
         #Rede.dssCktElement.Name = Line
@@ -663,7 +835,7 @@ def OrderFiles(listOfFiles):
 
     B = []
     for item in listOfFiles:
-        B.append([item, item.split(' ')[0]])
+        B.append([item, item.split(' ')[0], item.split(' ')[1].split('.')[0]])
 
     return sorted(B, key=lambda B: int(B[1]))
 
@@ -678,6 +850,9 @@ def GetAllTransfNames(Rede2):
 
 def GetAllElemtfNames(Rede2):
     return Rede2.circuit_all_element_names()
+
+def GetAllLinesfNames(Rede2):
+    return Rede2.lines_all_names()
 
 def CreateFakeLoads(Rede2):
 
@@ -698,4 +873,3 @@ def CreateFakeLoads(Rede2):
 
         logger.debug("Create_FakeLoad - " + Command)
         Rede2.text(Command)
-    print()
