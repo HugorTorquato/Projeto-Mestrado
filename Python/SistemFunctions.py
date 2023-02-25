@@ -104,7 +104,7 @@ def Compila_DSS2(Rede2):
     from Definitions import logger
     t1 = time.time()
 
-    Rede2.dss_clear_all()
+
     Rede2.text("compile " + Rede_Path + "\Master.dss")
     Rede2.text("set mode=daily")
     Rede2.text("set stepsize = 15m")
@@ -229,24 +229,44 @@ def Solve_Daily(Rede2, Simulation, Pot_GD):
     Adicionar_Monitores(Rede2)
 
     #a = Rede2.circuit_all_bus_vmag_pu()
-    #aa = Rede2.circuit_all_bus_vmag_pu()[44]
+    #aa = Rede2.circuit_all_bus_vmag_pu()
+    #bb = Rede2.solution_read_load_mult()
     Rede2.solution_solve()
-    #aaa = Rede2.circuit_all_bus_vmag_pu()[44]
+    #aaa = Rede2.circuit_all_bus_vmag_pu()
+    #bbb = Rede2.solution_read_load_mult()
+    #ccc = Rede2.loadshapes_read_p_mult()
+    #ddd = Rede2.loadshapes_read_time_array()
+    #eee = Rede2.loadshapes_read_name()
+    #fff = Rede2.loadshapes_all_names()
+
+    teste(Rede2)
 
     logger.debug("Solve_Daily took {" + str(time.time() - t1) + " sec} to execulte")
     #print()
+
+def teste(Rede2): #00000
+
+    Rede2.loads_first()
+    pos = 1
+    while pos:
+        logger.info(str(Rede2.loads_read_name()) + " khw:" + str(Rede2.loads_read_kwh()))
+
+        pos = Rede2.loads_next()
 
 def HC(Rede2):
 
     # Essa função é o pulmão do código, aqui que é feito o cálculo do HC
     from FunctionsSecond import Limpar_DF, Check2, GetAllTransfNames, Identify_Overcurrent_Limits
     from Definitions import DF_Geradores, DF_Barras, DF_General, DF_Elements, DF_PV,\
-        DF_Lista_Monitors, Incremento_gd, DF_Monitors_Data_2, Casos, logger, DF_Violations_Data
+        DF_Lista_Monitors, Incremento_gd, DF_Monitors_Data_2, Casos, logger, DF_Violations_Data, \
+        DF_Corrente_Limite
+
 
     # Define o primeiro transformador como o ponto de PCC e o incremento de pot em cada verificação do HC é
     # definido em termos de % frente a pot do trafo de entrada
 
     #Rede.dssTransformers.Name = Rede.dssTransformers.AllNames[0]
+    [Limpar_DF(DF) for DF in [DF_Corrente_Limite]]
     Rede2.transformers_write_name(GetAllTransfNames(Rede2)[0])
     Identify_Overcurrent_Limits(Rede2)
     #a = Rede2.transformers_read_name()
@@ -321,7 +341,7 @@ def HC(Rede2):
                 Sem_GD = 1
                 break
 
-            if Nummero_Simulacoes > 20:
+            if Nummero_Simulacoes > 30:
                 Verify = False
                 break
 
@@ -366,10 +386,10 @@ def Case_by_Case(Rede2):
     # 1 - Sem PV
     # 2 - Com PV FP=1
     # 3 - Com PV + VV
-    # 4 - Com PV
-    # 5 - Com PV + VW
-    # 6 - Com PV + VV
-    # 7 - Com PV + VV + VW
+    # 4 - Com PV + VW
+    # 5 - Com PV
+    # 6 - Com PV + VV + VW
+    # 7 - Com PV + VV
     #
 
     from Definitions import Num_GDs, Casos

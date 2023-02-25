@@ -1,0 +1,14 @@
+SELECT * FROM tblMonitoresData 
+WHERE 
+	Elemento = 'pvsystem.pv_4'
+	AND Measurement = ' P1 (kW)'
+
+SELECT top(100) * FROM tblMonitoresData with (nolock)
+WHERE 
+	Elemento = 'load.fakeload_bus_33998182_003'
+	AND Measurement = ' V1'
+
+SELECT * FROM tblMonitoresData 
+WHERE 
+	Elemento = 'bus_33998182_018'
+	AND Measurement = ' V2'

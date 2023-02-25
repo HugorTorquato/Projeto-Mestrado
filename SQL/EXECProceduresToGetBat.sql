@@ -1,0 +1,7 @@
+
+
+
+EXEC spCreateProcessedPVPowerDataDiffTable
+EXEC spSUMCreateProcessedPVPowerDataDiffTable
+EXEC spSUMCreateProcessedPVEergyDataDiff
+EXEC spGenerateBatterySummary

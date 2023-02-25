@@ -36,7 +36,7 @@ if os.path.isfile(Log_path):
 
 import logging
 
-Debug = 1
+Debug = 0
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG) if Debug else logger.setLevel(logging.INFO)
@@ -272,7 +272,7 @@ Norma = 1               #  # 0 - PRODIST # 1 - IEEE
 ############################################################
 Num_Simulations = 7     # Deifnie o número de simulações que serão realizadas
 
-Num_Estudos_de_Caso = 2 # Define o estudo de caso em questão (configuração das GDs)
+Num_Estudos_de_Caso = 3 # Define o estudo de caso em questão (configuração das GDs)
 
 Debug_VV = 1            # Modo Debug para mensurar e comparar o comportamento do VV no sistema ( 1 - liga 0 - desliga)
 Thiago = 0
@@ -286,7 +286,7 @@ FP_1 = 1
 Const_Irrad = .735
 Const_Temp = 25
 FP = 1
-Incremento_gd = 0.5  # Valores em porcentagem (%) da pot do trafo de entrada
+Incremento_gd = 0.6  # Valores em porcentagem (%) da pot do trafo de entrada
     # Considerar inversores reais
 
 Steps_wtout_unbalance = 4#10 # Creio que tem de ser 4

@@ -96,7 +96,7 @@ def Export_And_Read_Monitors_Data2(Rede2, Simulation):
 
     t1 = time.time()
     from Definitions import DF_Monitors_Data_2
-    from FunctionsSecond import IEC
+    from FunctionsSecond import IEC, ativa_barra
     from DB_Rede import Save_Data
     import sqlalchemy as sql
 
@@ -144,14 +144,21 @@ def Export_And_Read_Monitors_Data2(Rede2, Simulation):
                                         'TimeStep'       : range(0, len(Data)),
                                         'Measurement'    : str(header[channel]),
                                         'Value'          : Data})
-
-                DF_Monitors_Data_2 = pd.concat([DF_Monitors_Data_2, temp_df], ignore_index=True)
+                try:
+                    DF_Monitors_Data_2 = pd.concat([DF_Monitors_Data_2, temp_df], ignore_index=True)
+                except:
+                    logger.info("Export_And_Read_Monitors_Data DEU RUIM 2 - ")
+                    logger.info(DF_Monitors_Data_2.head())
+                    logger.info(temp_df.head())
 
         if Element.split('.')[1].startswith("fakeload"):
 
             # Calcular desequilibrio
+            bus = Element.replace("load_fakeload_", "").replace("_voltage", "")
+            ativa_barra(Rede2, bus)
+            kvbase = Rede2.bus_kv_base()
 
-            Data = IEC(V1, V2, V3, V1A, V2A, V3A, Rede2)
+            Data = IEC(V1, V2, V3, V1A, V2A, V3A, Rede2, kvbase * 1000)
             Element = Name.replace("load_fakeload_", "").replace("_voltage", "")
             Measurement = UnbalanceType.IEC.name
 
@@ -163,7 +170,12 @@ def Export_And_Read_Monitors_Data2(Rede2, Simulation):
                                     'Measurement'    : Measurement,
                                     'Value'          : Data})
 
-            DF_Monitors_Data_2 = pd.concat([DF_Monitors_Data_2, temp_df], ignore_index=True)
+            try:
+                DF_Monitors_Data_2 = pd.concat([DF_Monitors_Data_2, temp_df], ignore_index=True)
+            except:
+                logger.info("Export_And_Read_Monitors_Data DEU RUIM 3 - ")
+                logger.info(DF_Monitors_Data_2.head())
+                logger.info(temp_df.head())
 
         logger.debug("Evaluating monitor : " + str(Name))
         No_Monitor = Rede2.monitors_next()

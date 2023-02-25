@@ -107,7 +107,7 @@ def Create_PV(Rede2, Nome, Pmp, FP, Irrad, Temp, Simulation):
                            " Pmpp=" + str(Pmp) +  \
                            " kv=" + str(kvbase) + \
                            " kVA=" + str(Pmp * 1.05) + \
-                           " con=wye" + \
+                           " con=wye EffCurve=Eff" + \
                            " %Cutin=0.1 %cutout=0.1 P-TCurve=FactorPVsT" + \
                            " pf=1 VarFollowInverter=true" + \
                            " irradiance=" + str(Const_Irrad) + " temperature=" + str(Const_Temp) + \
@@ -118,8 +118,9 @@ def Create_PV(Rede2, Nome, Pmp, FP, Irrad, Temp, Simulation):
     logger.debug("Create_PV - " + Command)
     #Rede.dssText.Command = Command
     Rede2.text(Command)
-
+    Rede2.text("set maxcontroliter=2000")
     #Rede.dssText.Command = "set maxcontroliter=2000"
+
 
 
     if (Simulation == 3 or Simulation == 7) and Debug_VV == 1:

@@ -288,7 +288,7 @@ def Max_Min(Tensao1, Tensao2, Tensao3):
         return max_Tensao, min_Tensao
 
 
-def IEC(V1, V2, V3, VAngle1, VAngle2, VAngle3, Rede2):  # Limite de 3%
+def IEC(V1, V2, V3, VAngle1, VAngle2, VAngle3, Rede2, kvbase):  # Limite de 3%
 
     List_Desq_IEC = []
 
@@ -296,9 +296,9 @@ def IEC(V1, V2, V3, VAngle1, VAngle2, VAngle3, Rede2):  # Limite de 3%
 
         # Add other unbalances calculations here, and also add to dataframe to be sent to database
 
-        Tensao1 = V1[i] if len(V1) > 1 and V1[i] > 0.3 else 0
-        Tensao2 = V2[i] if len(V2) > 1 and V2[i] > 0.3 else 0
-        Tensao3 = V3[i] if len(V3) > 1 and V3[i] > 0.3 else 0
+        Tensao1 = V1[i] if len(V1) > 1 * kvbase and V1[i] > 0.3 * kvbase else 0
+        Tensao2 = V2[i] if len(V2) > 1 * kvbase and V2[i] > 0.3 * kvbase else 0
+        Tensao3 = V3[i] if len(V3) > 1 * kvbase and V3[i] > 0.3 * kvbase else 0
 
         if Tensao1 != 0 and Tensao2 != 0 and Tensao3 != 0:
             Positiva = 0.333333 * ((cmath.rect(Tensao1, np.deg2rad(VAngle1[i]))) +
@@ -434,15 +434,25 @@ def Check_Current(Rede2, Simulation):
 
         phase = 1
         for data in [I1, I2, I3]:
-            if data.__len__() > 0 and max(data) > Nom_Element_Curr:
-                count = 0
-                for i in range(len(data)):
-                    if data[i] > Nom_Element_Curr:
-                        count += 1
-                        if count >= Steps_wtout_overcurrent:
-                            count = 0
-                            Populate_DF_Violations_Data(Simulation, line_name_df, phase,
-                                                        ViolationType.overcurrent.value, i, data[i])
+            try:
+                #if np.any(data) > 0 and np.max(data) > Nom_Element_Curr:
+                if np.any(data) > 0:
+                    if np.max(data) > Nom_Element_Curr:
+                        count = 0
+                        for i in range(len(data)):
+                            if data[i] > Nom_Element_Curr:
+                                count += 1
+                                if count > 1e10:
+                                    logger.debug("Valor errado, avaliar o que aconteceu")
+                                    logger.error("Valor: " + str(data[i]) + " Simulation: " + str(Simulation) + ""
+                                                " line_name_df:" + str(line_name_df) + " Phase:" + str(phase) + " Voltage Type Violation:" +
+                                                ViolationType.overvoltage.value)
+                                if count >= Steps_wtout_overcurrent:
+                                    count = 0
+                                    Populate_DF_Violations_Data(Simulation, line_name_df, phase,
+                                                                ViolationType.overcurrent.value, i, data[i])
+            except:
+                print()
             phase = phase + 1
     logger.debug("Check_Current took {" + str(time.time() - t1) + " sec} to execulte in simulation: " + str(Simulation))
 
@@ -477,7 +487,7 @@ def Check_Voltages(Rede2, Simulation):
         #V1 = [70.46826171875, 2270.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 16870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875, 6870.46826171875]
         # Calcular desequilibrio
 
-        List_Desq_IEC = IEC(V1, V2, V3, V1A, V2A, V3A, Rede2)
+        List_Desq_IEC = IEC(V1, V2, V3, V1A, V2A, V3A, Rede2, kvbase * 1000)
 
         # Overvoltage and undervoltage
         phase = 1
@@ -487,6 +497,11 @@ def Check_Voltages(Rede2, Simulation):
                 for i in range(len(data)):
                     if (data[i]> pross_sup_limit):
                         count += 1
+                        if count > 1e10:
+                            logger.debug("Valor errado, avaliar o que aconteceu")
+                            logger.error("Valor: " + str(data[i]) + " Simulation: " + str(Simulation) + ""
+                                        " Bus:" + str(bus) + " Phase:" + str(phase) + " Voltage Type Violation:" +
+                                         ViolationType.overvoltage.value)
                         if count >= Steps_wtout_overcurrent:
                             count = 0
                             Populate_DF_Violations_Data(Simulation, bus, phase,
@@ -509,6 +524,11 @@ def Check_Voltages(Rede2, Simulation):
             for i in range(len(List_Desq_IEC)):
                 if len(List_Desq_IEC) > 1 and (List_Desq_IEC[i] > limite_Deseq):
                     count += 1
+                    if count > 1e10:
+                        logger.debug("Valor errado, avaliar o que aconteceu")
+                        logger.error("Valor: " + str(data[i]) + " Simulation: " + str(Simulation) + ""
+                                     " Bus:" + str(bus) + " Phase:" + str(phase) + " Voltage Type Violation:" +
+                                     ViolationType.overvoltage.value)
                     if count >= Steps_wtout_overcurrent:
                         count = 0
                         Populate_DF_Violations_Data(Simulation, bus, 0,
@@ -782,9 +802,13 @@ def Identify_Overcurrent_Limits(Rede2):
         #d = Rede.dssCktElement.Properties("cncables").val
         #d = Rede.dssCktElement.Properties("tscables").val
 
-    DF_Corrente_Limite.insert(0, 'Elementos', Line_Names, allow_duplicates=True)
-    DF_Corrente_Limite.insert(1, 'Wire_Geometry', Wire_Geometry, allow_duplicates=True)
-    DF_Corrente_Limite.insert(2, 'Current_Limits', NormAmps, allow_duplicates=True)
+    try:
+        DF_Corrente_Limite.insert(0, 'Elementos', Line_Names)
+        DF_Corrente_Limite.insert(1, 'Wire_Geometry', Wire_Geometry)
+        DF_Corrente_Limite.insert(2, 'Current_Limits', NormAmps)
+    except Exception as e:
+        logger.info("Deu Ruim Identify_Overcurrent_Limits()")
+        logger.info("Deu Ruim Identify_Overcurrent_Limits() com erro : " + str(e))
 
 def Converter_Intervalo_de_Simulacao(Rede, Hora):
     # Converte a hora passada para o respectivo instante em steps da curva de carga
@@ -857,19 +881,21 @@ def GetAllLinesfNames(Rede2):
 def CreateFakeLoads(Rede2):
 
     #This method aims to create a fake load on each bus to alow us to create monitors in there
-    Rede2.text("New LoadShape.Fakeloadshape Npts=96"
-               " Mult=(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)"
-               " Hour=(0.0, 0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0, 2.25, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0, 4.25, 4.5, 4.75, 5.0, 5.25, 5.5, 5.75, 6.0, 6.25, 6.5, 6.75, 7.0, 7.25, 7.5, 7.75, 8.0, 8.25, 8.5, 8.75, 9.0, 9.25, 9.5, 9.75, 10.0, 10.25, 10.5, 10.75, 11.0, 11.25, 11.5, 11.75, 12.0, 12.25, 12.5, 12.75, 13.0, 13.25, 13.5, 13.75, 14.0, 14.25, 14.5, 14.75, 15.0, 15.25, 15.5, 15.75, 16.0, 16.25, 16.5, 16.75, 17.0, 17.25, 17.5, 17.75, 18.0, 18.25, 18.5, 18.75, 19.0, 19.25, 19.5, 19.75, 20.0, 20.25, 20.5, 20.75, 21.0, 21.25, 21.5, 21.75, 22.0, 22.25, 22.5, 22.75, 23.0, 23.25, 23.5, 23.75)"
-               )
+    #Rede2.text("New LoadShape.Fakeloadshape Npts=96"
+    #           " pMult=(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)"
+    #           " Hour=(0.0, 0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0, 2.25, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0, 4.25, 4.5, 4.75, 5.0, 5.25, 5.5, 5.75, 6.0, 6.25, 6.5, 6.75, 7.0, 7.25, 7.5, 7.75, 8.0, 8.25, 8.5, 8.75, 9.0, 9.25, 9.5, 9.75, 10.0, 10.25, 10.5, 10.75, 11.0, 11.25, 11.5, 11.75, 12.0, 12.25, 12.5, 12.75, 13.0, 13.25, 13.5, 13.75, 14.0, 14.25, 14.5, 14.75, 15.0, 15.25, 15.5, 15.75, 16.0, 16.25, 16.5, 16.75, 17.0, 17.25, 17.5, 17.75, 18.0, 18.25, 18.5, 18.75, 19.0, 19.25, 19.5, 19.75, 20.0, 20.25, 20.5, 20.75, 21.0, 21.25, 21.5, 21.75, 22.0, 22.25, 22.5, 22.75, 23.0, 23.25, 23.5, 23.75)"
+    #           )
 
     for bus in GetAllBusNames(Rede2):
         ativa_barra(Rede2, bus)
         bus_nodes = bus
+        count = 0
         for i in Rede2.bus_nodes():
             bus_nodes = bus_nodes + "." + str(i)
+            count += sum([1 if i < 4 else 0])
 
         Command = "New Load.FakeLoad_" + bus + " Bus1=" + bus_nodes + \
-          " Conn=Wye Model=6 daily=Fakeloadshape kV=" + str(Rede2.bus_kv_base()) + " kW=0 kvar=0"
+          " model=6 kV=" + str(Rede2.bus_kv_base()) + " Phases=" + str(count) + " kW=0 kvar=0"
 
         logger.debug("Create_FakeLoad - " + Command)
         Rede2.text(Command)
