@@ -3,12 +3,12 @@ from Definitions import *
 import pandas as pd
 import random2
 
-def Adicionar_GDs(Rede, Pot_GD, Simulation):
+def Adicionar_GDs(Rede2, Pot_GD, Simulation):
 
     from Definitions import FP, Num_GDs, logger
     from FunctionsSecond import originalSteps
 
-    STEPS = originalSteps(Rede)
+    STEPS = originalSteps(Rede2)
     Shapes = []
     logger.debug("Adicionar_GDs - Num. Steps = " + str(STEPS))
 
@@ -46,48 +46,51 @@ def Adicionar_GDs(Rede, Pot_GD, Simulation):
     Shapes.append("New XYcurve.vw_curve npts=4 yarray=(1 1 0.85 0.85) xarray=(0.8 1.03 1.05 2)")
 
     for shape in Shapes:
-        Rede.dssText.Command = shape
+        #Rede.dssText.Command = shape
+        Rede2.text(shape)
         logger.debug("Adicionar_GDs - Shape was created : " + str(shape))
 
     if Use_PV:
         # adicionar compilaçãoem paralelo aqui
-        [Create_PV(Rede, 'PV_' + str(i), Pot_GD, FP, 'Irrad', 'Temp', Simulation) for i in range(Num_GDs)]
+        [Create_PV(Rede2, 'PV_' + str(i), Pot_GD, FP, 'Irrad', 'Temp', Simulation) for i in range(Num_GDs)]
         #print(DF_PV.head(10))# Printa os dados gerais das GDs ( resumo )
     else:
-        [Create_GD(Rede, 'GD_' + str(i), Pot_GD, 0, '_GD_' + str(i + 1), Simulation) for i in range(Num_GDs)]
+        # Ainda n foi migrado para nova dll
+        [Create_GD(Rede2, 'GD_' + str(i), Pot_GD, 0, '_GD_' + str(i + 1), Simulation) for i in range(Num_GDs)]
 
 
-def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
+def Create_PV(Rede2, Nome, Pmp, FP, Irrad, Temp, Simulation):
 
     from Definitions import DF_PV, Barras_GDs, Casos, logger, sqrt3
-    from FunctionsSecond import ativa_barra, Identify_Phases
+    from FunctionsSecond import ativa_barra, Identify_Phases, Fase2String
     from Monitores import Define_Random_Monior_Test
 
     index = len(DF_PV)
     STRING = ['A', 'B', 'C', 'N']
+    invcontrol = 0
 
     DF_PV.loc[index, 'Case'] = len(Casos) if Casos != [] else 0
     DF_PV.loc[index, 'Simulation'] = Simulation
     DF_PV.loc[index, 'Name'] = str("PVSystem." + Nome).lower()
     DF_PV.loc[index, 'Bus'] = Barras_GDs[(len(Barras_GDs) - 1) - index]
 
-    ativa_barra(Rede, str(DF_PV.loc[index, 'Bus']))
+    ativa_barra(Rede2, str(DF_PV.loc[index, 'Bus']))
 
     DF_PV.loc[index, 'Pmp'] = Pmp * 1.05
     DF_PV.loc[index, 'kW'] = 0   #Definir função para coletar pot gerada
     DF_PV.loc[index, 'kvar'] = 0
     DF_PV.loc[index, 'kva'] = 0
     DF_PV.loc[index, 'FP'] = FP
-    DF_PV.loc[index, 'Phases'] = Fase2String([STRING[i - 1] for i in Rede.dssBus.Nodes])
+    #DF_PV.loc[index, 'Phases'] = Fase2String([STRING[i - 1] for i in Rede.dssBus.Nodes])
+    DF_PV.loc[index, 'Phases'] = Fase2String([STRING[i - 1] for i in Rede2.bus_nodes()])
     DF_PV.loc[index, 'Irrad'] = Irrad
     DF_PV.loc[index, 'Temp'] = Temp
 
     kvbase = 0.220
 
-    if Rede.dssBus.NumNodes == 2:
+    #if Rede.dssBus.NumNodes == 2:
+    if Rede2.bus_num_nodes() == 2:
         kvbase = kvbase/sqrt3
-
-
 
     Identify_Phases0 =Identify_Phases(DF_PV.loc[index, 'Phases'])[0]
     Identify_Phases1 = Identify_Phases(DF_PV.loc[index, 'Phases'])[1]
@@ -104,16 +107,21 @@ def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
                            " Pmpp=" + str(Pmp) +  \
                            " kv=" + str(kvbase) + \
                            " kVA=" + str(Pmp * 1.05) + \
-                           " con=wye" + \
-                           " %Cutin=0.1 %cutout=0.1 EffCurve=Eff P-TCurve=FactorPVsT" + \
-                           " pf=1 VarFollowInverter=true " + \
+                           " con=wye EffCurve=Eff" + \
+                           " %Cutin=0.1 %cutout=0.1 P-TCurve=FactorPVsT" + \
+                           " pf=1 VarFollowInverter=true" + \
                            " irradiance=" + str(Const_Irrad) + " temperature=" + str(Const_Temp) + \
-                           " daily=irrad Tdaily=Temp wattpriority=yes debugtrace=yes"
+                           " daily=irrad Tdaily=Temp wattpriority=yes"
+
+    Command + " debugtrace=yes" if Debug else 0
 
     logger.debug("Create_PV - " + Command)
-    Rede.dssText.Command = Command
+    #Rede.dssText.Command = Command
+    Rede2.text(Command)
+    Rede2.text("set maxcontroliter=2000")
+    #Rede.dssText.Command = "set maxcontroliter=2000"
 
-    Rede.dssText.Command = "set maxcontroliter=2000"
+
 
     if (Simulation == 3 or Simulation == 7) and Debug_VV == 1:
 
@@ -124,7 +132,8 @@ def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
                            " deltaQ_factor=-1 RefReactivePower=VARAVAL" + \
                            " monVoltageCalc=AVG EventLog=yes"
         logger.debug("Create_PV - Define InvControl VV " + Command)
-        Rede.dssText.Command = Command
+        Rede2.text(Command)
+        invcontrol = 1
 
     if Simulation == 4 and Debug_VV == 1:
 
@@ -135,7 +144,8 @@ def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
                               " varchangetolerance=0.5 voltagechangetolerance=0.01" + \
                               " monVoltageCalc=AVG EventLog=yes"
         logger.debug("Create_PV - Define InvControl VW " + Command)
-        Rede.dssText.Command = Command
+        Rede2.text(Command)
+        invcontrol = 1
 
     if Simulation == 6 and Debug_VV == 1:
 
@@ -148,12 +158,8 @@ def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
                  " varchangetolerance=0.5 voltagechangetolerance=0.01" + \
                  " monVoltageCalc=AVG EventLog=yes"
         logger.debug("Create_PV - Define InvControl VV + VW " + Command)
-        Rede.dssText.Command = Command
-
-    # " monBusesVbase=" + str(kvbase) +\
-
-
-
+        Rede2.text(Command)
+        invcontrol = 1
 
     ## deltaQ_factor -> Mudança máxima da pot reativa da solução anterior para a desejada durante
     #                   cada iteração de controle
@@ -164,17 +170,18 @@ def Create_PV(Rede, Nome, Pmp, FP, Irrad, Temp, Simulation):
     ## maxcontroliter -> Número máximo de iterações por controle, default é 15. Um número baixo pode não ser
     #                    suficiente e, casos mais complesxo de multiplos GDs
 
-
     # Define um monitor para observar as configurações do PV durante o InvControl
-    Define_Random_Monior_Test(Rede, "InvControl", "PVSystem." + Nome, 1, 3)
+    if invcontrol:
+        Define_Random_Monior_Test(Rede2, "InvControl", "PVSystem." + Nome, 1, 3)
 
 def Create_GD(Rede, Nome, kW, kvar, LoadShape, Simulation):
     from Definitions import DF_Geradores, Barras_GDs, Casos
+    from FunctionsSecond import ativa_barra, Identify_Phases, Fase2String
 
     # Preparação para armazenamento dos dados
     index = len(DF_Geradores)  # Define a linha para aplicar as alterações
     STRING = ['A', 'B', 'C', 'N']  # Definie a string de fases para o gerador
-    from FunctionsSecond import ativa_barra, Identify_Phases  # Importa a função para ativação da barra
+
 
     # Armazenar e salvar dados
     DF_Geradores.loc[index, 'Case'] = len(Casos) if Casos != [] else 0
@@ -197,17 +204,10 @@ def Create_GD(Rede, Nome, kW, kvar, LoadShape, Simulation):
                            " kVAr=" + str(kvar + 0.001) + " model=1" + \
                            " daily=" + str(LoadShape)
 
-def Fase2String(STRING):
-    a = ''
-    for i in STRING:
-        #if i != 'N':
-       a += str(i)
-    return a
+def FindBusGD(Rede2, Num_GDs):
 
-def FindBusGD(Rede, Num_GDs):
-
-    from Definitions import Barras_GDs, Debug_VV
-    from SistemFunctions import Nome_Barras
+    from Definitions import Barras_GDs, Debug_VV, logger
+    from FunctionsSecond import GetAllLoadsNames
 
     if Debug_VV == 3000000000000000:
         #Barras_GDs_list = ['bus_33998182_039']#, 'bus_33998182_011',
@@ -240,18 +240,18 @@ def FindBusGD(Rede, Num_GDs):
             Barras_GDs.append(Barras_GDs_list[i])
         return
 
-    vet_choice = list(Nome_Barras(Rede))
+    vet_choice = []
+    #for load in Rede.dssLoads.AllNames:
+    for load in GetAllLoadsNames(Rede2):
+        Rede2.loads_write_name(load)
+        a = Rede2.cktelement_read_bus_names()
+        vet_choice.append(str(Rede2.cktelement_read_bus_names()[0]).split('.')[0])
+        #Rede.dssLoads.Name = load
+        #vet_choice.append(str(Rede.dssCktElement.BusNames[0]).split('.')[0])
 
-    ###############################################################################################
-    # Remover manualmente mas tem de mudar para identificar de forma automatica a barra do trafo
-    vet_choice.remove('bus_xfmr_pri_33998182')
-    vet_choice.remove('bus_xfmr_sec_33998182')
-    ###############################################################################################
-
-    # Tem de melhorar essa lista
-        # Identificar quais barras tem cargas e montar o vetor de escolha com base nisso
-
-    vet_choice = list(['bus_33998182_030'
+    # I'll leave it here just in case. Basicly it is comparing the hardcoded list with the one
+    # created based on load positions ( just for Rede_03 case )
+    vet_choice_2 = list(['bus_33998182_030'
                       ,'bus_33998182_025'
                       ,'bus_33998182_031'
                       ,'bus_33998182_032'
@@ -278,19 +278,12 @@ def FindBusGD(Rede, Num_GDs):
                       ,'bus_33998182_024'
                       ,'bus_33998182_021'
                       ,'bus_33998182_023'])
+    test5 = True if vet_choice == vet_choice_2 else False
 
-    vet_choice2 = list(['bus_33998182_030'
-                          ,'bus_33998182_015'
-                          ,'bus_33998182_018'
-                          ,'bus_33998182_013'
-                          ,'bus_33998182_022'
-                          ,'bus_33998182_025'])
-
-    #vet_choice = list(DF_Tensao_A.Barras.values)
+    logger.info("Position list considered in random PV position choice : " + str(vet_choice))
     for i in range(Num_GDs):
         choice = random2.choice(vet_choice)
         vet_choice.remove(choice) if choice in vet_choice else 0
         Barras_GDs.append(choice)
 
-    # Colocar um debug level aqui
     return

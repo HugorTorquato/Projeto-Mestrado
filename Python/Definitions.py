@@ -5,6 +5,7 @@ import pandas as pd
 from Princ import *
 import numpy as np
 import logging
+from enum import Enum
 
 
 #Rede_Path = "C:\\Users\hugo1\Desktop\Projeto_Rede_Fornecida\Python\TCC\Rede" # IEEE13
@@ -35,9 +36,10 @@ if os.path.isfile(Log_path):
 
 import logging
 
+Debug = 0
+
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-#logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG) if Debug else logger.setLevel(logging.INFO)
 formatter = logging.Formatter('%(asctime)s:%(name)s:%(levelname)s:%(message)s')
 file_Handler = logging.FileHandler(Log_path)
 file_Handler.setFormatter(formatter)
@@ -211,15 +213,40 @@ DF_Elements_Data = pd.DataFrame({'Element'       : [],
                                  'Measurement'    : [],
                                  'Value'          : []})
 
+DF_Violations_Data = pd.DataFrame({
+    'Case'         : [],
+    'Simulation'   : [],
+    'Element'      : [],
+    'Fase'         : [],
+    'ViolationType': [],
+    'TimeStep'     : [],
+    'Value'        : []
+})
+
+# Ainda tenho de popular isso, mas te de ser quando sair do check ( q se n vai para cada num_simulação)
+# e não quero isso, só quero isso populado quando achar o HC
+DF_List_Desq_IEC = pd.DataFrame({
+    'Case'          : [],
+    'Simulation'    : [],
+    'Bus'           : [],
+    'Type'          : [],
+    'TimeStep'      : [],
+    'Value'         : []
+})
+
 DF_TESTE = pd.DataFrame({
     "N": ['N', 'M', 'P', 'Q'],
     "A": [1, 2, 3.5, 4],
     "B": [4.5, 3.1, 2, 1],
     "C": [4.6, 1, 2, 3]})
 
+## Enum definitions
+ViolationType = Enum('ViolationType', ['overvoltage', 'undervoltage', 'unbalance', 'overcurrent'])
+UnbalanceType = Enum('UnbalanceType', ['IEC', 'IEEE', 'NEMA'])
+
 ##Switches
 
-Salva_Dados = 1         # Aciona o script que faz o levantamento dos dados da rede
+Salva_Dados = 0         # Aciona o script que faz o levantamento dos dados da rede
 
 # Não da para tirar isso aqui, pq?
 Savar_Dados_Elem = 0    # Habilita que os dados de pot e tensão dos elementos sejam salvos
@@ -245,7 +272,7 @@ Norma = 1               #  # 0 - PRODIST # 1 - IEEE
 ############################################################
 Num_Simulations = 7     # Deifnie o número de simulações que serão realizadas
 
-Num_Estudos_de_Caso = 2 # Define o estudo de caso em questão (configuração das GDs)
+Num_Estudos_de_Caso = 3 # Define o estudo de caso em questão (configuração das GDs)
 
 Debug_VV = 1            # Modo Debug para mensurar e comparar o comportamento do VV no sistema ( 1 - liga 0 - desliga)
 Thiago = 0
@@ -259,7 +286,7 @@ FP_1 = 1
 Const_Irrad = .735
 Const_Temp = 25
 FP = 1
-Incremento_gd = 0.5  # Valores em porcentagem (%) da pot do trafo de entrada
+Incremento_gd = 0.6  # Valores em porcentagem (%) da pot do trafo de entrada
     # Considerar inversores reais
 
 Steps_wtout_unbalance = 4#10 # Creio que tem de ser 4
@@ -273,7 +300,6 @@ inv_alfa = complex(-0.5, -0.866025403784)
 
 # List to be removed from Measurements table
 Remove_Measurament = ['P_TFactor',
-                      'Efficiency',
                       'Vavg (DRC)',
                       'DRC',
                       'VV_DRC',

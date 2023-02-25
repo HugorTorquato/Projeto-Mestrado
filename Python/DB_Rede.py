@@ -5,6 +5,7 @@ import pandas as pd
 import sqlalchemy as sql
 from Definitions import *
 import time
+from sqlalchemy import MetaData
 
 from Definitions import logger
 
@@ -23,17 +24,52 @@ def sqlalchemyengine():
     return sql.create_engine(
         'mssql+pyodbc://LAPTOP-5R3FI4O0\SQLEXPRESS/DB_Rede_3?driver=ODBC Driver 17 for SQL Server')
 
-def RunSQLDefinitions(engine, Rede):
+def RunSQLDefinitions(engine, Rede2):
 
     t = time.time()
     t1 = time.time()
     TableFolder = SQL_Path + "\\Tables"
+    ViewsFolder = SQL_Path + "\\Views"
+
     from FunctionsSecond import OrderFiles
+
+    for filefromfolder in OrderFiles(os.listdir(TableFolder)):
+        if (filefromfolder[2].startswith("sp") or filefromfolder[2].startswith("tbl"))\
+                and filefromfolder[2] != "tblGeneral":
+            try:
+                if len(pd.read_sql(
+                        'SELECT TABLE_NAME '
+                        'FROM INFORMATION_SCHEMA.TABLES '
+                        'WHERE TABLE_NAME = \'' + str(filefromfolder[2]) + '\'', engine)) != 0:
+                    engine.execute('DBCC CHECKIDENT(\'' + str(filefromfolder[2]) + '\', RESEED, 0)')
+                    engine.execute('DELETE FROM ' + str(filefromfolder[2]))
+                    logger.info('Deleted Table :' + str(filefromfolder[0]))
+            except Exception as e:
+                print("!!!!!!!Deu ruim deletando a tabela : " + filefromfolder[0] + " >>>>>> CONFERIR LOGS ")
+                logger.error("!!!!!!!Deu ruim deletando a tabela : " + filefromfolder[0] +
+                             " com a seguinte mensagem de erro: " + str(e.args))
+                logger.error("Mensagem detalhada do erro: \n" + str(e))
+                sys.exit()
+
+    try:
+        if len(pd.read_sql(
+                'SELECT TABLE_NAME '
+                'FROM INFORMATION_SCHEMA.TABLES '
+                'WHERE TABLE_NAME = \'tblGeneral\'', engine)) != 0:
+            engine.execute('DBCC CHECKIDENT(\'tblGeneral\', RESEED, 0)')
+            engine.execute('DELETE FROM tblGeneral')
+            logger.info('Deleted Table :' + str("tblGeneral"))
+    except Exception as e:
+        print("!!!!!!!Deu ruim deletando a tabela : " + "tblGeneral" + " >>>>>> CONFERIR LOGS ")
+        logger.error("!!!!!!!Deu ruim deletando a tabela : " + "tblGeneral" +
+                     " com a seguinte mensagem de erro: " + str(e.args))
+        logger.error("Mensagem detalhada do erro: \n" + str(e))
+        sys.exit()
 
     for filefromfolder in OrderFiles(os.listdir(TableFolder)):
         with open(TableFolder + "\\" + filefromfolder[0]) as file:
             try:
-                query = sql.text(file.read())
+                query = file.read()
                 engine.execute(query)
                 logger.info('Create Table :' + str(filefromfolder[0]))
                 logger.debug("Create Table :" + str(filefromfolder[0] + " took {" + str(time.time() - t1) +
@@ -49,10 +85,9 @@ def RunSQLDefinitions(engine, Rede):
     logger.debug("RunTablesDefinitions took {" + str(time.time() - t1) + " sec} to execulte")
 
     t1 = time.time()
-    Folder = SQL_Path + "\\Views"
 
-    for filefromfolder in os.listdir(Folder):
-        with open(Folder + "\\" + filefromfolder) as file:
+    for filefromfolder in os.listdir(ViewsFolder):
+        with open(ViewsFolder + "\\" + filefromfolder) as file:
             try:
                 query = sql.text(file.read())
                 engine.execute(query)
@@ -87,21 +122,21 @@ def RunSQLDefinitions(engine, Rede):
                 sys.exit()
 
     # I'll have to leave it here because this definition is dynamic, depends on originalSteps(Rede)
-    Adjust_tables_to_timestemp(engine, Rede)
-    Refresh_Or_Create_StoreProcedures(Rede, engine)
+    Adjust_tables_to_timestemp(engine, Rede2)
+    Refresh_Or_Create_StoreProcedures(engine, Rede2)
     logger.debug("RunStoredProceduresDefinitions took {" + str(time.time() - t1) + " sec} to execulte")
 
     logger.debug("RunSQLDefinitions took {" + str(time.time() - t) + " sec} to execulte")
     print("SQL Definitions completed")
 
-def Refresh_Or_Create_StoreProcedures(Rede, engine):
+def Refresh_Or_Create_StoreProcedures(engine, Rede2):
 
     from FunctionsSecond import Return_Time_String_Colum, Return_Time_String_Colum_Case_Options
 
     # Lembrar de adicionar os SP da pasta ###############################################################
 
     storeProcedure = 'spUpdate_Voltage_Data_Table_Max_Min'
-    Ary = Return_Time_String_Colum(Rede)
+    Ary = Return_Time_String_Colum(Rede2)
 
     if len(pd.read_sql(
         'SELECT * '
@@ -127,8 +162,8 @@ def Refresh_Or_Create_StoreProcedures(Rede, engine):
         logger.info('StoreProcedure already exists :' + str(storeProcedure))
 
     storeProcedure = 'spUpdate_Voltage_Data_Table_Max_Min_Time_Value'
-    AryMax = Return_Time_String_Colum_Case_Options(Rede)[0]
-    AryMin = Return_Time_String_Colum_Case_Options(Rede)[1]
+    AryMax = Return_Time_String_Colum_Case_Options(Rede2)[0]
+    AryMin = Return_Time_String_Colum_Case_Options(Rede2)[1]
 
     if len(pd.read_sql(
             'SELECT * '
@@ -149,7 +184,7 @@ def Refresh_Or_Create_StoreProcedures(Rede, engine):
     else:
         logger.info('StoreProcedure already exists :' + str(storeProcedure))
 
-def Adjust_tables_to_timestemp(engine, Rede):
+def Adjust_tables_to_timestemp(engine, Rede2):
 
     from FunctionsSecond import originalSteps
 
@@ -164,11 +199,10 @@ def Adjust_tables_to_timestemp(engine, Rede):
         if pd.read_sql('SELECT COUNT(COLUMN_NAME) AS resultado FROM INFORMATION_SCHEMA.COLUMNS '
                        'WHERE TABLE_NAME = \'' + str(table) + '\' AND  COLUMN_NAME = \'Time_1\'', engine).values == 0:
 
-            for i in range(originalSteps(Rede)):
+            for i in range(originalSteps(Rede2)):
                 engine.execute("ALTER TABLE " + table + " ADD Time_" + str(i) + " float(53)")
 
-def Save_Data(Simulation, DF_Voltage_Data, DF_Tensao_Data_Ang,
-              DF_Unbalance_Data, DF_Monitors_Data_2):
+def Save_Data(DF_Monitors_Data_2):
 
     # Before improvements
     #2022-04-10 17:33:10,722:Definitions:DEBUG:Save_Data took {207.72897791862488 sec} to execulte
@@ -176,24 +210,26 @@ def Save_Data(Simulation, DF_Voltage_Data, DF_Tensao_Data_Ang,
     #
 
     from Definitions import DF_Geradores, DF_General, DF_Barras, DF_Elements, DF_PV,\
-        DF_Check_Report, DF_Current_Data
+        DF_Check_Report, DF_Current_Data, DF_Violations_Data
 
     t1 = time.time()
     
     DF_General.to_sql('tblGeneral', sqlalchemy(), if_exists='append', index=False)
     DF_PV.to_sql('tblPVSystems', sqlalchemy(), if_exists='append', index=False)
-    DF_Geradores.to_sql('tblGD', sqlalchemy(), if_exists='append', index=False)
+    #DF_Geradores.to_sql('tblGD', sqlalchemy(), if_exists='append', index=False)
 
-    DF_Barras.to_sql('tblBarras', sqlalchemy(), if_exists='append', index=False)
-    DF_Elements.to_sql('tblGrid_Elements', sqlalchemy(), if_exists='append', index=False)
+    #DF_Barras.to_sql('tblBarras', sqlalchemy(), if_exists='append', index=False)
+    #DF_Elements.to_sql('tblGrid_Elements', sqlalchemy(), if_exists='append', index=False)
     DF_Check_Report.to_sql('tblCheck_Report', sqlalchemy(), if_exists='append', index=False)
+    DF_Violations_Data.to_sql('tblViolations_Data', sqlalchemy(), if_exists='append', index=False)
 
     # Corrigir essa ref -> Por algum motivo não está sendo armazenada a global
-    DF_Voltage_Data.to_sql('tblVoltage_Data', sqlalchemy(), if_exists='append', index=False)
-    DF_Tensao_Data_Ang.to_sql('tblVoltage_Data_Ang', sqlalchemy(), if_exists='append', index=False)
-    DF_Unbalance_Data.to_sql('tblUnbalance_Data', sqlalchemy(), if_exists='append', index=False)
-    DF_Current_Data.to_sql('tblCurrent_Elemt_Data', sqlalchemy(), if_exists='append', index=False)
-    DF_Current_Elemt_Data_Ang.to_sql('tblCurrent_Elemt_Data_Ang', sqlalchemy(), if_exists='append', index=False)
+
+    #DF_Voltage_Data.to_sql('tblVoltage_Data', sqlalchemy(), if_exists='append', index=False)
+    #DF_Tensao_Data_Ang.to_sql('tblVoltage_Data_Ang', sqlalchemy(), if_exists='append', index=False)
+    #DF_Unbalance_Data.to_sql('tblUnbalance_Data', sqlalchemy(), if_exists='append', index=False)
+    #DF_Current_Data.to_sql('tblCurrent_Elemt_Data', sqlalchemy(), if_exists='append', index=False)
+    #DF_Current_Elemt_Data_Ang.to_sql('tblCurrent_Elemt_Data_Ang', sqlalchemy(), if_exists='append', index=False)
 
     DF_Monitors_Data_2.to_sql('tblMonitoresData', sqlalchemy(), if_exists='append', index=False)
 
@@ -228,7 +264,7 @@ def Run_Store_Procedures():
 
     logger.debug("Save_General_Data took {" + str(time.time() - t1) + " sec} to execulte")
 
-def Process_Data(Rede, Simulation, DF_Monitors_Data_2):
+def Process_Data(Simulation, DF_Monitors_Data_2):
 
     from Definitions import DF_Tensao_A, DF_Tensao_B, DF_Tensao_C, DF_Barras, DF_Desq_IEC, DF_Desq_IEEE,\
         DF_Desq_NEMA, DF_Corrente_A, DF_Corrente_B, DF_Corrente_C, DF_Elements, DF_Voltage_Data, DF_Current_Data,\
@@ -389,7 +425,7 @@ def Process_Data(Rede, Simulation, DF_Monitors_Data_2):
         DF_Current_Elemt_Data_Ang.insert(loc=0, column='Case', value=len(Casos) if Casos != [] else 0)
         DF_Current_Elemt_Data_Ang.insert(loc=1, column='Simulation', value=Simulation)
 
-    Save_Data(Simulation, DF_Voltage_Data, DF_Tensao_Data_Ang,
+    Save_Data(DF_Voltage_Data, DF_Tensao_Data_Ang,
               DF_Unbalance_Data, DF_Monitors_Data_2)
 
     logger.debug("Process_Data took {" + str(time.time() - t1) + " sec} to execulte")

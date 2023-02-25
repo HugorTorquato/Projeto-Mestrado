@@ -1,0 +1,33 @@
+
+
+[1] 
+I. S. C. Committee, IEEE-1547 - Standard for Interconnection and Interoperability of Distributed Energy Resources with Associated Electric Power Systems Interfaces, New York: Institute of Electrical and Electronics Engineers, 2018. 
+[2] 
+T. Degner, G. Arnold, T. Reimann, M. B. Bernd Engel e P. Strauss, “Increasing the Photovoltaic-System Hosting Capacity of Low Voltage Distribution Networks,” em 21st International Conference on Electricity Distribution - CIRED, Frankfurt, 2011. 
+[3] 
+W. Freitas, R. Torquato, D. Salles, C. O. Pereira e P. C. M. Meira, “A Comprehensive Assessment of PV Hosting Capacity on Low-Voltage Distribution Systems,” IEEE Transactions on power Delivery, pp. 1002, Vol. 33, April 2018. 
+[4] 
+S. M. Ismael, S. H. E. A. Aleem, A. Y. Abdelaziz e A. F. Zobaa, “State-of-the-art of Hosting Capacity in Modern Power Systems With Distributed Generation,” Renewable Energy, vol. Vol. 130, nº Elsevier, pp. pp 1002-1020, 2019. 
+[5] 
+A. Ghosh e G. Ledwich, Power Quality Enhancement Using Custom Power Devices, Boston/Dordrecht/London: Kluwer Academic Publishers, 2002. 
+[6] 
+A. P. Nóbrega, Procedimentos de Distribuição de Energia Elétrica no Sistema Elétrico Nacional - PRODIST - PRODIST - Módulo 8 - Qualidade da Energia Elétrica, Brasília: ANEEL, 2021. 
+[7] 
+M. Smith e D. Ton, “Key Connections: The US Department of Energy? s Microgrid Initiative,” IEEE Power and Energy magazine, vol. 11, nº 4, pp. 22-27, 2013. 
+[8] 
+J. Smith, M. Rylander, M. J. Reno, R. Broderick e B. Mather, “Alternatives to the 15% Rule: Final Project Report,” EPRI - Electric Power Research Institute, California, 2015.
+[9] 
+S. C. a. P. C. S. Chowdhury, Microgrids and Active Distribution Networks, United Kingdom: The Institution of Engineering and Technology, 2009. 
+[10] 
+I. P. &. E. Society, IEEE-1159 - Recommended Practice for Monitoring Electric Power Quality, New York: IEEE Institute of Electrical and Eletronics Engineers, 2009. 
+[11] 
+N. J. H. Moreira, RN482/2012 - Estabelece as condições gerais para o acesso de microgeração e minigeração distribuída aos sistemas de distribuição de energia elétrica, o sistema de compensação de energia elétrica e das outras providências., Brasília: ANEEL, 2012. 
+[12] 
+R. D. Rufino, RN687/2015 - Altera a Resolução Normativa nº 482, de 17 de abril de 2012, e os Módulos 1 e 3 dos Procedimentos de Distribuição - PRODIST, Brasília : ANEEL, 2015. 
+[13] 
+W. M. Franco, Recursos Energéticos Distribuídos: Impacto e Planejamento Energético, Rio de Janeiro: EPE, 2018. 
+[14] 
+B. Albuquerque, Plano Decenal de Expansão de Energia 2030, Rio de Janeiro: EPE, 2021. 
+[15] 
+M. Bollen e F. Hassan, Integration of Distributed Generation in the Power System, Hoboken, USA: IEEE Press, 2011. 
+
