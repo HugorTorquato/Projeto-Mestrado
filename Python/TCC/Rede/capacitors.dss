@@ -1,6 +1,0 @@
-//DEFINIÇÕES DE CAPACITOR
-
-New Capacitor.Cap1 Bus1=675 phases=3 kVAR=600 kV=4.16 
-New Capacitor.Cap2 Bus1=611.3 phases=1 kVAR=100 kV=2.4 
-
-//A barra 670 é o ponto de carga concentrado da carga distribuída na linha 632 a 671 localizada a 1/3 da distância do nó 632
