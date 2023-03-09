@@ -2,13 +2,13 @@ CREATE OR ALTER PROCEDURE spCalc_HC
 AS
 BEGIN
 		UPDATE 
-			[General]
+			tblGeneral
 		SET
 			HC = (select
 						-min(SPPGD.Sum_Pot_W)/45000
-					from spSum_Pot_P_GDs SPPGD
+					from spTimeStempOvrViewData SPPGD  WITH (NOLOCK)
 						where 
 							SPPGD.[Case] = G.[Case] AND
 							SPPGD.Simulation = G.SimulationCount)
-		FROM [General] G
+		FROM tblGeneral G WITH (NOLOCK)
 END

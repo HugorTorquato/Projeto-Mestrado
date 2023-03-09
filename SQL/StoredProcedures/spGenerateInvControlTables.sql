@@ -35,7 +35,7 @@ BEGIN
 		Monitor,
 		Elemento
 		-- Adicionar aqui
-	FROM MonitoresData_2 MD2 WITH (NOLOCK)
+	FROM tblMonitoresData MD2 WITH (NOLOCK)
 		WHERE Elemento like 'pvsystem%' 
 		ORDER BY Simulation, [Case]
 
@@ -51,7 +51,7 @@ BEGIN
 		MD2.[Value] AS [Value]
 
 	FROM spSummary_InvControl AS SI WITH (NOLOCK)
-	join MonitoresData_2 AS MD2 WITH (NOLOCK)
+	join tblMonitoresData AS MD2 WITH (NOLOCK)
 		ON SI.[Case] = MD2.[Case]
 		   and SI.Simulation = MD2.Simulation
 		   and SI.Elemento = MD2.Elemento

@@ -60,26 +60,26 @@ BEGIN
 			 DISTINCT(SPPPDD.[Case])
 			 , SPPPDD.Elemento
 			-- Max POWER demand PV system is injecting into the system
-			, ( SELECT MAX(SPPPDD2.Sum_Pot_Diff_5_4) FROM spSUMProcessedPVPowerDataDiff AS SPPPDD2 WHERE SPPPDD2.Elemento = SPPPDD.Elemento AND SPPPDD2.[Case] = SPPPDD.[Case] ) AS MAX_Pot_Diff_5_4
-			, ( SELECT MAX(SPPPDD2.Sum_Pot_Diff_7_6) FROM spSUMProcessedPVPowerDataDiff AS SPPPDD2 WHERE SPPPDD2.Elemento = SPPPDD.Elemento AND SPPPDD2.[Case] = SPPPDD.[Case] ) AS MAX_Pot_Diff_7_6
+			, ( SELECT MAX(SPPPDD2.Sum_Pot_Diff_5_4) FROM spSUMProcessedPVPowerDataDiff AS SPPPDD2 WITH (NOLOCK) WHERE SPPPDD2.Elemento = SPPPDD.Elemento AND SPPPDD2.[Case] = SPPPDD.[Case] ) AS MAX_Pot_Diff_5_4
+			, ( SELECT MAX(SPPPDD2.Sum_Pot_Diff_7_6) FROM spSUMProcessedPVPowerDataDiff AS SPPPDD2 WITH (NOLOCK) WHERE SPPPDD2.Elemento = SPPPDD.Elemento AND SPPPDD2.[Case] = SPPPDD.[Case] ) AS MAX_Pot_Diff_7_6
 			-- Max ENERGY demand PV system is injecting into the system
-			, ( SELECT MAX(SPPEDD2.Sum_Eergy_Diff_5_4) FROM spSUMProcessedPVEergyDataDiff AS SPPEDD2 WHERE SPPEDD2.Elemento = SPPPDD.Elemento AND SPPEDD2.[Case] = SPPPDD.[Case] ) AS MAX_Eergy_Diff_5_4
-			, ( SELECT MAX(SPPEDD2.Sum_Eergy_Diff_7_6) FROM spSUMProcessedPVEergyDataDiff AS SPPEDD2 WHERE SPPEDD2.Elemento = SPPPDD.Elemento AND SPPEDD2.[Case] = SPPPDD.[Case] ) AS MAX_Eergy_Diff_7_6
+			, ( SELECT MAX(SPPEDD2.Sum_Eergy_Diff_5_4) FROM spSUMProcessedPVEergyDataDiff AS SPPEDD2 WITH (NOLOCK) WHERE SPPEDD2.Elemento = SPPPDD.Elemento AND SPPEDD2.[Case] = SPPPDD.[Case] ) AS MAX_Eergy_Diff_5_4
+			, ( SELECT MAX(SPPEDD2.Sum_Eergy_Diff_7_6) FROM spSUMProcessedPVEergyDataDiff AS SPPEDD2 WITH (NOLOCK) WHERE SPPEDD2.Elemento = SPPPDD.Elemento AND SPPEDD2.[Case] = SPPPDD.[Case] ) AS MAX_Eergy_Diff_7_6
 
 			-- SUM energy demand PV system is injecting into the system
-			, ( SELECT SUM(SPPEDD2.Sum_Eergy_Diff_5_4) FROM spSUMProcessedPVEergyDataDiff AS SPPEDD2 WHERE SPPEDD2.Elemento = SPPPDD.Elemento AND SPPEDD2.[Case] = SPPPDD.[Case] ) AS SUM_Eergy_Diff_5_4
-			, ( SELECT SUM(SPPEDD2.Sum_Eergy_Diff_7_6) FROM spSUMProcessedPVEergyDataDiff AS SPPEDD2 WHERE SPPEDD2.Elemento = SPPPDD.Elemento AND SPPEDD2.[Case] = SPPPDD.[Case] ) AS SUM_Eergy_Diff_7_6
+			, ( SELECT SUM(SPPEDD2.Sum_Eergy_Diff_5_4) FROM spSUMProcessedPVEergyDataDiff AS SPPEDD2 WITH (NOLOCK) WHERE SPPEDD2.Elemento = SPPPDD.Elemento AND SPPEDD2.[Case] = SPPPDD.[Case] ) AS SUM_Eergy_Diff_5_4
+			, ( SELECT SUM(SPPEDD2.Sum_Eergy_Diff_7_6) FROM spSUMProcessedPVEergyDataDiff AS SPPEDD2 WITH (NOLOCK) WHERE SPPEDD2.Elemento = SPPPDD.Elemento AND SPPEDD2.[Case] = SPPPDD.[Case] ) AS SUM_Eergy_Diff_7_6
 
 			-- Max CURRENT demand PV system is injecting into the system
-			, ( SELECT MAX(SPPPDD2.Sum_Pot_Diff_5_4) / @TensaoNomBat FROM spSUMProcessedPVPowerDataDiff AS SPPPDD2 WHERE SPPPDD2.Elemento = SPPPDD.Elemento AND SPPPDD2.[Case] = SPPPDD.[Case] ) AS MAX_CUR_Diff_5_4
-			, ( SELECT MAX(SPPPDD2.Sum_Pot_Diff_7_6) / @TensaoNomBat FROM spSUMProcessedPVPowerDataDiff AS SPPPDD2 WHERE SPPPDD2.Elemento = SPPPDD.Elemento AND SPPPDD2.[Case] = SPPPDD.[Case] ) AS MAX_CUR_Diff_7_6
+			, ( SELECT MAX(SPPPDD2.Sum_Pot_Diff_5_4) / @TensaoNomBat FROM spSUMProcessedPVPowerDataDiff AS SPPPDD2 WITH (NOLOCK) WHERE SPPPDD2.Elemento = SPPPDD.Elemento AND SPPPDD2.[Case] = SPPPDD.[Case] ) AS MAX_CUR_Diff_5_4
+			, ( SELECT MAX(SPPPDD2.Sum_Pot_Diff_7_6) / @TensaoNomBat FROM spSUMProcessedPVPowerDataDiff AS SPPPDD2 WITH (NOLOCK) WHERE SPPPDD2.Elemento = SPPPDD.Elemento AND SPPPDD2.[Case] = SPPPDD.[Case] ) AS MAX_CUR_Diff_7_6
 
 			-- SUM CURRENT demand PV system is injecting into the system
-			, ( SELECT SUM(SPPEDD2.Sum_Eergy_Diff_5_4) / @TensaoNomBat FROM spSUMProcessedPVEergyDataDiff AS SPPEDD2 WHERE SPPEDD2.Elemento = SPPPDD.Elemento AND SPPEDD2.[Case] = SPPPDD.[Case] ) AS SUM_CUR_Diff_5_4
-			, ( SELECT SUM(SPPEDD2.Sum_Eergy_Diff_7_6) / @TensaoNomBat FROM spSUMProcessedPVEergyDataDiff AS SPPEDD2 WHERE SPPEDD2.Elemento = SPPPDD.Elemento AND SPPEDD2.[Case] = SPPPDD.[Case] ) AS SUM_CUR_Diff_7_6
+			, ( SELECT SUM(SPPEDD2.Sum_Eergy_Diff_5_4) / @TensaoNomBat FROM spSUMProcessedPVEergyDataDiff AS SPPEDD2 WITH (NOLOCK) WHERE SPPEDD2.Elemento = SPPPDD.Elemento AND SPPEDD2.[Case] = SPPPDD.[Case] ) AS SUM_CUR_Diff_5_4
+			, ( SELECT SUM(SPPEDD2.Sum_Eergy_Diff_7_6) / @TensaoNomBat FROM spSUMProcessedPVEergyDataDiff AS SPPEDD2 WITH (NOLOCK) WHERE SPPEDD2.Elemento = SPPPDD.Elemento AND SPPEDD2.[Case] = SPPPDD.[Case] ) AS SUM_CUR_Diff_7_6
 
 
-		FROM spSUMProcessedPVPowerDataDiff AS SPPPDD
+		FROM spSUMProcessedPVPowerDataDiff AS SPPPDD WITH (NOLOCK)
 
 	--SELECT * FROM #tmpEnergytable -- Query somente para verificar a tabela temp que foi criada
 
@@ -97,7 +97,8 @@ BEGIN
 			, ROUND(tmp.MAX_CUR_Diff_7_6  , 4)*1000 AS MAX_CUR_Diff_7_6_Ah
 			, ROUND(tmp.SUM_CUR_Diff_5_4  , 4)*1000 AS SUM_CUR_Diff_5_4_Ah
 			, ROUND(tmp.SUM_CUR_Diff_7_6  , 4)*1000 AS SUM_CUR_Diff_7_6_Ah
-			, ROUND(ISNULL(MAX_Eergy_Diff_7_6, 0) * 1000 / @FatorEOL / @FatorEFF , 4) AS ADJ_Battery_Capacity --Wh
+			, ROUND(ISNULL(MAX_Eergy_Diff_5_4, 0) * 1000 / @FatorEOL / @FatorEFF , 4) AS ADJ_Battery_Capacity_5_4 --Wh
+			, ROUND(ISNULL(MAX_Eergy_Diff_7_6, 0) * 1000 / @FatorEOL / @FatorEFF , 4) AS ADJ_Battery_Capacity_7_6 --Wh
 
 			-- Calculate batery variables ( I removed this part because i'll not set a default baterry type in here, just give the parameters for the user to do so )
 			--
@@ -105,7 +106,7 @@ BEGIN
 			--, FLOOR(@TensaoNomBat / @TensaoNomBat)                                                   AS N_celulas_serie
 			--, CEILING((ISNULL(MAX_Eergy_Diff_7_6, 0) / @TensaoNomBat / @FatorEOL / @FatorEFF)
 			--	 / (@CargaIndividual * FLOOR(@TensaoNomBat / @TensaoNomBat)))                        AS N_celulas_paral
-		FROM #tmpEnergytable tmp
+		FROM #tmpEnergytable tmp WITH (NOLOCK)
 
 	-- Remember to drop this table or it will cause problems in next execution
 	DROP TABLE #tmpEnergytable

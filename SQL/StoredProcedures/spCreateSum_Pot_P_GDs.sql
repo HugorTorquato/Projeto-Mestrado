@@ -12,7 +12,7 @@ BEGIN
 				)
 		)
 	BEGIN
-		DELETE FROM spSum_Pot_P_GDs
+		DELETE FROM spTimeStempOvrViewData
 		DBCC CHECKIDENT('spTimeStempOvrViewData', RESEED, 0)
 	END
 	
@@ -25,13 +25,13 @@ BEGIN
 		distinct MD2.TimeStep
 		, MD2.[Case]
 		, MD2.Simulation
-		, (select sum(MD22.[Value]) from MonitoresData_2 MD22
+		, (select sum(MD22.[Value]) from tblMonitoresData MD22 WITH (NOLOCK)
 			where MD22.[Case] = MD2.[Case]
 				and MD22.Elemento like 'pvsystem.pv_%'
 				and MD22.Measurement like ' watts'
 				and MD22.TimeStep = MD2.TimeStep
 				and MD22.Simulation = MD2.Simulation) AS Sum_Pot_W
-	from MonitoresData_2 MD2
+	from tblMonitoresData MD2 WITH (NOLOCK)
 		order by MD2.[Case], MD2.Simulation, MD2.TimeStep
 
 	

@@ -4,11 +4,8 @@
     <list default="true" id="c0a353b0-9d94-497b-99cd-a779928dfe5d" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Python/Definitions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/Definitions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python/FunctionsSecond.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/FunctionsSecond.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python/Geradores.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/Geradores.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python/Monitores.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/Monitores.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python/SistemFunctions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/SistemFunctions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Reffs/Usadas/Intro Helio.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/Reffs/Usadas/Intro Helio.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL/StoredProcedures/spGenerateBatterySummary.sql" beforeDir="false" afterPath="$PROJECT_DIR$/SQL/StoredProcedures/spGenerateBatterySummary.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL/Tables/15 spBatterySummary.sql" beforeDir="false" afterPath="$PROJECT_DIR$/SQL/Tables/15 spBatterySummary.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

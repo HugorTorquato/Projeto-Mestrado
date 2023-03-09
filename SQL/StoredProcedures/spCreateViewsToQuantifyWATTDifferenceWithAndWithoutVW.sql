@@ -45,8 +45,8 @@ BEGIN
 			WHEN MD2_2.[Value] < 0 THEN ROUND(ABS(MD2_1.[Value] - MD2_2.[Value]) * 100 / -MD2_2.[Value], 2)
 			ELSE 0
 		   END) AS 'Diff(%)' -- Porcentage from max active power generated
-	FROM MonitoresData_2 MD2_1
-	INNER JOIN MonitoresData_2 MD2_2 
+	FROM tblMonitoresData MD2_1 WITH (NOLOCK)
+	INNER JOIN tblMonitoresData MD2_2 WITH (NOLOCK)
 		ON 
 			MD2_1.Elemento = MD2_2.Elemento 
 			AND MD2_1.TimeStep = MD2_2.TimeStep
@@ -84,8 +84,8 @@ BEGIN
 			WHEN MD2_2.[Value] < 0 THEN ROUND(ABS(MD2_1.[Value] - MD2_2.[Value]) * 100 / -MD2_2.[Value], 2)
 			ELSE 0
 		   END) AS 'Diff(%)' -- Porcentage from max active power generated
-	FROM MonitoresData_2 MD2_1
-	INNER JOIN MonitoresData_2 MD2_2 
+	FROM tblMonitoresData MD2_1 WITH (NOLOCK)
+	INNER JOIN tblMonitoresData MD2_2 WITH (NOLOCK) 
 		ON 
 			MD2_1.Elemento = MD2_2.Elemento 
 			AND MD2_1.TimeStep = MD2_2.TimeStep
