@@ -33,5 +33,5 @@ BEGIN
 			,([Sum_Pot_7] / 4 ) AS [Sum_Eergy_7]
 			,([Sum_Pot_6] / 4 ) AS [Sum_Eergy_6]
 			,([Sum_Pot_Diff_7_6] / 4 ) AS [Sum_Eergy_Diff_7_6]
-		FROM [DB_Rede_3].[dbo].spSUMProcessedPVPowerDataDiff
+		FROM [DB_Rede_3].[dbo].spSUMProcessedPVPowerDataDiff  WITH (NOLOCK)
 END

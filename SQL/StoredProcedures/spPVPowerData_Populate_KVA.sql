@@ -6,10 +6,10 @@ BEGIN
 	SET NOCOUNT ON;
 
 		UPDATE 
-			PVSystems
+			tblPVSystems
 		SET
 			kva = POWER(POWER(PV.kW, 2) + POWER(PV.kvar,2), 0.5)
 
-		FROM PVSystems PV
+		FROM tblPVSystems PV WITH (NOLOCK)
 
 END

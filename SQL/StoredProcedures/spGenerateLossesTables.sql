@@ -33,13 +33,13 @@ BEGIN
 		Simulation,
 		Monitor,
 		Elemento,
-		(SELECT sum([VALUE])/1000 FROM MonitoresData_2 MD
+		(SELECT sum([VALUE])/1000 FROM tblMonitoresData MD WITH (NOLOCK)
 			WHERE Measurement like ' watts' 
 				  and MD.Elemento = MD2.Elemento 
 				  and MD.Simulation = MD2.Simulation 
 				  and MD.[Case]= MD2.[Case] 
 				  and MD.Monitor = MD2.Monitor) AS Loss
-	FROM MonitoresData_2 MD2 WITH (NOLOCK)
+	FROM tblMonitoresData MD2 WITH (NOLOCK)
 		WHERE Elemento like 'line%' 
 			  and Monitor like '%loss' 
 		ORDER BY Simulation, [Case]
@@ -64,9 +64,8 @@ BEGIN
 		MD2.TimeStep AS TimeStep,
 		MD2.Measurement AS Measurement,
 		MD2.[Value] AS [Value]
-
 	FROM spSummary_Losses AS SL WITH (NOLOCK)
-	join MonitoresData_2 AS MD2  WITH (NOLOCK)
+	join tblMonitoresData AS MD2  WITH (NOLOCK)
 		ON SL.[Case] = MD2.[Case]
 		   and SL.Simulation = MD2.Simulation
 		   and SL.Monitor = MD2.Monitor

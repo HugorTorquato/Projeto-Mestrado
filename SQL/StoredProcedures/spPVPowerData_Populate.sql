@@ -10,21 +10,21 @@ BEGIN
 		
 		-- Tem de identificar o timestep de maior geração e depois pegar os valores de pot, de cada GD, para ele
 		UPDATE 
-			PVSystems
+			tblPVSystems
 		SET
-			kW = (select min(MD2.[Value]) from MonitoresData_2 MD2
+			kW = (select min(MD2.[Value]) from tblMonitoresData MD2 WITH (NOLOCK)
 					where
 						MD2.[Case] = PV.[Case] AND
 						MD2.Simulation = PV.Simulation AND
 						MD2.Elemento =  PV.[Name] AND
 						MD2.Measurement like ' watts'),
-			kvar = (select MAX(MD2.[Value]) from MonitoresData_2 MD2
+			kvar = (select MAX(MD2.[Value]) from tblMonitoresData MD2 WITH (NOLOCK)
 					 where 
 						MD2.[Case] = PV.[Case] AND
 						MD2.Simulation = PV.Simulation AND
 						MD2.Elemento =  PV.[Name] AND
 						MD2.Measurement like ' vars')
 
-		FROM PVSystems PV
+		FROM tblPVSystems PV WITH (NOLOCK)
 
 END

@@ -29,7 +29,7 @@ BEGIN
 			Monitor,
 			Elemento
 			-- Adicionar aqui
-		FROM MonitoresData_2 MD2 WITH (NOLOCK)
+		FROM tblMonitoresData MD2 WITH (NOLOCK)
 			WHERE Elemento in ('vsource.source', 'transformer.t1') 
 			ORDER BY Simulation, [Case]
 
@@ -45,7 +45,7 @@ BEGIN
 		MD2.[Value] AS [Value]
 
 	FROM spSummary_Source AS SI WITH (NOLOCK)
-	join MonitoresData_2 AS MD2 WITH (NOLOCK)
+	join tblMonitoresData AS MD2 WITH (NOLOCK)
 		ON SI.[Case] = MD2.[Case]
 		   and SI.Simulation = MD2.Simulation
 		   and SI.Elemento = MD2.Elemento

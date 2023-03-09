@@ -10,10 +10,11 @@ IF (NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES
 	BEGIN
 		CREATE TABLE spStatisticalData (
 			id int PRIMARY KEY IDENTITY(1,1),
-			id_Results int,
+			[Case] int,
+			id_Results smallint,
 			HC float
 		)
 
 		ALTER TABLE spStatisticalData
-			ADD CONSTRAINT fk_spStatisticalResults_spStatisticalData FOREIGN KEY (id_Results) REFERENCES spStatisticalResults (id)
+			ADD CONSTRAINT fk_spStatisticalResults_spStatisticalData FOREIGN KEY (id_Results) REFERENCES spStatisticalResults (Simulation)
 	END

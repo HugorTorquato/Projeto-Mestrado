@@ -23,19 +23,23 @@ BEGIN
 		(Simulation, Average, StandardDeviation)
 	SELECT 
 		DISTINCT G.SimulationCount AS Simulation,
-		(SELECT AVG(HC) FROM General G2 WHERE G2.SimulationCount = G.SimulationCount) AS Average,
-		(SELECT STDEVP(HC) FROM General G2 WHERE G2.SimulationCount = G.SimulationCount) AS StandardDeviation
+		(SELECT AVG(HC) FROM tblGeneral G2 WITH (NOLOCK) 
+			WHERE G2.SimulationCount = G.SimulationCount AND HC < 2 AND HC > 0) AS Average,
+		(SELECT STDEVP(HC) FROM tblGeneral G2 WITH (NOLOCK)
+			WHERE G2.SimulationCount = G.SimulationCount AND HC < 2 AND HC > 0) AS StandardDeviation
 		-- PARA ADICIONAR MAIS TEM DE LISTAR AS CONSULTAS AQUI
-	FROM General G WHERE G.SimulationCount > 1
+	FROM tblGeneral G WITH (NOLOCK) 
+	WHERE G.SimulationCount > 1
 
 	-----------------------------------------------------------------------------
 
 	INSERT INTO spStatisticalData
-		(id_Results, HC)
+		([Case], id_Results, HC)
 	SELECT
-		SR.Simulation AS Simulation,
-		G2.HC AS HC
-	FROM spStatisticalResults SR
-	JOIN General G2 ON G2.SimulationCount = SR.Simulation
-	ORDER BY SR.Simulation
+		G2.[Case]
+		,G2.SimulationCount AS Simulation
+		,G2.HC AS HC
+	FROM spStatisticalResults SR WITH (NOLOCK)
+	JOIN tblGeneral G2 WITH (NOLOCK) ON G2.SimulationCount = SR.Simulation
+	ORDER BY G2.[Case], G2.SimulationCount
 END

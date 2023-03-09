@@ -21,7 +21,7 @@
 --			SUM_CUR_Diff_7_6_Ah   -> Dif da SUM CURR entre Simulação 7 e 6 ( S/VW e C/VW - C/VV) ? CONFERIR CASO 7 PARA VER SE TEM VV  
 
 --			ADJ_Battery_Capacity  -> Capacidade já ajustada da bateria em Wh, com os devidos fatores já aplicados
---												( Sem considerar nenhum tipo de bateria).
+--												( Sem considerar nenhum tipo de bateria). Para ambos os casos
 -----------------------------------------------------------------------------
 IF (NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES
 			WHERE TABLE_NAME IN ('spBatterySummary')
@@ -43,7 +43,8 @@ IF (NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES
 			MAX_CUR_Diff_7_6_Ah float,
 			SUM_CUR_Diff_5_4_Ah float,
 			SUM_CUR_Diff_7_6_Ah float,
-			ADJ_Battery_Capacity float,
+			ADJ_Battery_Capacity_5_4 float,
+			ADJ_Battery_Capacity_7_6 float,
 			-- Adicionar aqui
 		);
 	END

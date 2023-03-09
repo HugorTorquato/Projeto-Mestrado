@@ -23,5 +23,5 @@ BEGIN
 		([Case], Elemento, TimeStep, Sum_Pot_5, Sum_Pot_4, Sum_Pot_Diff_5_4, 
 		Sum_Pot_7, Sum_Pot_6, Sum_Pot_Diff_7_6)
 	
-		select * from vwCreateSUMProcessedPVPowerDataDiffTable
+		select * from vwCreateSUMProcessedPVPowerDataDiffTable  WITH (NOLOCK)
 END
