@@ -32,14 +32,15 @@ BEGIN
 	WHERE G.SimulationCount > 1
 
 	-----------------------------------------------------------------------------
+	-- Já tenho essa informação em outro canto mas esse insert está com erro
 
-	INSERT INTO spStatisticalData
-		([Case], id_Results, HC)
-	SELECT
-		G2.[Case]
-		,G2.SimulationCount AS Simulation
-		,G2.HC AS HC
-	FROM spStatisticalResults SR WITH (NOLOCK)
-	JOIN tblGeneral G2 WITH (NOLOCK) ON G2.SimulationCount = SR.Simulation
-	ORDER BY G2.[Case], G2.SimulationCount
+	--INSERT INTO spStatisticalData
+	--	([Case], id_Results, HC)
+	--SELECT
+	--	G2.[Case]
+	--	,G2.SimulationCount AS Simulation
+	--	,G2.HC AS HC
+	--FROM spStatisticalResults SR WITH (NOLOCK)
+	--JOIN tblGeneral G2 WITH (NOLOCK) ON G2.SimulationCount = SR.Simulation
+	--ORDER BY G2.[Case], G2.SimulationCount
 END

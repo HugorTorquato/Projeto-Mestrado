@@ -24,6 +24,22 @@ def sqlalchemyengine():
     return sql.create_engine(
         'mssql+pyodbc://LAPTOP-5R3FI4O0\SQLEXPRESS/DB_Rede_3?driver=ODBC Driver 17 for SQL Server')
 
+def delMethod(fff, engine):
+    try:
+        if len(pd.read_sql(
+                'SELECT TABLE_NAME '
+                'FROM INFORMATION_SCHEMA.TABLES '
+                'WHERE TABLE_NAME = \'' + str(fff[2]) + '\'', engine)) != 0:
+            engine.execute('DELETE FROM ' + str(fff[2]))
+            engine.execute('DBCC CHECKIDENT(\'' + str(fff[2]) + '\', RESEED, 0)')
+            logger.info('Deleted Table :' + str(fff[0]))
+    except Exception as e:
+        print("!!!!!!!Deu ruim deletando a tabela : " + fff[0] + " >>>>>> CONFERIR LOGS ")
+        logger.error("!!!!!!!Deu ruim deletando a tabela : " + fff[0] +
+                     " com a seguinte mensagem de erro: " + str(e.args))
+        logger.error("Mensagem detalhada do erro: \n" + str(e))
+        sys.exit()
+
 def RunSQLDefinitions(engine, Rede2):
 
     t = time.time()
@@ -34,37 +50,16 @@ def RunSQLDefinitions(engine, Rede2):
     from FunctionsSecond import OrderFiles
 
     for filefromfolder in OrderFiles(os.listdir(TableFolder)):
-        if (filefromfolder[2].startswith("sp") or filefromfolder[2].startswith("tbl"))\
-                and filefromfolder[2] != "tblGeneral":
-            try:
-                if len(pd.read_sql(
-                        'SELECT TABLE_NAME '
-                        'FROM INFORMATION_SCHEMA.TABLES '
-                        'WHERE TABLE_NAME = \'' + str(filefromfolder[2]) + '\'', engine)) != 0:
-                    engine.execute('DBCC CHECKIDENT(\'' + str(filefromfolder[2]) + '\', RESEED, 0)')
-                    engine.execute('DELETE FROM ' + str(filefromfolder[2]))
-                    logger.info('Deleted Table :' + str(filefromfolder[0]))
-            except Exception as e:
-                print("!!!!!!!Deu ruim deletando a tabela : " + filefromfolder[0] + " >>>>>> CONFERIR LOGS ")
-                logger.error("!!!!!!!Deu ruim deletando a tabela : " + filefromfolder[0] +
-                             " com a seguinte mensagem de erro: " + str(e.args))
-                logger.error("Mensagem detalhada do erro: \n" + str(e))
-                sys.exit()
+        if (filefromfolder[2].endswith("Data")):
+            delMethod(filefromfolder, engine)
 
-    try:
-        if len(pd.read_sql(
-                'SELECT TABLE_NAME '
-                'FROM INFORMATION_SCHEMA.TABLES '
-                'WHERE TABLE_NAME = \'tblGeneral\'', engine)) != 0:
-            engine.execute('DBCC CHECKIDENT(\'tblGeneral\', RESEED, 0)')
-            engine.execute('DELETE FROM tblGeneral')
-            logger.info('Deleted Table :' + str("tblGeneral"))
-    except Exception as e:
-        print("!!!!!!!Deu ruim deletando a tabela : " + "tblGeneral" + " >>>>>> CONFERIR LOGS ")
-        logger.error("!!!!!!!Deu ruim deletando a tabela : " + "tblGeneral" +
-                     " com a seguinte mensagem de erro: " + str(e.args))
-        logger.error("Mensagem detalhada do erro: \n" + str(e))
-        sys.exit()
+    for filefromfolder in OrderFiles(os.listdir(TableFolder)):
+        if (filefromfolder[2].startswith("sp") or filefromfolder[2].startswith("tbl"))\
+                and filefromfolder[2] != "tblGeneral" and not filefromfolder[2].endswith("Data"):
+            delMethod(filefromfolder, engine)
+
+    # Need to be left to the end because all other tables reference this one, otherwise it would cause error
+    delMethod(["1 tblGeneral", "1", "tblGeneral"], engine)
 
     for filefromfolder in OrderFiles(os.listdir(TableFolder)):
         with open(TableFolder + "\\" + filefromfolder[0]) as file:
