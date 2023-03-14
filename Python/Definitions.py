@@ -272,7 +272,7 @@ Norma = 1               #  # 0 - PRODIST # 1 - IEEE
 ############################################################
 Num_Simulations = 7     # Deifnie o número de simulações que serão realizadas
 
-Num_Estudos_de_Caso = 100 # Define o estudo de caso em questão (configuração das GDs)
+Num_Estudos_de_Caso = 1 # Define o estudo de caso em questão (configuração das GDs)
 
 Debug_VV = 1            # Modo Debug para mensurar e comparar o comportamento do VV no sistema ( 1 - liga 0 - desliga)
 Thiago = 0

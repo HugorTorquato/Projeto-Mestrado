@@ -9,12 +9,12 @@ BEGIN
 	-----------------------------------------------------------------------------
 
 	IF (EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES
-				WHERE TABLE_NAME IN ('spSummary_InvControl', 'spInvControlData')
+				WHERE TABLE_NAME IN ('spSummary_InvControl', 'spSummary_InvControlData')
 				)
 		)
 	BEGIN
-		DELETE FROM spInvControlData
-		DBCC CHECKIDENT('spInvControlData', RESEED, 0)
+		DELETE FROM spSummary_InvControlData
+		DBCC CHECKIDENT('spSummary_InvControlData', RESEED, 0)
 		DELETE FROM spSummary_InvControl
 		DBCC CHECKIDENT('spSummary_InvControl', RESEED, 0)
 	END
@@ -42,7 +42,7 @@ BEGIN
 	-----------------------------------------------------------------------------
 	-- DESCRIPTION: This query will populate the Losses table
 	-----------------------------------------------------------------------------
-	INSERT INTO spInvControlData
+	INSERT INTO spSummary_InvControlData
 		(id_Summary, TimeStep, Measurement, [Value])
 	SELECT
 		SI.id AS id_Summary,
