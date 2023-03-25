@@ -35,6 +35,5 @@ EXEC spGenerateSourceTables
 
 
 
-
 --THIS TABLE IS BROKEN -- VERIFY
 --EXEC spRemoveDuplicatesCheckReport

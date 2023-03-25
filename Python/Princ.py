@@ -36,3 +36,4 @@ if __name__ == "__main__":
     # Definições de store procedures que ajustam dados nas tabelas depois de tudo rodar
     logger.info("Starting Store Procedures function")
     Run_Store_Procedures()
+
