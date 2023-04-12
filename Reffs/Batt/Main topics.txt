@@ -1,0 +1,86 @@
+
+Brains Storm:
+
+-> Adding a conclusion in abstract
+
+-> Iniciar o artigo explicando que apesar de os controles VV e VW apresentarem bons resultados na elevação do HC,
+	o VW acaba por reduzir "perder" uma certa quantidade de energia que pode ser aproveitada. Eliminando assim
+	o argumento do prejuizo ao se perder energia gerada
+-> 
+
+
+1 - The lithium-ion battery: State of the art and future perspectives
+	-> Li-ion batteries coud support the inteegration of high shares of photovoltaic (PV and wind energy in the power
+		mix by providing storage capacity and ancillary services.
+	-> There is a relevant untapped potential for use in power supply system, therefor it is not the more relevant application
+		for Li-ion ( small market share for power grid )
+	-> Small comparansion betwing battery types ( Li-ion, NiMH, NiCd ) -> Each tecnology has its own characteristics
+		that make it more or less suitable for a specific applicaation
+		- Energy densit, secific energ, specifi power round-trip efficiency, self discharge rate, cycles lives,
+			full charge and discharge time
+	-> Li-ion benefits
+		- most promising : widely available, non-toxic, very light and electropositive
+	-> Use of batteries in power supply systems
+		- To adjust demand curves during peaks
+		- Ancillary services to ensure quality
+	-> PHS is the most widelly storage used 
+		Centralized character, tecnology maturity, low cost and fair round-trip efficiency
+		But the grid network is changing do a distributed generation base, EES can gain market shere with that
+	-> Cost is the step back of this tenology
+		- Reduce cost and increase cycles to be competitive
+		- Strongly related to the inreasing reliance on PV and wind power
+		
+		
+		
+		
+2 - Effects of sizing on battery life and generation cost in PV–wind battery hybrid systems
+	-> the least energy generation cost is achieved when increasing the BESS size by 20%
+	-> This increases BESS life from 5.3 years to 7.3 years and reduces the generation cost
+	-> The oversized BESS provides extended life and reduces the energy generation cost for a standalone PV–wind–battery hybrid power system.
+	-> Used batery to control demand, battery charging when power is more than the demand and dischar otherwise
+	-> 
+
+
+3 - IEEE Recommended Practice for Sizing Lead-Acid Batteries for Stand-Alone Photovoltaic (PV) Systems
+	-> Sizing bttery came from here 
+
+
+4 - State-of-the-art technologies for volt-var control to support the penetration of renewable energy into the smart distribution grids
+	-> comprehensive review on available voltage control methods and devices for voltage management in the distribution network.
+	-> I'm working in the network side, since i want to ensure reliable deliver of eletric power. But also in the 
+		consumer side to explore maximum capacity of the PV unit.
+	-> Tem bastantes referências para serem pesqisadas
+	-> Large PV INSTALLATIONS: required to have enought capacity to provide a fast reactve power support to the grid
+	-> Smart rooftop PV inverter active and reactive power control: (mportant limitations are highlighted below:)
+			although this technology has a great impact on improving the efficiency of the network, like power loss minimization
+			and local voltage control, it has a negative impact on the customers’ revenues.
+
+
+5 - Improvement of RES Hosting Capacity Using a Central Energy Storage System ( Just introduction )
+	-> This paper uses an centrilized approach, but how small ESS affects the reverse active power? i got me thinking
+	-> Higjtlights that the reactive power control depends on reactivance of the transformer
+	-> Presents the problems of losing generation if we try to control active power, although it is effective.
+	-> Changes in regulation to motivate PV owners to install it and contribute to voltage regulation ( to install on each PV )
+	-> Central ESS is more likly to be installed :(
+	
+	-> Presented the volt limits at the biggining of introduction ( maybe an approach to reduce items from last article )
+	
+	
+	
+6 - Voltage Control and PV Hosting Capacity of Distribution Networks ( Mais um exemplo para dissertação que referência )
+	-> 6.2.2Baterias residenciais bastante usadas para absorver a demanda excedente, mas pode ficar chia em um curto espaço de tempo
+		o artigo meu propoem uma forma diferente de usar essas baterias
+	-> Problemas na definição da atuação das curvas VV e VW
+	-> 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
