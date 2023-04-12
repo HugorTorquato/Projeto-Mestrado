@@ -43,7 +43,7 @@ def Adicionar_GDs(Rede2, Pot_GD, Simulation):
     #Shapes.append("New XYcurve.vw_curve npts=4 yarray=[1 1 0.90 0.85 0.8] xarray=[0.8 1 1.01 1.05 1.5]")
 
     #  Fazer um estudo para avaliar o nível de redução da pot ativa
-    Shapes.append("New XYcurve.vw_curve npts=4 yarray=(1 1 0.85 0.85) xarray=(0.8 1.03 1.05 2)")
+    Shapes.append("New XYcurve.vw_curve npts=4 yarray=(1 1 0.50 0.50) xarray=(0.8 1.03 1.05 2)")
 
     for shape in Shapes:
         #Rede.dssText.Command = shape
