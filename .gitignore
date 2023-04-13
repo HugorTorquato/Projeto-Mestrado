@@ -10,10 +10,10 @@ Texto/Conceitos/
 *.log
 Python/Debug/
 /Tools/export_SQL_2_CSV/Data/*
-/Tools/PlotData/include
-/Tools/PlotData/Lib
-/Tools/PlotData/Scripts
-/Tools/PlotData/share
+/Tools/PlotData/include/*
+/Tools/PlotData/Lib/*
+/Tools/PlotData/Scripts/*
+/Tools/PlotData/share/*
 /Tools/PlotData/*.cfg
 
 ## Ignore Visual Studio temporary files, build results, and
