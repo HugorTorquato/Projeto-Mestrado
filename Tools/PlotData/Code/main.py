@@ -4,9 +4,9 @@ if __name__ == '__main__':
 
     # Define the desired plots to run
     DO_FirstPlot = 0
-    DO_BatBySize = 1  # Devide batery sizing by range and put them together
-    DO_VWHCDiff = 1   # Plot the HC diference btween each simulation for diferente VW ranges
-
+    DO_BatBySize = 0  # Devide batery sizing by range and put them together
+    DO_VWHCDiff = 0   # Plot the HC diference btween each simulation for diferente VW ranges
+    DO_PowerLoss = 1   # Plot the power reduction caused by VW controls
 
     # Actually Plot call
     if DO_FirstPlot:
@@ -15,6 +15,8 @@ if __name__ == '__main__':
         import BatBySize
     if DO_VWHCDiff:
         import VWHCDiff
+    if DO_PowerLoss:
+        import PowerLoss
 
 
     plt.show()
