@@ -1,0 +1,42 @@
+- fazer analise de energia e potencia na parte das baterias
+- colocar faixa de 200 para cima e 200 para baixo wh
+- 500w ou 1000w de potencia para avaliar para cima e para baixo
+
+
+
+caso PV+VW 
+	-QUANTIFICAR A POTENCIA E ENERGIA QUE FORAM PERDIDAS
+	- POTENCIA MAXIMA QUE FOI LIMITADA, ENERGIA PERDIDA (W AND WH )
+	
+	
+APRESENTAR O DIMENSIONAMENTO DO BANCO
+- APRESENTAR OS BANCOS PARA CADA UM DOS CASOS
+- NÃO STÁ CLARO QUE TEM BANCO DE BATERIAS, DEIXAR CLARO A ENERGIA PERDIDA
+- ESPECIFICAR O DIMENSIONAMENTO E BUSCAR RESULTADOS SIMULARES MAS SEM A PERDA DE ENERGIA
+- Ai depois entra na questão do tamanho do banco ( quantos bancos - valores medios )
+
+
+Fazer figura para os bancos de bateria com desvio padrao
+- 50w 200wh descarta
+- fazer para energia e potencia 
+
+
+
+mostrar a potinjetada e a potencia que não foi injetada
+qual usada para achar o hc e qual usada para dimencionar os bancos de baterias
+
+
+
+
+
+
+DEFESA 09/23
+
+PASSAR ARA BANCA 30/08
+
+AGENDAR 30/07
+- Só marca depois de ver o texto completo
+- Dissertação completa
+
+
+3 meses para terminar

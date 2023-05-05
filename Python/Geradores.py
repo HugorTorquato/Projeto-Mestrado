@@ -43,7 +43,7 @@ def Adicionar_GDs(Rede2, Pot_GD, Simulation):
     #Shapes.append("New XYcurve.vw_curve npts=4 yarray=[1 1 0.90 0.85 0.8] xarray=[0.8 1 1.01 1.05 1.5]")
 
     #  Fazer um estudo para avaliar o nível de redução da pot ativa
-    Shapes.append("New XYcurve.vw_curve npts=4 yarray=(1 1 0.50 0.50) xarray=(0.8 1.03 1.05 2)")
+    Shapes.append("New XYcurve.vw_curve npts=4 yarray=(1 1 0.70 0.70) xarray=(0.8 1.03 1.05 2)")
 
     for shape in Shapes:
         #Rede.dssText.Command = shape
@@ -241,7 +241,7 @@ def FindBusGD(Rede2, Num_GDs):
         return
 
     vet_choice = []
-    #for load in Rede.dssLoads.AllNames:
+
     for load in GetAllLoadsNames(Rede2):
         Rede2.loads_write_name(load)
         a = Rede2.cktelement_read_bus_names()
@@ -251,7 +251,7 @@ def FindBusGD(Rede2, Num_GDs):
         #Rede.dssLoads.Name = load
         #vet_choice.append(str(Rede.dssCktElement.BusNames[0]).split('.')[0])
 
-    # I'll leave it here just in case. Basicly it is comparing the hardcoded list with the one
+    # I'll leave it here just in case. Basically it is comparing the hardcoded list with the one
     # created based on load positions ( just for Rede_03 case )
     vet_choice_2 = list(['bus_33998182_030'
                       ,'bus_33998182_025'

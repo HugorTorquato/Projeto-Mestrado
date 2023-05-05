@@ -1,4 +1,3 @@
-import pandas
 import pandas as pd
 
 import pythonsql
@@ -25,9 +24,9 @@ SELECT
     """
 
 # Create the plot class and init all properties realted to it
-x15 = pythonsql.SQLActions("DB_Rede_3_50_2303")
-x30 = pythonsql.SQLActions("DB_Rede_3_50_2303")
-x50 = pythonsql.SQLActions("DB_Rede_3_50_2303")
+x15 = pythonsql.SQLActions("DB_Rede_3_50_1403")
+x30 = pythonsql.SQLActions("DB_Rede_3")
+x50 = pythonsql.SQLActions("DB_Rede_3_50_1904_50")
 
 command1Value = x15.returnTableFromSQLasDataframe(command1).melt()["value"]
 command2Value = x15.returnTableFromSQLasDataframe(command2).melt()["value"]
@@ -38,23 +37,48 @@ dfTable15 = pd.concat([command1Value, command2Value, 100 * (command2Value - comm
 dfTable15.columns = ["Values_5_4", "Values_7_6", "Diff(%)"]
 dfTable15.index = labels
 
+command1Value = x30.returnTableFromSQLasDataframe(command1).melt()["value"]
+command2Value = x30.returnTableFromSQLasDataframe(command2).melt()["value"]
 
+dfTable30 = pd.concat([command1Value, command2Value, 100 * (command2Value - command1Value) / command1Value], axis=1)
+dfTable30.columns = ["Values_5_4", "Values_7_6", "Diff(%)"]
+dfTable30.index = labels
 
+command1Value = x50.returnTableFromSQLasDataframe(command1).melt()["value"]
+command2Value = x50.returnTableFromSQLasDataframe(command2).melt()["value"]
 
+dfTable50 = pd.concat([command1Value, command2Value, 100 * (command2Value - command1Value) / command1Value], axis=1)
+dfTable50.columns = ["Values_5_4", "Values_7_6", "Diff(%)"]
+dfTable50.index = labels
 
+fig1 = plt.figure(1)
 
-fig = plt.figure(1)
-
-ax1 = fig.add_subplot(1, 2, 1)
+ax1 = fig1.add_subplot(3, 2, 1)
 ax1.pie(dfTable15["Values_5_4"], autopct='%1.1f%%')
 ax1.set_title("VW Control enabled")
 
-ax2 = fig.add_subplot(1, 2, 2)
+ax2 = fig1.add_subplot(3, 2, 2)
 ax2.pie(dfTable15["Values_7_6"], autopct='%1.1f%%')
 ax2.set_title("VW and VV Control enabled")
 
-fig.legend(labels, loc='upper left')
-fig.suptitle("BATTERY DIVIDED BY SIZE")
+ax1 = fig1.add_subplot(3, 2, 3)
+ax1.pie(dfTable30["Values_5_4"], autopct='%1.1f%%')
+ax1.set_title("VW Control enabled")
+
+ax2 = fig1.add_subplot(3, 2, 4)
+ax2.pie(dfTable30["Values_7_6"], autopct='%1.1f%%')
+ax2.set_title("VW and VV Control enabled")
+
+ax1 = fig1.add_subplot(3, 2, 5)
+ax1.pie(dfTable50["Values_5_4"], autopct='%1.1f%%')
+ax1.set_title("VW Control enabled")
+
+ax2 = fig1.add_subplot(3, 2, 6)
+ax2.pie(dfTable50["Values_7_6"], autopct='%1.1f%%')
+ax2.set_title("VW and VV Control enabled")
+
+fig1.legend(labels, loc='upper left')
+fig1.suptitle("BATTERY DIVIDED BY SIZE")
 
 '''
 This table and pie chart represents the diference between only VW and VW + VV controls.
@@ -68,7 +92,14 @@ Values_5_4  Values_7_6     Diff(%
 >250           2           2   0.000000
 '''
 
+'''
+It is also possible to compare different VW ranges here, just need to change the connection string and add
+more sublots. But let's see how it works.... but i need to generate data for 50%
+'''
+
 print(dfTable15)
+print(dfTable30)
+print(dfTable50)
 
 
 

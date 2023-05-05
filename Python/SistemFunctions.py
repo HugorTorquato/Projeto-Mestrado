@@ -239,7 +239,7 @@ def Solve_Daily(Rede2, Simulation, Pot_GD):
     #eee = Rede2.loadshapes_read_name()
     #fff = Rede2.loadshapes_all_names()
 
-    teste(Rede2)
+    #teste(Rede2)
 
     logger.debug("Solve_Daily took {" + str(time.time() - t1) + " sec} to execulte")
     #print()
@@ -258,15 +258,11 @@ def HC(Rede2):
     # Essa função é o pulmão do código, aqui que é feito o cálculo do HC
     from FunctionsSecond import Limpar_DF, Check2, GetAllTransfNames, Identify_Overcurrent_Limits
     from Definitions import DF_Geradores, DF_Barras, DF_General, DF_Elements, DF_PV,\
-        DF_Lista_Monitors, Incremento_gd, DF_Monitors_Data_2, Casos, logger, DF_Violations_Data, \
-        DF_Corrente_Limite
-
+        DF_Lista_Monitors, Incremento_gd, DF_Monitors_Data_2, Casos, logger, DF_Violations_Data
 
     # Define o primeiro transformador como o ponto de PCC e o incremento de pot em cada verificação do HC é
     # definido em termos de % frente a pot do trafo de entrada
 
-    #Rede.dssTransformers.Name = Rede.dssTransformers.AllNames[0]
-    [Limpar_DF(DF) for DF in [DF_Corrente_Limite]]
     Rede2.transformers_write_name(GetAllTransfNames(Rede2)[0])
     Identify_Overcurrent_Limits(Rede2)
     #a = Rede2.transformers_read_name()
