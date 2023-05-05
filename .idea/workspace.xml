@@ -2,9 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c0a353b0-9d94-497b-99cd-a779928dfe5d" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Tools/PlotData/Code/PowerLoss.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/erro overcurrent.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/PlotData/Code/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Tools/PlotData/Code/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python/Definitions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/Definitions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python/FunctionsSecond.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/FunctionsSecond.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python/Geradores.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/Geradores.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python/SistemFunctions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/SistemFunctions.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -293,16 +296,6 @@
           <line>526</line>
           <option name="timeStamp" value="325" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Python/SistemFunctions.py</url>
-          <line>243</line>
-          <option name="timeStamp" value="326" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Python/DB_Rede.py</url>
-          <line>53</line>
-          <option name="timeStamp" value="332" />
-        </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
@@ -313,10 +306,6 @@
       </default-breakpoints>
     </breakpoint-manager>
     <watches-manager>
-      <configuration name="PythonConfigurationType">
-        <watch expression="mon" />
-        <watch expression="DF_Violations_Data" />
-      </configuration>
       <inline-watch fileUrl="file://$PROJECT_DIR$/Python/DB_Rede.py" line="51">
         <watch expression="filefromfolder" language="Python" />
       </inline-watch>

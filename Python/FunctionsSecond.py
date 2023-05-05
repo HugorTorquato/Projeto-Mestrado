@@ -781,8 +781,9 @@ def Adjust_Colum_Name(DF):
 
     return new_Col
 
-
 def Identify_Overcurrent_Limits(Rede2):
+
+    from Definitions import DF_Corrente_Limite
 
     NormAmps = []
     Line_Names = []
@@ -794,21 +795,18 @@ def Identify_Overcurrent_Limits(Rede2):
         NormAmps.append(float(Rede2.lines_read_norm_amps()))
         Wire_Geometry.append(Rede2.lines_read_geometry())
 
-        # Acharo nome dos cabos pelo opendss
-        #Rede.dssCktElement.Name = Line
-        #a = Rede.dssCktElement.Name
-        #b = Rede.dssCktElement.Properties("geometry").val
-        #c = Rede.dssCktElement.Properties("wires").val
-        #d = Rede.dssCktElement.Properties("cncables").val
-        #d = Rede.dssCktElement.Properties("tscables").val
-
     try:
-        DF_Corrente_Limite.insert(0, 'Elementos', Line_Names)
-        DF_Corrente_Limite.insert(1, 'Wire_Geometry', Wire_Geometry)
-        DF_Corrente_Limite.insert(2, 'Current_Limits', NormAmps)
+        if not DF_Corrente_Limite.empty:
+            # Make sure the DF is empty before adding more stuffs in there
+            [Limpar_DF(DF) for DF in [DF_Corrente_Limite]]
+
+        DF_Corrente_Limite['Elementos'] = Line_Names
+        DF_Corrente_Limite['Wire_Geometry'] = Wire_Geometry
+        DF_Corrente_Limite['Current_Limits'] = NormAmps
+
     except Exception as e:
-        logger.info("Deu Ruim Identify_Overcurrent_Limits()")
-        logger.info("Deu Ruim Identify_Overcurrent_Limits() com erro : " + str(e))
+        logger.error("Deu Ruim Identify_Overcurrent_Limits()")
+        logger.error("Deu Ruim Identify_Overcurrent_Limits() com erro : " + str(e))
 
 def Converter_Intervalo_de_Simulacao(Rede, Hora):
     # Converte a hora passada para o respectivo instante em steps da curva de carga

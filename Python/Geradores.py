@@ -241,7 +241,7 @@ def FindBusGD(Rede2, Num_GDs):
         return
 
     vet_choice = []
-    #for load in Rede.dssLoads.AllNames:
+
     for load in GetAllLoadsNames(Rede2):
         Rede2.loads_write_name(load)
         a = Rede2.cktelement_read_bus_names()
@@ -251,7 +251,7 @@ def FindBusGD(Rede2, Num_GDs):
         #Rede.dssLoads.Name = load
         #vet_choice.append(str(Rede.dssCktElement.BusNames[0]).split('.')[0])
 
-    # I'll leave it here just in case. Basicly it is comparing the hardcoded list with the one
+    # I'll leave it here just in case. Basically it is comparing the hardcoded list with the one
     # created based on load positions ( just for Rede_03 case )
     vet_choice_2 = list(['bus_33998182_030'
                       ,'bus_33998182_025'
