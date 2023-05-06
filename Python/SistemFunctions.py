@@ -337,7 +337,7 @@ def HC(Rede2):
                 Sem_GD = 1
                 break
 
-            if Nummero_Simulacoes > 30:
+            if Nummero_Simulacoes > Num_Max_Iterações:
                 Verify = False
                 break
 
