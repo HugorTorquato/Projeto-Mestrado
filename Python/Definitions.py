@@ -273,7 +273,7 @@ Norma = 1               #  # 0 - PRODIST # 1 - IEEE
 Num_Simulations = 7     # Deifnie o número de simulações que serão realizadas
 
 Num_Estudos_de_Caso = 10 # Define o estudo de caso em questão (configuração das GDs)
-Num_Max_Iterações = 30
+Num_Max_Iterações = 20
 
 Debug_VV = 1            # Modo Debug para mensurar e comparar o comportamento do VV no sistema ( 1 - liga 0 - desliga)
 Thiago = 0

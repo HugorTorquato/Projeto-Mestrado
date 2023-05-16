@@ -47,7 +47,7 @@ ORDER BY Simulation
 
 
 
-
+SELECT * FROM [DB_Rede_3_50_3103_30].dbo.spStatisticalResults
 
 
 
