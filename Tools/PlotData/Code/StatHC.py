@@ -109,4 +109,3 @@ plt.savefig(r"C:\Users\hugo1\Desktop\Projeto_Rede_Fornecida\Figs\Artigo2" +
             "\BOXPLOT_HC_DB_" + str(DB) + ".pdf",
             format='pdf', transparent=True)
 plt.savefig(r"C:\Users\hugo1\Desktop\Projeto_Rede_Fornecida\Figs\Artigo2" + "\BOXPLOT_HC_DB_" + str(DB))
-plt.show()
