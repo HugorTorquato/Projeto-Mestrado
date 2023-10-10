@@ -88,21 +88,41 @@ for Sim in Simulations_to_Plot:
 
 """
 
-DB = "DB_Rede_3_50_2403"
+DB = "DB_Rede_3_50_2706_15"#_30_2006_30"
 
 ##########################
-fig2, ax = plt.subplots()
+#fig2, ax = plt.subplots()
 df = GetHCDATA(DB)
 # generate a boxplot based on the new grouping
-plt.boxplot([df[df['SimulationCount'] == 2]['HC'] * 100,
-             df[df['SimulationCount'] == 3]['HC'] * 100,
-             df[df['SimulationCount'] == 4]['HC'] * 100,
-             df[df['SimulationCount'] == 6]['HC'] * 100],
-            showmeans=True, idths=0.7, meanline=True)
+#plt.boxplot([df[df['SimulationCount'] == 2]['HC'] * 100,
+ #            df[df['SimulationCount'] == 3]['HC'] * 100,
+ #            df[df['SimulationCount'] == 4]['HC'] * 100,
+ #            df[df['SimulationCount'] == 6]['HC'] * 100],
+ #           showmeans=True, widths=0.7, meanline=True)
 
-plt.xticks([1, 2, 3, 4], ['C/PV', 'VV', 'VW', 'VV+VW'])
-plt.ylabel('HC(%)')
-plt.title('Boxplot of HC simulations with and without controls')
+#plt.xticks([1, 2, 3, 4], ['Without Control', 'VV', 'VW', 'VV+VW'], fontsize=14)
+#plt.ylim(0, 100), plt.yticks(fontsize=14), plt.ylabel('HC(%)',  fontsize=14)
+#plt.title('Boxplot of HC simulations', fontsize=14, weight='bold')
+#plt.grid(True, linestyle='--', linewidth=0.5, color='gray', alpha=0.25)
+#plt.legend()
+fig, ax = plt.subplots(figsize=(8, 6))  # Adjust the figure size as needed
+
+boxprops = dict(linewidth=3, color='black')  # Box properties
+meanprops = dict(linestyle='--', linewidth=2, color='red')  # Mean line properties
+whiskerprops = dict(linewidth=2, color='black')  # Whisker properties
+
+
+plt.boxplot(
+    [df[df['SimulationCount'] == val]['HC'] * 100 for val in [2, 3, 4, 6]],
+    showmeans=True, widths=0.7, meanline=True,
+    boxprops=boxprops, meanprops=meanprops, whiskerprops=whiskerprops
+)
+plt.xticks([1, 2, 3, 4], ['Without Control', 'VV', 'VW', 'VV+VW'], fontsize=14)
+plt.yticks(fontsize=14)
+plt.ylabel('HC (%)', fontsize=14)
+plt.ylim(0, 100)
+plt.grid(True, linestyle='--', linewidth=1, color='gray', alpha=0.25)
+plt.legend()
 
 # Save as PDF and PNG
 plt.savefig(r"C:\Users\hugo1\Desktop\Projeto_Rede_Fornecida\Figs\Artigo2" +

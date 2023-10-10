@@ -25,7 +25,7 @@ SELECT
 
 # Create the plot class and init all properties realted to it
 x15 = pythonsql.SQLActions("DB_Rede_3_50_1403")
-x30 = pythonsql.SQLActions("DB_Rede_3")
+x30 = pythonsql.SQLActions("DB_Rede_3_50_3103_30")
 x50 = pythonsql.SQLActions("DB_Rede_3_50_1904_50")
 
 command1Value = x15.returnTableFromSQLasDataframe(command1).melt()["value"]

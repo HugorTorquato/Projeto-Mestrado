@@ -1,0 +1,64 @@
+%-----------------------------------
+\begin{apendicesenv}
+\label{appendix}
+%-----------------------------------
+
+%-----------------------------------
+\chapter{Large Table} \label{apendiceA}
+
+\small
+\begin{center}
+    \begin{landscape}
+        \begin{longtable}{@{\extracolsep{\fill}}ccccccc@{}}
+            \caption{Example of a Large Table} \label{tab_longtable}\\
+            \hline
+            ID &  & Item 1 & Item 2 & Item 3 & Item 4 & Item 5 \\ \hline 
+            \endfirsthead
+            \multicolumn{7}{c}%
+            {\tablename\ \thetable\ -- \textit{Continue in previous page}} \\
+            \hline
+            \endhead
+            \hline 
+            \multicolumn{7}{c}{\textit{Continue in next page}} \\
+            \endfoot
+            \hline
+            \endlastfoot
+            1       &  & 49   & 16      & 16      & 16      & 16     \\
+            2       &  & 72   & 15      & 15      & 15      & 15     \\
+            3       &  & 61   & 14      & 14      & 14      & 14     \\
+            4       &  & 54   & 13      & 13      & 13      & 13     \\
+            5       &  & 57   & 19      & 19      & 19      & 19     \\
+            6       &  & 76   & 18      & 18      & 18      & 18     \\
+            7       &  & 73   & 11      & 11      & 65      & 65     \\
+            8       &  & 70   & 6       & 6       & 11      & 11     \\
+            9       &  & 80   & 41      & 5       & 6       & 55     \\
+            10      &  & 55   & 5       & 41      & 55      & 6      \\
+            11      &  & 69   & 47      & 47      & 64      & 64     \\
+            12      &  & 66   & 65      & 65      & 68      & 68     \\
+            13      &  & 59   & 17      & 17      & 5       & 58     \\
+            14      &  & 78   & 30      & 30      & 41      & 66     \\
+            15      &  & 77   & 12      & 55      & 58      & 5      \\
+            16      &  & 60   & 34      & 12      & 47      & 41     \\
+            17      &  & 63   & 55      & 34      & 66      & 52     \\
+            18      &  & 52   & 64      & 64      & 52      & 75     \\
+            19      &  & 65   & 68      & 68      & 75      & 47     \\
+            20      &  & 56   & 46      & 46      & 17      & 17     \\
+            21      &  & 62   & 43      & 43      & 30      & 49     \\
+            22      &  & 53   & 27      & 58      & 49      & 77     \\
+            23      &  & 67   & 44      & 66      & 12      & 30     \\
+            24      &  & 75   & 58      & 27      & 77      & 51     \\
+            25      &  & 71   & 40      & 44      & 34      & 72     \\
+            26      &  & 51   & 36      & 40      & 51      & 34     \\
+            27      &  & 50   & 66      & 52      & 72      & 12     \\
+            28      &  & 58   & 52      & 36      & 80      & 80     \\
+            29      &  & 79   & 2       & 75      & 63      & 63     \\
+            30      &  & 68   & 75      & 2       & 46      & 78     \\
+            \hline
+        \end{longtable}
+    \end{landscape}
+\end{center}
+\normalsize
+
+
+
+\end{apendicesenv}

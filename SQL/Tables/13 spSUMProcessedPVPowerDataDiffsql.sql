@@ -16,6 +16,7 @@ IF (NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES
 			[Case] int,
 			Elemento nvarchar(50),
 			TimeStep int,
+			Sum_Pot_2 float,
 			Sum_Pot_5 float,
 			Sum_Pot_4 float,
 			Sum_Pot_Diff_5_4 float,

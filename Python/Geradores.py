@@ -39,11 +39,11 @@ def Adicionar_GDs(Rede2, Pot_GD, Simulation):
                            "mult=(file=C:\\Users\hugo1\Desktop\Rede_03\LoadShapeGeradores\Irrad.txt)")
     #Shapes.append("New XYcurve.vv_curve npts=4 Xarray=(0.5,0.89,0.96,1,1.02,1.1,1.5) "
     Shapes.append("New XYcurve.vv_curve npts=5 Xarray=(0.92, 0.99, 1, 1.01, 1.05) "
-                           "Yarray=(-1.0, 0, 0, 0, 1.0)") #Inverter para ver como fica
+                           "Yarray=(1.0, 0, 0, 0, -1.0)") #Inverter para ver como fica
     #Shapes.append("New XYcurve.vw_curve npts=4 yarray=[1 1 0.90 0.85 0.8] xarray=[0.8 1 1.01 1.05 1.5]")
 
     #  Fazer um estudo para avaliar o nível de redução da pot ativa
-    Shapes.append("New XYcurve.vw_curve npts=4 yarray=(1 1 0.70 0.70) xarray=(0.8 1.03 1.05 2)")
+    Shapes.append("New XYcurve.vw_curve npts=4 yarray=(1 1 0.50 0.50) xarray=(0.8 1.03 1.05 2)")
 
     for shape in Shapes:
         #Rede.dssText.Command = shape

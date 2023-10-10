@@ -2,7 +2,6 @@
 import py_dss_interface
 
 if __name__ == "__main__":
-
     from Definitions import *
     from SistemFunctions import *
     from LevantarDados import *

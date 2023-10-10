@@ -89,6 +89,7 @@ def Compila_DSS(Rede2):
 
     Rede2.dss_clear_all()
     Rede2.text("compile " + Rede_Path + "\Master.dss")
+    #Rede2.text("set controlmode=static") ####### -> TESTARRRRR
     Rede2.text("set mode=daily")
     Rede2.text("set stepsize = 15m")
     Rede2.text("set number = 96")
@@ -139,7 +140,7 @@ def Solve_Hora_por_Hora(Rede2, Simulation, Pot_GD):
     from Monitores import Adicionar_Monitores, Export_Random_Monitor_Test, Debug_Loads
     from FunctionsSecond import Adicionar_EnergyMeter, Converter_Intervalo_de_Simulacao
 
-    # Feature:
+    # TODO:
     # -> Limitar a simulação diária somente ao pico de geração fotovoltaica ( algumas horas ) = sim. mais rápida
     # -> Salvar no banco os valores obtidos
     #       -> Função para salvar os dados em cada iteração ( Salvar_Dados_Tensao )
@@ -268,7 +269,7 @@ def HC(Rede2):
     #a = Rede2.transformers_read_name()
     try:
         #Incremento_Pot_gd = float(Incremento_gd)/100 * Rede.dssTransformers.kva
-        Incremento_Pot_gd = float(Incremento_gd)/100 * Rede2.transformers_read_kva()
+        Incremento_Pot_gd = float(Incremento_gd) * Rede2.transformers_read_kva() / 100
     except:
         Incremento_Pot_gd = 0.025
 
@@ -337,7 +338,7 @@ def HC(Rede2):
                 Sem_GD = 1
                 break
 
-            if Nummero_Simulacoes > Num_Max_Iterações:
+            if Nummero_Simulacoes > Num_Max_Iteracoes:
                 Verify = False
                 break
 

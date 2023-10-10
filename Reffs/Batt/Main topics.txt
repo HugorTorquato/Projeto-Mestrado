@@ -71,10 +71,13 @@ Brains Storm:
 	-> 6.2.2Baterias residenciais bastante usadas para absorver a demanda excedente, mas pode ficar chia em um curto espaço de tempo
 		o artigo meu propoem uma forma diferente de usar essas baterias
 	-> Problemas na definição da atuação das curvas VV e VW
-	-> 
+	-> ref 65, 67
 	
-	
-	
+7 - 
+	-> A sobretensão tende a acontcer nas baras em que os PVs são instalados?
+	-> Como que está o fluxo reverso? deve estar gritando já, tem um limite para isso? creio que com esse limite n vai ter muitas violações
+	-> Apresentar qu muitos modelos existem mas a comparaão entre ees não vai ser feita, somente vai ser escolhido a bateria
+	-> ão teve dimensionamento
 	
 	
 	
