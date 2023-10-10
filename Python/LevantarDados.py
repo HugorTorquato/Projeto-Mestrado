@@ -111,7 +111,7 @@ def Dados_Geometria_Linha(Rede):
         print(a)
         print(Rede.dssLines.Name)
         print(Rmatrix[-1])
-        pause()
+
 
     Geo_Rede.insert(0, 'Nomes', Nome)
     Geo_Rede.insert(1, 'Bus1', Bus1), Geo_Rede.insert(2, 'Bus2', Bus2), Geo_Rede.insert(3, 'X0', X0)

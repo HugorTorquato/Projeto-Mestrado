@@ -17,6 +17,7 @@ IF (NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES
 			Elemento nvarchar(50),
 			Measurement nvarchar(50),
 			TimeStep int,
+			Value_S2 float,
 			Value_S5 float,
 			Value_S4 float,
 			Value_diff_5to4 float,

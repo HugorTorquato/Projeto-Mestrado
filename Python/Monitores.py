@@ -43,15 +43,22 @@ def Define_Monitor(Rede2, Lista_Monitores):
     for element in Lista_Monitores:
         Command = []
 
-        if element.split('.')[1].startswith("fakeload"):
-            Command.append("New monitor." + str(element.replace('.', '_')) + "_voltage element=" + str(element) \
+        #if element.split('.')[1].startswith("fakeload"):
+        #    Command.append("New monitor." + str(element.replace('.', '_')) + "_voltage element=" + str(element) \
+        #               + " terminal=1 mode=0 enabled=Yes")
+        #elif element.split('.')[0] != 'Monitor':
+        #    Command.append("New monitor." + str(element.replace('.', '_')) + "_power element=" + str(element) \
+        #               + " terminal=1 mode=1 ppolar=no enabled=Yes")
+        #    Command.append("New monitor." + str(element.replace('.', '_')) + "_voltage element=" + str(element) \
+        #               + " terminal=1 mode=0 enabled=Yes")
+        #    Command.append("New monitor." + str(element.replace('.', '_')) + "_loss element=" + str(element) \
+        #               + " terminal=1 mode=9 enabled=Yes")
+
+        Command.append("New monitor." + str(element.replace('.', '_')) + "_power element=" + str(element) \
+                           + " terminal=1 mode=1 ppolar=no enabled=Yes")
+        Command.append("New monitor." + str(element.replace('.', '_')) + "_voltage element=" + str(element) \
                        + " terminal=1 mode=0 enabled=Yes")
-        elif element.split('.')[0] != 'Monitor':
-            Command.append("New monitor." + str(element.replace('.', '_')) + "_power element=" + str(element) \
-                       + " terminal=1 mode=1 ppolar=no enabled=Yes")
-            Command.append("New monitor." + str(element.replace('.', '_')) + "_voltage element=" + str(element) \
-                       + " terminal=1 mode=0 enabled=Yes")
-            Command.append("New monitor." + str(element.replace('.', '_')) + "_loss element=" + str(element) \
+        Command.append("New monitor." + str(element.replace('.', '_')) + "_loss element=" + str(element) \
                        + " terminal=1 mode=9 enabled=Yes")
 
             #logger.debug("Starting Monitor 1  - " + Command1)

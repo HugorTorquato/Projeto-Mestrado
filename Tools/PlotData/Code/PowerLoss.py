@@ -21,9 +21,10 @@ import matplotlib.pyplot as plt
 
 # Find a way to get the max power diference from each VW rate
 
-DB15 = "DB_Rede_3_50_1403"
-DB30 = "DB_Rede_3_50_3103_30"
-DB50 = "DB_Rede_3_50_1904_50"
+DB15 = "DB_Rede_3_50_2706_15"
+DB30 = "DB_Rede_3_50_0107_30"
+DB50 = "DB_Rede_3_50_0107_50"
+DB50 = "DB_Rede_3_50_1207_50"
 
 def GetPowerDataTable(db):
     command = f"""
@@ -63,203 +64,116 @@ df2_DB30 = GetFuncPowerDataFilteredTable(DB30, dfFiltered30)
 df2_DB50 = GetFuncPowerDataFilteredTable(DB50, dfFiltered50)
 
 x_ax = df2_DB15["TimeStep"]
-
-
 fig3 = plt.figure(3)
 
-#######################################################################################################################
-ax1 = fig3.add_subplot(3, 2, 1)
-x1, y1 = dfFiltered15['TimeStep'], dfFiltered15['Sum_Pot_5']
-x2, y2 = dfFiltered15['TimeStep'], dfFiltered15['Sum_Pot_4']
-ax1.plot(x_ax, df2_DB15["Sum_Pot_5"], label='Pot Without VW')
-ax1.plot(x_ax, df2_DB15["Sum_Pot_4"], label='Pot With VW')
-ax1.set_xlim(18, 96)
-ax1.legend()
+def MakePlotDiagram(ax, dfFiltered, df2_DB, pot_Control, pot_without_control):
 
-# Draw the square
-square = plt.Rectangle((x2 - x2 * 0.1, y2 - y2 * 0.025), x2 * 0.2, 2 * (y1-y2),
-                       facecolor='none', edgecolor='red', linewidth=2)
-ax1.add_patch(square)
-# Zoom in on the square
-axins1 = ax1.inset_axes([0.3, 0.06, 0.6, 0.6])  # Position and size of the zoomed-in plot
-axins1.plot(x_ax, df2_DB15["Sum_Pot_5"])
-axins1.plot(x_ax, df2_DB15["Sum_Pot_4"])
-axins1.set_xlim((x2 - x2 * 0.1), ((x2 - x2 * 0.1) + x2 * 0.2))     # Adjust the x limits to move the square down
-axins1.set_ylim((y2 - y2 * 0.025), ((y2 - y2 * 0.025) + 2 * (y1-y2)))  # Adjust the y limits to zoom in on the square
+    x1, y1 = dfFiltered['TimeStep'], dfFiltered[pot_without_control]
+    x2, y2 = dfFiltered['TimeStep'], dfFiltered[pot_Control]
+    time_values = [f"{hour:02d}:00" for hour in range(24) for _ in range(4)]
 
-axins1.annotate('', xy=(x1, y1), xytext=(x2, y2),
-               arrowprops=dict(arrowstyle='<->', linewidth=3))
+    ax.plot(x_ax, df2_DB[pot_without_control], label='Pot Without VW')
+    ax.plot(x_ax, df2_DB[pot_Control], label='Pot With VW')
+    ax.set_xlim(18, 96)
+    ax.legend()
+    plt.xticks(range(24, 96, 8), time_values[24::8], rotation='vertical')
+    plt.ylabel("Active Power (kW)")
+    plt.xlabel("Time")
 
-axins1.annotate(
-    f"{round((100*(df2_DB15['Sum_Pot_5'].iloc[x1]-df2_DB15['Sum_Pot_4'].iloc[x1]))/df2_DB15['Sum_Pot_5'].iloc[x1], 2)} %",
-    xy=(x1 + .5, (y1 + y2)/2), xytext=(x1 + .5, (y1 + y2)/2))
-axins1.grid()
+    square = plt.Rectangle((x2 - x2 * 0.1, y2 - y2 * 0.025), x2 * 0.2, 2 * (y1-y2),
+                           facecolor='none', edgecolor='red', linewidth=2)
+    ax.add_patch(square)
+    # Zoom in on the square
+    axins = ax.inset_axes([0.3, 0.06, 0.6, 0.6])  # Position and size of the zoomed-in plot
+    axins.plot(x_ax, df2_DB[pot_without_control])
+    axins.plot(x_ax, df2_DB[pot_Control])
 
-#######################################################################################################################
-ax2 = fig3.add_subplot(3, 2, 2)
-x1, y1 = dfFiltered15['TimeStep'], dfFiltered15['Sum_Pot_7']
-x2, y2 = dfFiltered15['TimeStep'], dfFiltered15['Sum_Pot_6']
-ax2.plot(x_ax, df2_DB15["Sum_Pot_7"], label='Pot Without VW')
-ax2.plot(x_ax, df2_DB15["Sum_Pot_6"], label='Pot With VW')
-ax2.set_xlim(18, 96)
-ax2.legend()
+    x_min = (x2 - x2 * 0.1)
+    x_max = ((x2 - x2 * 0.1) + x2 * 0.2)
+    y_min = (y2 - y2 * 0.025)
+    y_max = ((y2 - y2 * 0.025) + 2 * (y1-y2))
 
-# Draw the square
-square = plt.Rectangle((x2 - x2 * 0.1, y2 - y2 * 0.025), x2 * 0.2, 2 * (y1-y2),
-                       facecolor='none', edgecolor='red', linewidth=2)
-ax2.add_patch(square)
-# Zoom in on the square
-axins2 = ax2.inset_axes([0.3, 0.06, 0.6, 0.6])  # Position and size of the zoomed-in plot
-axins2.plot(x_ax, df2_DB15["Sum_Pot_7"])
-axins2.plot(x_ax, df2_DB15["Sum_Pot_6"])
-axins2.set_xlim((x2 - x2 * 0.1), ((x2 - x2 * 0.1) + x2 * 0.2))     # Adjust the x limits to move the square down
-axins2.set_ylim((y2 - y2 * 0.025), ((y2 - y2 * 0.025) + 2 * (y1-y2)))  # Adjust the y limits to zoom in on the square
+    axins.set_xlim(x_min, x_max)  # Adjust x limits to move the square down
+    axins.set_ylim(y_min, y_max)  # Adjust y limits to zoom in on the square
 
-axins2.annotate('', xy=(x1, y1), xytext=(x2, y2),
-                arrowprops=dict(arrowstyle='<->', linewidth=3))
+    axins.annotate('', xy=(x1, y1), xytext=(x2, y2),
+                    arrowprops=dict(arrowstyle='<->', linewidth=3))
 
-axins2.annotate(
-    f"{round((100*(df2_DB15['Sum_Pot_7'].iloc[x1]-df2_DB15['Sum_Pot_6'].iloc[x1]))/df2_DB15['Sum_Pot_7'].iloc[x1], 2)} %",
-    xy=(x1 + .5, (y1 + y2)/2), xytext=(x1 + .5, (y1 + y2)/2))
-axins2.grid()
+    axins.annotate(
+        f"{round((100*(df2_DB15[pot_without_control].iloc[x1]-df2_DB15[pot_Control].iloc[x1]))/df2_DB15[pot_without_control].iloc[x1], 2)} %",
+        xy=(x1 + .5, (y1 + y2)/2), xytext=(x1 + .5, (y1 + y2)/2))
+    axins.grid()
+
+def MakePlotDiagram2(num, dfFiltered, df2_DB, pot_Control, pot_without_control):
+
+    fig, ax = plt.subplots(figsize=(6, 4), dpi=300)
+    x1, y1 = dfFiltered['TimeStep'], dfFiltered[pot_without_control]
+    x2, y2 = dfFiltered['TimeStep'], dfFiltered[pot_Control]
+    time_values = [f"{hour:02d}:00" for hour in range(24) for _ in range(4)]
+
+    ax.plot(x_ax, df2_DB[pot_without_control], label='Pot Without VW', linewidth=2.5)
+    ax.plot(x_ax, df2_DB[pot_Control], label='Pot With VW', linewidth=2.5)
+    ax.set_xlim(18, 96)
+    ax.legend(fontsize=11, bbox_to_anchor=(0.9, 0.9))
+    plt.xticks(range(24, 96, 8), time_values[24::8], rotation=45, fontsize=15)
+    plt.ylabel("Active Power (kW)", fontsize=17)
+    plt.xlabel("Time (hour)", fontsize=17)
+    plt.tick_params(axis='both', labelsize=15)
+
+    square = plt.Rectangle((x2 - x2 * 0.1, y2 - y2 * 0.025), x2 * 0.2, 2 * (y1-y2),
+                           facecolor='none', edgecolor='red', linewidth=2.5)
+    ax.add_patch(square)
+    # Zoom in on the square
+    axins = ax.inset_axes([0.3, 0.06, 0.6, 0.6])  # Position and size of the zoomed-in plot
+    axins.plot(x_ax, df2_DB[pot_without_control])
+    axins.plot(x_ax, df2_DB[pot_Control])
+
+
+    x_min = (x2 - x2 * 0.1)
+    x_max = ((x2 - x2 * 0.1) + x2 * 0.2)
+    y_min = (y2 - y2 * 0.025)
+    y_max = ((y2 - y2 * 0.025) + 2 * (y1-y2))
+
+    axins.tick_params(axis='both', labelsize=0, colors='white')
+    axins.set_xlim(x_min, x_max)  # Adjust x limits to move the square down
+    axins.set_ylim(y_min, y_max)  # Adjust y limits to zoom in on the square
+
+    axins.annotate('', xy=(x1, y1), xytext=(x2, y2),
+                   arrowprops=dict(arrowstyle='<->', linewidth=3))
+
+    axins.annotate(
+        f"{round((100*(df2_DB[pot_without_control].iloc[x1]-df2_DB[pot_Control].iloc[x1]))/df2_DB[pot_without_control].iloc[x1], 2)} %",
+        xy=(x1 + .5, (y1 + y2)/2), xytext=(x1 + .5, (y1 + y2)/2))
+    axins.grid(True, linestyle='--', alpha=0.9)
 
 
 
-
-
-
-
-#######################################################################################################################
-ax1 = fig3.add_subplot(3, 2, 3)
-x1, y1 = dfFiltered30['TimeStep'], dfFiltered30['Sum_Pot_5']
-x2, y2 = dfFiltered30['TimeStep'], dfFiltered30['Sum_Pot_4']
-ax1.plot(x_ax, df2_DB30["Sum_Pot_5"], label='Pot Without VW')
-ax1.plot(x_ax, df2_DB30["Sum_Pot_4"], label='Pot With VW')
-ax1.set_xlim(18, 96)
-ax1.legend()
-
-# Draw the square
-square = plt.Rectangle((x2 - x2 * 0.1, y2 - y2 * 0.025), x2 * 0.2, 2 * (y1-y2),
-                       facecolor='none', edgecolor='red', linewidth=2)
-ax1.add_patch(square)
-# Zoom in on the square
-axins1 = ax1.inset_axes([0.3, 0.06, 0.6, 0.6])  # Position and size of the zoomed-in plot
-axins1.plot(x_ax, df2_DB30["Sum_Pot_5"])
-axins1.plot(x_ax, df2_DB30["Sum_Pot_4"])
-axins1.set_xlim((x2 - x2 * 0.1), ((x2 - x2 * 0.1) + x2 * 0.2))     # Adjust the x limits to move the square down
-axins1.set_ylim((y2 - y2 * 0.025), ((y2 - y2 * 0.025) + 2 * (y1-y2)))  # Adjust the y limits to zoom in on the square
-
-axins1.annotate('', xy=(x1, y1), xytext=(x2, y2),
-                arrowprops=dict(arrowstyle='<->', linewidth=3))
-
-axins1.annotate(
-    f"{round((100*(df2_DB30['Sum_Pot_5'].iloc[x1]-df2_DB30['Sum_Pot_4'].iloc[x1]))/df2_DB30['Sum_Pot_5'].iloc[x1], 2)} %",
-    xy=(x1 + .5, (y1 + y2)/2), xytext=(x1 + .5, (y1 + y2)/2))
-axins1.grid()
-
-#######################################################################################################################
-ax2 = fig3.add_subplot(3, 2, 4)
-x1, y1 = dfFiltered30['TimeStep'], dfFiltered30['Sum_Pot_7']
-x2, y2 = dfFiltered30['TimeStep'], dfFiltered30['Sum_Pot_6']
-ax2.plot(x_ax, df2_DB30["Sum_Pot_7"], label='Pot Without VW')
-ax2.plot(x_ax, df2_DB30["Sum_Pot_6"], label='Pot With VW')
-ax2.set_xlim(18, 96)
-ax2.legend()
-
-# Draw the square
-square = plt.Rectangle((x2 - x2 * 0.1, y2 - y2 * 0.025), x2 * 0.2, 2 * (y1-y2),
-                       facecolor='none', edgecolor='red', linewidth=2)
-ax2.add_patch(square)
-# Zoom in on the square
-axins2 = ax2.inset_axes([0.3, 0.06, 0.6, 0.6])  # Position and size of the zoomed-in plot
-axins2.plot(x_ax, df2_DB30["Sum_Pot_7"])
-axins2.plot(x_ax, df2_DB30["Sum_Pot_6"])
-axins2.set_xlim((x2 - x2 * 0.1), ((x2 - x2 * 0.1) + x2 * 0.2))     # Adjust the x limits to move the square down
-axins2.set_ylim((y2 - y2 * 0.025), ((y2 - y2 * 0.025) + 2 * (y1-y2)))  # Adjust the y limits to zoom in on the square
-
-axins2.annotate('', xy=(x1, y1), xytext=(x2, y2),
-                arrowprops=dict(arrowstyle='<->', linewidth=3))
-
-axins2.annotate(
-    f"{round((100*(df2_DB30['Sum_Pot_7'].iloc[x1]-df2_DB30['Sum_Pot_6'].iloc[x1]))/df2_DB30['Sum_Pot_7'].iloc[x1], 2)} %",
-    xy=(x1 + .5, (y1 + y2)/2), xytext=(x1 + .5, (y1 + y2)/2))
-axins2.grid()
+    # Save as PDF and PNG
+    plt.savefig(r"C:\Users\hugo1\Desktop\Projeto_Rede_Fornecida\Dissertação\Figs" +
+                "\PowerLossAndVWControl_" + str(num) + ".pdf",
+                format='pdf', transparent=True, dpi=300, bbox_inches='tight')
+    plt.savefig(r"C:\Users\hugo1\Desktop\Projeto_Rede_Fornecida\Dissertação\Figs" +
+                "\PowerLossAndVWControl_" + str(num) + ".png", dpi=300, bbox_inches='tight')
 
 
 
 
+#MakePlotDiagram(fig3.add_subplot(3, 2, 1), dfFiltered15, df2_DB15, 'Sum_Pot_4', 'Sum_Pot_5')
+#MakePlotDiagram(fig3.add_subplot(3, 2, 2), dfFiltered15, df2_DB15, 'Sum_Pot_6', 'Sum_Pot_7')
+#MakePlotDiagram(fig3.add_subplot(3, 2, 3), dfFiltered30, df2_DB30, 'Sum_Pot_4', 'Sum_Pot_5')
+#MakePlotDiagram(fig3.add_subplot(3, 2, 4), dfFiltered30, df2_DB30, 'Sum_Pot_6', 'Sum_Pot_7')
+#MakePlotDiagram(fig3.add_subplot(3, 2, 5), dfFiltered50, df2_DB50, 'Sum_Pot_4', 'Sum_Pot_5')
+#MakePlotDiagram(fig3.add_subplot(3, 2, 6), dfFiltered50, df2_DB50, 'Sum_Pot_6', 'Sum_Pot_7')
 
+MakePlotDiagram2(1, dfFiltered15, df2_DB15, 'Sum_Pot_4', 'Sum_Pot_5')
+MakePlotDiagram2(2, dfFiltered15, df2_DB15, 'Sum_Pot_6', 'Sum_Pot_7')
+MakePlotDiagram2(3, dfFiltered30, df2_DB30, 'Sum_Pot_4', 'Sum_Pot_5')
+MakePlotDiagram2(4, dfFiltered30, df2_DB30, 'Sum_Pot_6', 'Sum_Pot_7')
+MakePlotDiagram2(5, dfFiltered50, df2_DB50, 'Sum_Pot_4', 'Sum_Pot_5')
+MakePlotDiagram2(6, dfFiltered50, df2_DB50, 'Sum_Pot_6', 'Sum_Pot_7')
 
-
-#######################################################################################################################
-ax1 = fig3.add_subplot(3, 2, 5)
-x1, y1 = dfFiltered50['TimeStep'], dfFiltered50['Sum_Pot_5']
-x2, y2 = dfFiltered50['TimeStep'], dfFiltered50['Sum_Pot_4']
-ax1.plot(x_ax, df2_DB50["Sum_Pot_5"], label='Pot Without VW')
-ax1.plot(x_ax, df2_DB50["Sum_Pot_4"], label='Pot With VW')
-ax1.set_xlim(18, 96)
-ax1.legend()
-
-# Draw the square
-square = plt.Rectangle((x2 - x2 * 0.1, y2 - y2 * 0.025), x2 * 0.2, 2 * (y1-y2),
-                       facecolor='none', edgecolor='red', linewidth=2)
-ax1.add_patch(square)
-# Zoom in on the square
-axins1 = ax1.inset_axes([0.3, 0.06, 0.6, 0.6])  # Position and size of the zoomed-in plot
-axins1.plot(x_ax, df2_DB50["Sum_Pot_5"])
-axins1.plot(x_ax, df2_DB50["Sum_Pot_4"])
-axins1.set_xlim((x2 - x2 * 0.1), ((x2 - x2 * 0.1) + x2 * 0.2))     # Adjust the x limits to move the square down
-axins1.set_ylim((y2 - y2 * 0.025), ((y2 - y2 * 0.025) + 2 * (y1-y2)))  # Adjust the y limits to zoom in on the square
-
-axins1.annotate('', xy=(x1, y1), xytext=(x2, y2),
-                arrowprops=dict(arrowstyle='<->', linewidth=3))
-
-axins1.annotate(
-    f"{round((100*(df2_DB50['Sum_Pot_5'].iloc[x1]-df2_DB50['Sum_Pot_4'].iloc[x1]))/df2_DB50['Sum_Pot_5'].iloc[x1], 2)} %",
-    xy=(x1 + .5, (y1 + y2)/2), xytext=(x1 + .5, (y1 + y2)/2))
-axins1.grid()
-
-#######################################################################################################################
-ax2 = fig3.add_subplot(3, 2, 6)
-x1, y1 = dfFiltered50['TimeStep'], dfFiltered50['Sum_Pot_7']
-x2, y2 = dfFiltered50['TimeStep'], dfFiltered50['Sum_Pot_6']
-ax2.plot(x_ax, df2_DB50["Sum_Pot_7"], label='Pot Without VW')
-ax2.plot(x_ax, df2_DB50["Sum_Pot_6"], label='Pot With VW')
-ax2.set_xlim(18, 96)
-ax2.legend()
-
-# Draw the square
-square = plt.Rectangle((x2 - x2 * 0.1, y2 - y2 * 0.025), x2 * 0.2, 2 * (y1-y2),
-                       facecolor='none', edgecolor='red', linewidth=2)
-ax2.add_patch(square)
-# Zoom in on the square
-axins2 = ax2.inset_axes([0.3, 0.06, 0.6, 0.6])  # Position and size of the zoomed-in plot
-axins2.plot(x_ax, df2_DB50["Sum_Pot_7"])
-axins2.plot(x_ax, df2_DB50["Sum_Pot_6"])
-axins2.set_xlim((x2 - x2 * 0.1), ((x2 - x2 * 0.1) + x2 * 0.2))     # Adjust the x limits to move the square down
-axins2.set_ylim((y2 - y2 * 0.025), ((y2 - y2 * 0.025) + 2 * (y1-y2)))  # Adjust the y limits to zoom in on the square
-
-axins2.annotate('', xy=(x1, y1), xytext=(x2, y2),
-                arrowprops=dict(arrowstyle='<->', linewidth=3))
-
-axins2.annotate(
-    f"{round((100*(df2_DB50['Sum_Pot_7'].iloc[x1]-df2_DB50['Sum_Pot_6'].iloc[x1]))/df2_DB50['Sum_Pot_7'].iloc[x1], 2)} %",
-    xy=(x1 + .5, (y1 + y2)/2), xytext=(x1 + .5, (y1 + y2)/2))
-axins2.grid()
-
-
-
-
-
-
-
-
-
-
-
-
-plt.show()
-
-
-
-print()
+# Save as PDF and PNG
+#plt.savefig(r"C:\Users\hugo1\Desktop\Projeto_Rede_Fornecida\Figs\Artigo2" +
+#            "\PowerLossAndVWControl.pdf",
+#            format='pdf', transparent=True)
+#plt.savefig(r"C:\Users\hugo1\Desktop\Projeto_Rede_Fornecida\Figs\Artigo2" + "\owerLossAndVWControl")

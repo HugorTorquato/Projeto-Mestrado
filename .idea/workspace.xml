@@ -2,12 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c0a353b0-9d94-497b-99cd-a779928dfe5d" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/erro overcurrent.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Python/Definitions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/Definitions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python/FunctionsSecond.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/FunctionsSecond.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python/Geradores.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/Geradores.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python/SistemFunctions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/SistemFunctions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python/Monitores.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/Monitores.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL/InProgress- violation analisy.sql" beforeDir="false" afterPath="$PROJECT_DIR$/SQL/InProgress- violation analisy.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL/StoredProcedures/spSUMCreateProcessedPVEergyDataDiff.sql" beforeDir="false" afterPath="$PROJECT_DIR$/SQL/StoredProcedures/spSUMCreateProcessedPVEergyDataDiff.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL/Views/fnGetPotDataBasedOnElement.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL/Views/vwHCSummaryForAllDB.sql" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -283,7 +284,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Python/Monitores.py</url>
-          <line>149</line>
+          <line>156</line>
           <option name="timeStamp" value="293" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
