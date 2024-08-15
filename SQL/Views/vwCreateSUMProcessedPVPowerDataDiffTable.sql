@@ -24,6 +24,7 @@ AS
 		DISTINCT(P1.[Case])
 		, P1.Elemento
 		, P1.TimeStep
+		, (ISNULL(P1.Value_S2,0)  + ISNULL(P2.Value_S2,0) + ISNULL(P3.Value_S2,0)) AS Sum_Pot_2
 		, (ISNULL(P1.Value_S5,0)  + ISNULL(P2.Value_S5,0) + ISNULL(P3.Value_S5,0)) AS Sum_Pot_5
 		, (ISNULL(P1.Value_S4,0)  + ISNULL(P2.Value_S4,0) + ISNULL(P3.Value_S4,0)) AS Sum_Pot_4
 		, (ISNULL(P1.Value_diff_5to4,0)  + ISNULL(P2.Value_diff_5to4,0) + ISNULL(P3.Value_diff_5to4,0)) AS Sum_Pot_Diff_5_4

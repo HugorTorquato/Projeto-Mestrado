@@ -1,0 +1,19 @@
+! Created by 42 on 2017-12-19 14:47:34
+Clear
+Redirect Circuit.dss
+
+!Common files
+Redirect ../WireData.dss
+Redirect ../LineGeometry.dss
+Redirect ../LoadShape.dss
+Redirect Line.dss
+Redirect Reactor.dss
+Redirect Transformer.dss
+
+MakebusList
+
+Set voltagebases=[0.22 11.9 0.3811 0.127]
+calcvoltagebases
+calc
+
+Export EventLog

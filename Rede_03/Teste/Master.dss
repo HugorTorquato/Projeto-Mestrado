@@ -1,0 +1,18 @@
+!
+Clear
+New Circuit.TheveninEquivalente bus1=bus_xfmr_pri_33998182 pu=1.0 basekv=0.22
+~ Z0=[10, 10] Z1=[10, 10]
+Redirect ../WireData.dss
+Redirect ../LineGeometry.dss
+Redirect ../LoadShape.dss
+
+!
+New Line._abcn_l01-sec   Bus1=bus_xfmr_pri_33998182 Bus2=bus_33998182_001
+ ~ Length=0.0150330000 Geometry=sec-tradicional-ca-2awg-1kv-ca-2awg-1kv-ca-2awg-1kv-ca-4_0awg-1kv Units=km
+!
+New Load.c21 Bus1=bus_33998182_001 model=6 Phases=3 kV=0.22 kW=0.1666666667 PF=0.85 Daily=media_5769-0
+!
+
+Set voltagebases=[0.22 11.9 0.3811 0.127]
+calcvoltagebases
+calc

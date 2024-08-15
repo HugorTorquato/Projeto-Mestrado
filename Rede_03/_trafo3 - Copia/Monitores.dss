@@ -1,0 +1,5 @@
+New monitor._abcn_l01-sec_power element=line._abcn_l01-sec terminal=1 mode=1 ppolar=no
+New monitor._abcn_l01-sec_voltage element=line._abcn_l01-sec terminal=1 mode=0
+
+New monitor.c01_power element=load.c01 terminal=1 mode=1 ppolar=no
+New monitor.c01_voltage element=load.c01 terminal=1 mode=0

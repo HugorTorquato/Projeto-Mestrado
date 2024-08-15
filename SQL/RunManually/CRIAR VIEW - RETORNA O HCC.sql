@@ -2,8 +2,7 @@
 
 
 
-CREATE OR ALTER VIEW vwHCCResultsTable
-AS
+
 	WITH
 
 		BATSUM AS (
@@ -54,3 +53,4 @@ AS
 			*
 			--AVG(HCC4) , AVG(HCC6)
 		FROM ByCase
+		WHERE [CASE] = 15

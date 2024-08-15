@@ -152,34 +152,22 @@ PlotDailyCurves(df50_avg_ByTime_6['AVG_PV_Power_By_TimeStep'].values, df50_avg_B
 plt.show()
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 # Group average results from multiple tables
 df15_avg_4 = Aggregate(DB15, "vwGetPowerToHCCalculation4")
-print(' -------------------------------- Averag result from DB15', DB15), print(df15_avg_4)
+print(' -------------------------------- HCC Averag result from DB15', DB15), print(df15_avg_4)
 df30_avg_4 = Aggregate(DB30, "vwGetPowerToHCCalculation4")
-print(' -------------------------------- Averag result from DB30', DB30), print(df30_avg_4)
+print(' -------------------------------- HCC Averag result from DB30', DB30), print(df30_avg_4)
 df50_avg_4 = Aggregate(DB50, "vwGetPowerToHCCalculation4")
-print(' -------------------------------- Averag result from DB50', DB50), print(df50_avg_4)
+print(' -------------------------------- HCC Averag result from DB50', DB50), print(df50_avg_4)
 
 print("------------------------------------------------------------------------------------------------")
 # Group average results from multiple tables
 df15_avg_4 = Aggregate(DB15, "vwGetPowerToHCCalculation6")
-print(' -------------------------------- Averag result from DB15', DB15), print(df15_avg_4)
+print(' -------------------------------- HCC Averag result from DB15', DB15), print(df15_avg_4)
 df30_avg_4 = Aggregate(DB30, "vwGetPowerToHCCalculation6")
-print(' -------------------------------- Averag result from DB30', DB30), print(df30_avg_4)
+print(' -------------------------------- HCC Averag result from DB30', DB30), print(df30_avg_4)
 df50_avg_4 = Aggregate(DB50, "vwGetPowerToHCCalculation6")
-print(' -------------------------------- Averag result from DB50', DB50), print(df50_avg_4)
+print(' -------------------------------- HCC Averag result from DB50', DB50), print(df50_avg_4)
 
 print("------------------------------------------------------------------------------------------------")
 

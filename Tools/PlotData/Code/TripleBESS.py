@@ -180,6 +180,8 @@ def GetAVGBessKPIData(db, table):
                 SELECT 
                     AVG(EnergByPot)       AS AVG_EnergyByPot,
                     STDEV(EnergByPot)     AS STDEV_AVG_EnergyByPot,
+                    AVG(MaxPotByPVSize)       AS AVG_PotbyEnergy,
+                    STDEV(MaxPotByPVSize)     AS STDEV_PotbyEnergy,
                     AVG(MaxPotByPVSize)       AS AVG_MaxPotByPVSize,
                     STDEV(MaxPotByPVSize)     AS STDEV_MaxPotByPVSize
                 FROM {db}.dbo.{table}

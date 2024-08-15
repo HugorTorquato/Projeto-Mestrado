@@ -97,8 +97,10 @@ BEGIN
 			, ROUND(tmp.MAX_CUR_Diff_7_6  , 4)*1000 AS MAX_CUR_Diff_7_6_Ah
 			, ROUND(tmp.SUM_CUR_Diff_5_4  , 4)*1000 AS SUM_CUR_Diff_5_4_Ah
 			, ROUND(tmp.SUM_CUR_Diff_7_6  , 4)*1000 AS SUM_CUR_Diff_7_6_Ah
-			, ROUND(ISNULL(MAX_Eergy_Diff_5_4, 0) * 1000 / @FatorEOL / @FatorEFF , 4) AS ADJ_Battery_Capacity_5_4 --Wh
-			, ROUND(ISNULL(MAX_Eergy_Diff_7_6, 0) * 1000 / @FatorEOL / @FatorEFF , 4) AS ADJ_Battery_Capacity_7_6 --Wh
+			--, ROUND(ISNULL(MAX_Eergy_Diff_5_4, 0) * 1000 / @FatorEOL / @FatorEFF , 4) AS ADJ_Battery_Capacity_5_4 --Wh
+			--, ROUND(ISNULL(MAX_Eergy_Diff_7_6, 0) * 1000 / @FatorEOL / @FatorEFF , 4) AS ADJ_Battery_Capacity_7_6 --Wh
+			, ROUND(ISNULL(SUM_Eergy_Diff_5_4, 0) * 1000 / @FatorEOL / @FatorEFF , 4) AS ADJ_Battery_Capacity_5_4 --Wh
+			, ROUND(ISNULL(SUM_Eergy_Diff_7_6, 0) * 1000 / @FatorEOL / @FatorEFF , 4) AS ADJ_Battery_Capacity_7_6 --Wh
 
 			-- Calculate batery variables ( I removed this part because i'll not set a default baterry type in here, just give the parameters for the user to do so )
 			--
