@@ -1,0 +1,18 @@
+!
+Clear
+Redirect Circuit.dss
+Redirect ../WireData.dss
+Redirect ../LineGeometry.dss
+Redirect ../LoadShape.dss
+Redirect Transformer.dss
+!
+New Line._abcn_l01-sec   Bus1=bus_xfmr_sec_33998182.1.2.3.4 Bus2=bus_33998182_001.1.2.3.4 Length=0.0150330000 Geometry=sec-tradicional-ca-2awg-1kv-ca-2awg-1kv-ca-2awg-1kv-ca-4_0awg-1kv Units=km
+New Reactor.gnd_r01 Bus1=bus_xfmr_sec_33998182.4 Phases=1 R=15.0 X=0.0
+New Reactor.gnd_r02 Bus1=bus_33998182_001.4 Phases=1 R=5.0 X=0.0
+!
+New Load.c21 Bus1=bus_33998182_001.1.2.3.4 model=6 Phases=3 kV=0.22 kW=0.1666666667 PF=0.85 Daily=media_5769-0
+!
+
+Set voltagebases=[0.22 11.9 0.3811 0.127]
+calcvoltagebases
+calc

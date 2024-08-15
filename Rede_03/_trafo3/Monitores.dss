@@ -1,0 +1,210 @@
+! Monitores do tipo : Line
+ 
+New monitor._abcn_l01-sec_power element=line._abcn_l01-sec terminal=1 mode=1 ppolar=no
+New monitor._abcn_l01-sec_voltage element=line._abcn_l01-sec terminal=1 mode=0
+ 
+New monitor._cn_l02-ramal_power element=line._cn_l02-ramal terminal=1 mode=1 ppolar=no
+New monitor._cn_l02-ramal_voltage element=line._cn_l02-ramal terminal=1 mode=0
+ 
+New monitor._abcn_l03-sec_power element=line._abcn_l03-sec terminal=1 mode=1 ppolar=no
+New monitor._abcn_l03-sec_voltage element=line._abcn_l03-sec terminal=1 mode=0
+ 
+New monitor._abcn_l04-sec_power element=line._abcn_l04-sec terminal=1 mode=1 ppolar=no
+New monitor._abcn_l04-sec_voltage element=line._abcn_l04-sec terminal=1 mode=0
+ 
+New monitor._abcn_l05-sec_power element=line._abcn_l05-sec terminal=1 mode=1 ppolar=no
+New monitor._abcn_l05-sec_voltage element=line._abcn_l05-sec terminal=1 mode=0
+ 
+New monitor._abcn_l06-sec_power element=line._abcn_l06-sec terminal=1 mode=1 ppolar=no
+New monitor._abcn_l06-sec_voltage element=line._abcn_l06-sec terminal=1 mode=0
+ 
+New monitor._an_l07-ramal_power element=line._an_l07-ramal terminal=1 mode=1 ppolar=no
+New monitor._an_l07-ramal_voltage element=line._an_l07-ramal terminal=1 mode=0
+ 
+New monitor._bcn_l08-ramal_power element=line._bcn_l08-ramal terminal=1 mode=1 ppolar=no
+New monitor._bcn_l08-ramal_voltage element=line._bcn_l08-ramal terminal=1 mode=0
+ 
+New monitor._abcn_l09-sec_power element=line._abcn_l09-sec terminal=1 mode=1 ppolar=no
+New monitor._abcn_l09-sec_voltage element=line._abcn_l09-sec terminal=1 mode=0
+ 
+New monitor._abcn_l10-sec_power element=line._abcn_l10-sec terminal=1 mode=1 ppolar=no
+New monitor._abcn_l10-sec_voltage element=line._abcn_l10-sec terminal=1 mode=0
+ 
+New monitor._abcn_l11-ramal_power element=line._abcn_l11-ramal terminal=1 mode=1 ppolar=no
+New monitor._abcn_l11-ramal_voltage element=line._abcn_l11-ramal terminal=1 mode=0
+ 
+New monitor._an_l12-ramal_power element=line._an_l12-ramal terminal=1 mode=1 ppolar=no
+New monitor._an_l12-ramal_voltage element=line._an_l12-ramal terminal=1 mode=0
+ 
+New monitor._bcn_l13-ramal_power element=line._bcn_l13-ramal terminal=1 mode=1 ppolar=no
+New monitor._bcn_l13-ramal_voltage element=line._bcn_l13-ramal terminal=1 mode=0
+ 
+New monitor._abcn_l14-ramal_power element=line._abcn_l14-ramal terminal=1 mode=1 ppolar=no
+New monitor._abcn_l14-ramal_voltage element=line._abcn_l14-ramal terminal=1 mode=0
+ 
+New monitor._acn_l15-ramal_power element=line._acn_l15-ramal terminal=1 mode=1 ppolar=no
+New monitor._acn_l15-ramal_voltage element=line._acn_l15-ramal terminal=1 mode=0
+ 
+New monitor._bn_l16-ramal_power element=line._bn_l16-ramal terminal=1 mode=1 ppolar=no
+New monitor._bn_l16-ramal_voltage element=line._bn_l16-ramal terminal=1 mode=0
+ 
+New monitor._abcn_l17-sec_power element=line._abcn_l17-sec terminal=1 mode=1 ppolar=no
+New monitor._abcn_l17-sec_voltage element=line._abcn_l17-sec terminal=1 mode=0
+ 
+New monitor._bcn_l18-ramal_power element=line._bcn_l18-ramal terminal=1 mode=1 ppolar=no
+New monitor._bcn_l18-ramal_voltage element=line._bcn_l18-ramal terminal=1 mode=0
+ 
+New monitor._abcn_l19-sec_power element=line._abcn_l19-sec terminal=1 mode=1 ppolar=no
+New monitor._abcn_l19-sec_voltage element=line._abcn_l19-sec terminal=1 mode=0
+ 
+New monitor._abcn_l20-sec_power element=line._abcn_l20-sec terminal=1 mode=1 ppolar=no
+New monitor._abcn_l20-sec_voltage element=line._abcn_l20-sec terminal=1 mode=0
+ 
+New monitor._abcn_l21-sec_power element=line._abcn_l21-sec terminal=1 mode=1 ppolar=no
+New monitor._abcn_l21-sec_voltage element=line._abcn_l21-sec terminal=1 mode=0
+ 
+New monitor._bcn_l22-ramal_power element=line._bcn_l22-ramal terminal=1 mode=1 ppolar=no
+New monitor._bcn_l22-ramal_voltage element=line._bcn_l22-ramal terminal=1 mode=0
+ 
+New monitor._abcn_l23-sec_power element=line._abcn_l23-sec terminal=1 mode=1 ppolar=no
+New monitor._abcn_l23-sec_voltage element=line._abcn_l23-sec terminal=1 mode=0
+ 
+New monitor._bn_l24-ramal_power element=line._bn_l24-ramal terminal=1 mode=1 ppolar=no
+New monitor._bn_l24-ramal_voltage element=line._bn_l24-ramal terminal=1 mode=0
+ 
+New monitor._abn_l25-ramal_power element=line._abn_l25-ramal terminal=1 mode=1 ppolar=no
+New monitor._abn_l25-ramal_voltage element=line._abn_l25-ramal terminal=1 mode=0
+ 
+New monitor._cn_l26-ramal_power element=line._cn_l26-ramal terminal=1 mode=1 ppolar=no
+New monitor._cn_l26-ramal_voltage element=line._cn_l26-ramal terminal=1 mode=0
+ 
+New monitor._abcn_l27-sec_power element=line._abcn_l27-sec terminal=1 mode=1 ppolar=no
+New monitor._abcn_l27-sec_voltage element=line._abcn_l27-sec terminal=1 mode=0
+ 
+New monitor._an_l28-ramal_power element=line._an_l28-ramal terminal=1 mode=1 ppolar=no
+New monitor._an_l28-ramal_voltage element=line._an_l28-ramal terminal=1 mode=0
+ 
+New monitor._cn_l29-ramal_power element=line._cn_l29-ramal terminal=1 mode=1 ppolar=no
+New monitor._cn_l29-ramal_voltage element=line._cn_l29-ramal terminal=1 mode=0
+ 
+New monitor._an_l30-ramal_power element=line._an_l30-ramal terminal=1 mode=1 ppolar=no
+New monitor._an_l30-ramal_voltage element=line._an_l30-ramal terminal=1 mode=0
+ 
+New monitor._cn_l31-ramal_power element=line._cn_l31-ramal terminal=1 mode=1 ppolar=no
+New monitor._cn_l31-ramal_voltage element=line._cn_l31-ramal terminal=1 mode=0
+ 
+New monitor._cn_l32-ramal_power element=line._cn_l32-ramal terminal=1 mode=1 ppolar=no
+New monitor._cn_l32-ramal_voltage element=line._cn_l32-ramal terminal=1 mode=0
+ 
+New monitor._an_l33-ramal_power element=line._an_l33-ramal terminal=1 mode=1 ppolar=no
+New monitor._an_l33-ramal_voltage element=line._an_l33-ramal terminal=1 mode=0
+ 
+New monitor._acn_l34-ramal_power element=line._acn_l34-ramal terminal=1 mode=1 ppolar=no
+New monitor._acn_l34-ramal_voltage element=line._acn_l34-ramal terminal=1 mode=0
+ 
+New monitor._an_l35-ramal_power element=line._an_l35-ramal terminal=1 mode=1 ppolar=no
+New monitor._an_l35-ramal_voltage element=line._an_l35-ramal terminal=1 mode=0
+ 
+New monitor._bn_l36-ramal_power element=line._bn_l36-ramal terminal=1 mode=1 ppolar=no
+New monitor._bn_l36-ramal_voltage element=line._bn_l36-ramal terminal=1 mode=0
+ 
+New monitor._cn_l37-ramal_power element=line._cn_l37-ramal terminal=1 mode=1 ppolar=no
+New monitor._cn_l37-ramal_voltage element=line._cn_l37-ramal terminal=1 mode=0
+ 
+New monitor._bn_l38-ramal_power element=line._bn_l38-ramal terminal=1 mode=1 ppolar=no
+New monitor._bn_l38-ramal_voltage element=line._bn_l38-ramal terminal=1 mode=0
+ 
+New monitor._an_l39-ramal_power element=line._an_l39-ramal terminal=1 mode=1 ppolar=no
+New monitor._an_l39-ramal_voltage element=line._an_l39-ramal terminal=1 mode=0
+ 
+ 
+! Monitores do tipo : Load
+ 
+New monitor.c01_power element=load.c01 terminal=1 mode=1 ppolar=no
+New monitor.c01_voltage element=load.c01 terminal=1 mode=0
+ 
+New monitor.c02_power element=load.c02 terminal=1 mode=1 ppolar=no
+New monitor.c02_voltage element=load.c02 terminal=1 mode=0
+ 
+New monitor.c03_power element=load.c03 terminal=1 mode=1 ppolar=no
+New monitor.c03_voltage element=load.c03 terminal=1 mode=0
+ 
+New monitor.c04_power element=load.c04 terminal=1 mode=1 ppolar=no
+New monitor.c04_voltage element=load.c04 terminal=1 mode=0
+ 
+New monitor.c05_power element=load.c05 terminal=1 mode=1 ppolar=no
+New monitor.c05_voltage element=load.c05 terminal=1 mode=0
+ 
+New monitor.c06_power element=load.c06 terminal=1 mode=1 ppolar=no
+New monitor.c06_voltage element=load.c06 terminal=1 mode=0
+ 
+New monitor.c07_power element=load.c07 terminal=1 mode=1 ppolar=no
+New monitor.c07_voltage element=load.c07 terminal=1 mode=0
+ 
+New monitor.c08_power element=load.c08 terminal=1 mode=1 ppolar=no
+New monitor.c08_voltage element=load.c08 terminal=1 mode=0
+ 
+New monitor.c09_power element=load.c09 terminal=1 mode=1 ppolar=no
+New monitor.c09_voltage element=load.c09 terminal=1 mode=0
+ 
+New monitor.c10_power element=load.c10 terminal=1 mode=1 ppolar=no
+New monitor.c10_voltage element=load.c10 terminal=1 mode=0
+ 
+New monitor.c11_power element=load.c11 terminal=1 mode=1 ppolar=no
+New monitor.c11_voltage element=load.c11 terminal=1 mode=0
+ 
+New monitor.c12_power element=load.c12 terminal=1 mode=1 ppolar=no
+New monitor.c12_voltage element=load.c12 terminal=1 mode=0
+ 
+New monitor.c13_power element=load.c13 terminal=1 mode=1 ppolar=no
+New monitor.c13_voltage element=load.c13 terminal=1 mode=0
+ 
+New monitor.c14_power element=load.c14 terminal=1 mode=1 ppolar=no
+New monitor.c14_voltage element=load.c14 terminal=1 mode=0
+ 
+New monitor.c15_power element=load.c15 terminal=1 mode=1 ppolar=no
+New monitor.c15_voltage element=load.c15 terminal=1 mode=0
+ 
+New monitor.c16_power element=load.c16 terminal=1 mode=1 ppolar=no
+New monitor.c16_voltage element=load.c16 terminal=1 mode=0
+ 
+New monitor.c17_power element=load.c17 terminal=1 mode=1 ppolar=no
+New monitor.c17_voltage element=load.c17 terminal=1 mode=0
+ 
+New monitor.c18_power element=load.c18 terminal=1 mode=1 ppolar=no
+New monitor.c18_voltage element=load.c18 terminal=1 mode=0
+ 
+New monitor.c19_power element=load.c19 terminal=1 mode=1 ppolar=no
+New monitor.c19_voltage element=load.c19 terminal=1 mode=0
+ 
+New monitor.c20_power element=load.c20 terminal=1 mode=1 ppolar=no
+New monitor.c20_voltage element=load.c20 terminal=1 mode=0
+ 
+New monitor.c21_power element=load.c21 terminal=1 mode=1 ppolar=no
+New monitor.c21_voltage element=load.c21 terminal=1 mode=0
+ 
+New monitor.c22_power element=load.c22 terminal=1 mode=1 ppolar=no
+New monitor.c22_voltage element=load.c22 terminal=1 mode=0
+ 
+New monitor.c23_power element=load.c23 terminal=1 mode=1 ppolar=no
+New monitor.c23_voltage element=load.c23 terminal=1 mode=0
+ 
+New monitor.c24_power element=load.c24 terminal=1 mode=1 ppolar=no
+New monitor.c24_voltage element=load.c24 terminal=1 mode=0
+ 
+New monitor.c25_power element=load.c25 terminal=1 mode=1 ppolar=no
+New monitor.c25_voltage element=load.c25 terminal=1 mode=0
+ 
+New monitor.c26_power element=load.c26 terminal=1 mode=1 ppolar=no
+New monitor.c26_voltage element=load.c26 terminal=1 mode=0
+ 
+New monitor.c27_power element=load.c27 terminal=1 mode=1 ppolar=no
+New monitor.c27_voltage element=load.c27 terminal=1 mode=0
+ 
+ 
+! Monitores do tipo : Transformer
+ 
+New monitor.t1_power element=transformer.t1 terminal=1 mode=1 ppolar=no
+New monitor.t1_voltage element=transformer.t1 terminal=1 mode=0
+ 
+ 

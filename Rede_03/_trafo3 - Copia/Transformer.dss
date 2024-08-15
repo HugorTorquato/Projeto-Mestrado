@@ -1,0 +1,4 @@
+! Created by 42 on 2017-12-19 14:47:34
+New Transformer.t1 Windings=2 XHL=3.091723719
+ ~ Wdg=1 Bus=bus_xfmr_pri_33998182.1.2.3 Conn=delta kV=11.9 kVA=45.0 Tap=1.0 %R=0.776666667
+ ~ Wdg=2 Bus=bus_xfmr_sec_33998182.1.2.3.4 Conn=wye kV=0.22 kVA=45.0 Tap=1.0 %R=0.776666667

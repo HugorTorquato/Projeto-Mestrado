@@ -6,7 +6,7 @@
 import pythonsql
 import matplotlib.pyplot as plt
 
-DB = "DB_Rede_3_50_2706_15"
+DB = "DB_Rede_3_50_0107_30"
 
 def GetPowerDataTable(db):
     # Fazer verificação se a vw está definida?

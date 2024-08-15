@@ -32,6 +32,7 @@ AS
 		MAX_Pot_Diff_5_4_W,
 		ADJ_Battery_Capacity_5_4,
 		CASE WHEN MAX_Pot_Diff_5_4_W > 0 THEN ROUND( 100 * ADJ_Battery_Capacity_5_4 / MAX_Pot_Diff_5_4_W ,2) ELSE 0 END AS EnergByPot,
+		CASE WHEN ADJ_Battery_Capacity_5_4 > 0 THEN ROUND( 100 * MAX_Pot_Diff_5_4_W / ADJ_Battery_Capacity_5_4 ,2) ELSE 0 END AS PotbyEnergy,
 		CASE WHEN kva > 0 THEN ROUND( 100 * MAX_Pot_Diff_5_4_W / kva , 2) ELSE 0 END AS MaxPotByPVSize
 	FROM GROUPPVANDBAT_5_4
 	WHERE
